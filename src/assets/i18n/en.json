@@ -430,6 +430,7 @@
           "Tablet": "Tablet",
           "Game console": "Game Console",
           "Digital media receiver": "Media Receiver",
+          "Other": "Other",
           "OTHER": "Other"
         }
       }
@@ -1417,6 +1418,7 @@
         "Computer": "Desktop",
         "Mobile": "Mobile",
         "Tablet": "Tablet",
+        "Other": "Other",
         "Game console": "Game Console",
         "Digital media receiver": "Media Receiver",
         "OTHER": "Other"
