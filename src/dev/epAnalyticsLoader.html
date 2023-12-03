@@ -65,7 +65,7 @@
            sendMessage({messageType: 'updateFilters', payload: {queryParams: {dateBy: 'sinceCreation'}}});
           break;
          case 've':
-          sendMessage({ messageType: 'navigate', payload: { url: '/virtual-event/273' } });
+          sendMessage({ messageType: 'navigate', payload: { url: '/virtual-event/1127402' } });
            sendMessage({messageType: 'updateFilters', payload: {queryParams: {dateBy: 'sinceCreation'}}});
           break;
          case 'user':
@@ -83,8 +83,16 @@
             serverUri: 'http://cdnapi.kaltura.com',
             securedServerUri: 'https://cdnapisec.kaltura.com'
         },
-      ks: "",
-      pid: "",
+        externalServices: {
+          appRegistryEndpoint: {
+            "uri": "https://app-registry.nvp1.ovp.kaltura.com/api/v1/app-registry"
+          },
+          userReportsEndpoint: {
+            uri: "https://user.nvp1.ovp.kaltura.com/api/v1/reports"
+          }
+        },
+        ks: "",
+        pid: "",
         locale: 'en',
         live: {
             pollInterval: 30,
@@ -176,7 +184,7 @@
                 border-bottom-left-radius: 3px;
                 border-bottom-right-radius: 3px;
             }
-            .ep .kReportContainer .kReportContent.kNoTitle, .ep app-ve-highlights, .ep app-ve-status, .ep app-registration-funnel, .ep app-ve-mini-insights {
+            .ep .kReportContainer .kReportContent.kNoTitle, .ep app-ve-highlights, .ep app-ve-status, .ep app-registration-funnel, .ep app-ve-mini-origin, .ep app-ve-mini-origin {
                 border-top: 1px solid #cccccc !important;
                 border-top-left-radius: 3px;
                 border-top-right-radius: 3px;
