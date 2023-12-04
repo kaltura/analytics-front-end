@@ -10,6 +10,15 @@
     flex-direction: column;
     overflow-x: hidden;
   }
+  .kFilters {
+    .kTitle {
+      width: auto;
+      padding-right: 0px;
+    }
+    kinputhelper {
+      margin-top: 3px;
+    }
+  }
   .hiddenHeader {
     display: none;
   }

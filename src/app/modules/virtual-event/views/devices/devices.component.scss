@@ -9,11 +9,15 @@
   .kFilters {
     height: auto;
     .kTitle {
-      width: 100%;
+      width: auto;
       padding: 24px;
+      padding-right: 0px;
       font-size: 20px;
       color: #333333;
       font-weight: bold;
+    }
+    kinputhelper {
+      margin-top: 2px;
     }
   }
   .kIcon {

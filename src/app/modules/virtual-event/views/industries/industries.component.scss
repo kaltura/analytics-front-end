@@ -16,6 +16,15 @@
   ::ng-deep .p-table .p-table-tbody > tr > td, ::ng-deep  .p-table .p-table-thead {
     border: none !important;
   }
+  .kFilters {
+    .kTitle {
+      width: auto;
+      padding-right: 0px;
+    }
+    kinputhelper {
+      margin-top: 3px;
+    }
+  }
 }
 .kIndustries ::ng-deep p-table .p-datatable .p-datatable-thead {
   border-top: none;

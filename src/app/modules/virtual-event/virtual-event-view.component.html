@@ -70,7 +70,7 @@
 <!--            <app-ve-mini-attendance [attendees$]="funnel.attendees$" [disabled]="_disableMiniViews"></app-ve-mini-attendance>-->
 <!--          </div>-->
           <div *ngIf="_viewConfig.miniOrigin" class="kMiniReportContainer">
-            <app-ve-mini-origin [attendees$]="funnel.attendees$" [disabled]="_disableMiniViews"></app-ve-mini-origin>
+            <app-ve-mini-origin [attendees$]="funnel.attendees$" [disabled]="_disableMiniViews" [exporting]="_exporting"></app-ve-mini-origin>
           </div>
         </div>
 

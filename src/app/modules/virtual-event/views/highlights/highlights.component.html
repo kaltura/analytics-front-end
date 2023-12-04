@@ -5,6 +5,9 @@
 <!--      <app-report-tabs [tabs]="_tabsData" [showValue]="false" (tabChange)="_onTabChange($event)"></app-report-tabs>-->
       <div class="kHeader">
         <span class="kTitle">{{'app.ve.registrants' | translate}}</span>
+        <kInputHelper *ngIf="!exporting">
+          <span>{{'app.ve.registrants_tt' | translate}}</span>
+        </kInputHelper>
       </div>
 
       <div class="kChart">

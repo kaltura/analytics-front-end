@@ -21,6 +21,7 @@ export class VEMiniOriginComponent implements OnInit, OnDestroy{
 
   @Input() attendees$: BehaviorSubject<{ loading: boolean, results: attendeesData[], sum: number }> = new BehaviorSubject({ loading: false, results: [], sum: 0 });
   @Input() disabled = false;
+  @Input() exporting = false;
 
   private registration: origin = {key: 'registration', total:0, attended: 0, notAttended: 0};
   private webhook: origin = {key: 'webhook', total:0, attended: 0, notAttended: 0};

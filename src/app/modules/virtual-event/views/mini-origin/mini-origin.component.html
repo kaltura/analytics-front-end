@@ -4,6 +4,9 @@
 
       <div class="kHeader">
         <span class="kTitle">{{'app.ve.origin' | translate}}</span>
+        <kInputHelper *ngIf="!exporting">
+          <span>{{'app.ve.origin_tt' | translate}}</span>
+        </kInputHelper>
       </div>
 
       <div class="kRow" *ngFor="let origin of _origins" [class.kHidden]="origin.total === 0">

@@ -2,6 +2,9 @@
 
   <div class="kFilters">
     <span class="kTitle">{{'app.ve.industries' | translate}}</span>
+    <kInputHelper *ngIf="!exporting">
+      <span>{{'app.ve.industries_tt' | translate}}</span>
+    </kInputHelper>
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">

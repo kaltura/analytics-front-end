@@ -8,12 +8,11 @@
     height: auto;
     display: flex;
     width: 100%;
-    align-items: center;
+    align-items: flex-end;
     box-sizing: border-box;
     margin-bottom: 28px;
     .kTitle {
       padding: 0px;
-      width: 100%;
       font-size: 20px;
       color: #333;
       font-weight: 700;
