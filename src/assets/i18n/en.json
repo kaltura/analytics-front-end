@@ -1150,6 +1150,7 @@
       "all": "Registrants",
       "registration": "Registration",
       "registered": "Registered",
+      "distribution": "Registered",
       "registrants": "Registrants over time",
       "registrants_tt": "The percentage of new registrants out of total registrations, per day",
       "devices_tt": "The device a person registered with",

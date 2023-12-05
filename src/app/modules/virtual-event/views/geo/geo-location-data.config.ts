@@ -45,7 +45,7 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
       },
       [ReportDataSection.totals]: {
         units: '',
-        preSelected: 'registered_unique_users',
+        preSelected: 'distribution',
         fields: {
           'registered_unique_users': {
             format: value => ReportHelper.numberOrNA(value),
@@ -77,11 +77,7 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
         },
         formatter: (params) => {
           if (params.name && params.data && params.data.value && params.data.value.length === 3) {
-            let tooltip = '<span style="color: #999999">' + params.name + '</span><br/>' + params.seriesName + ' : ' + params.data.value[2];
-            if (params.seriesName === 'Avg. Drop Off') {
-              tooltip = tooltip + '%';
-            }
-            return tooltip;
+            return '<span style="color: #999999">' + params.name + '</span><br/>' + params.seriesName + ' : ' + params.data.value[2] + '%';
           } else {
             return this._translate.instant('app.common.na');
           }
