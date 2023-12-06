@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
 import { AppAnalytics, BrowserService, ReportService } from 'shared/services';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { KalturaClient, KalturaEndUserReportInputFilter, KalturaObjectBaseFactory, KalturaPager, KalturaReportExportItem, KalturaReportExportParams, KalturaReportResponseOptions, ReportExportToCsvAction } from 'kaltura-ngx-client';
@@ -13,6 +13,7 @@ import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { finalize } from 'rxjs/operators';
 import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
 import { KalturaLogger } from "@kaltura-ng/kaltura-logger";
+import { isEmptyObject } from "shared/utils/is-empty-object";
 
 @Component({
   selector: 'app-export-csv',
@@ -113,6 +114,12 @@ export class ExportCsvComponent implements OnDestroy {
 
     if (this.userId) {
       filter.userIds = this.userId;
+    }
+
+    if (analyticsConfig.predefinedFilter !== null && !isEmptyObject(analyticsConfig.predefinedFilter)) {
+      Object.keys(analyticsConfig.predefinedFilter).forEach(key => {
+        filter[key] = analyticsConfig.predefinedFilter[key]; // override filter value
+      })
     }
 
     return filter;
