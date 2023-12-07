@@ -100,6 +100,7 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
 
   private _loadAppGuid(): void {
     this._loadingAppGuid = true;
+    this._disableMiniViews = false;
     const filter = {
       "appCustomIdIn": [this._virtualEventId]
     }
@@ -112,10 +113,13 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
         this._loadingAppGuid = false;
         if (result && result.objects && result.objects.length) {
           this._appGuid = result.objects[0].id;
+        } else {
+          this._disableMiniViews = true;
         }
       },
       error => {
         this._loadingAppGuid = false;
+        this._disableMiniViews = true;
         const actions = {
           'close': () => {
             this._blockerMessage = null;
@@ -154,7 +158,6 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
           this._virtualEventDateLabel = DateFilterUtils.getMomentDate(virtualEvent.createdAt).format(dateFormat);
           this._creationDate = DateFilterUtils.getMomentDate(virtualEvent.createdAt);
           this._updateDate = DateFilterUtils.getMomentDate(virtualEvent.updatedAt).format(dateFormat);
-          this._disableMiniViews = virtualEvent.createdAt < 1680307200; // before April 2023
           this._loadingVirtualEvent = false;
         },
         error => {
