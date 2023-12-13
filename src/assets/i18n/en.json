@@ -1176,7 +1176,7 @@
       "webhook": "Webhook",
       "admin": "Admin",
       "attended": "Attended",
-      "old": "Data is not available to review on the registration dashboard. Please contact Customer Care to obtain data for this event. ",
+      "old": "Data is not available to review on the registration dashboard. To access registration data for this event, go to the reports tab and download the registration report.",
       "attendance": "Attendance",
       "pre": "Pre",
       "during": "During",
