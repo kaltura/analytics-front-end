@@ -1426,6 +1426,7 @@
         "Mobile": "Mobile",
         "Tablet": "Tablet",
         "Other": "Other",
+        "Unknown": "Unknown",
         "Game console": "Game Console",
         "Digital media receiver": "Media Receiver",
         "OTHER": "Other"

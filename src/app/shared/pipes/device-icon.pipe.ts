@@ -10,6 +10,8 @@ export class DeviceIconPipe implements PipeTransform {
     'Mobile': 'icon-phone',
     'Game console': 'icon-game-console',
     'Digital media receiver': 'icon-receiver',
+    'Unknown': 'kIcondevices',
+    'UNKNOWN': 'kIcondevices',
     'OTHER': 'kIcondevices',
     'Other': 'kIcondevices'
   };
