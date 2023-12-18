@@ -111,8 +111,13 @@ export class VirtualEventViewComponent implements OnInit, OnDestroy {
     this._http.post(`${analyticsConfig.externalServices.appRegistryEndpoint.uri}/list`, {filter}, {headers}).pipe(cancelOnDestroy(this)).subscribe(
       (result: any) => {
         this._loadingAppGuid = false;
-        if (result && result.objects && result.objects.length) {
-          this._appGuid = result.objects[0].id;
+        if (result?.objects?.length) {
+          const applications = result.objects.filter(app => app.appType === 'sites' || app.appType === 'kms');
+          if (applications.length > 0 && applications[0].id) {
+            this._appGuid = applications[0].id;
+          } else {
+            this._disableMiniViews = true;
+          }
         } else {
           this._disableMiniViews = true;
         }
