@@ -12,9 +12,12 @@
       <div class="kRow" *ngFor="let origin of _origins" [class.kHidden]="origin.total === 0">
         <span class="kLabel">{{'app.ve.' + origin.key | translate}}</span>
         <span class="kVal">{{origin.total}}</span>
-        <div class="kBar">
+        <div class="kBar" *ngIf="origin.key !== 'other'">
           <div [ngStyle]="{width: _allAttendees > 0 ? (origin.attended / _allAttendees) * 100 + '%' : '0px'}" [kTooltip]="origin.attended" class="participated"></div>
           <div [ngStyle]="{width: _allAttendees > 0 ? (origin.notAttended / _allAttendees) * 100 + '%' : '0px'}" [kTooltip]="origin.notAttended" class="notParticipated"></div>
+        </div>
+        <div class="kBar" *ngIf="origin.key === 'other'">
+          <div [ngStyle]="{width: _allAttendees > 0 ? (origin.total / _allAttendees) * 100 + '%' : '0px'}" [kTooltip]="origin.total" class="other"></div>
         </div>
       </div>
 

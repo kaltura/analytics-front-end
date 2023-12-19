@@ -47,6 +47,10 @@
         background-color: #487ADF;
         transition: width 0.35s ease-in-out;
       }
+      .other {
+        background-color: $kGrayscale3;
+        transition: width 0.35s ease-in-out;
+      }
     }
     .kBar {
       width: 100%;

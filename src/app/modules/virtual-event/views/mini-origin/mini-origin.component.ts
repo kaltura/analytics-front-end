@@ -28,9 +28,10 @@ export class VEMiniOriginComponent implements OnInit, OnDestroy{
   private invite: origin = {key: 'invite', total:0, attended: 0, notAttended: 0};
   private admin: origin = {key: 'admin', total:0, attended: 0, notAttended: 0};
   private sso: origin = {key: 'sso', total:0, attended: 0, notAttended: 0};
+  private other: origin = {key: 'other', total:0, attended: 0, notAttended: 0};
 
   public _allAttendees = 0;
-  public _origins = [this.registration, this.webhook, this.invite, this.admin, this.sso];
+  public _origins = [this.registration, this.webhook, this.invite, this.admin, this.sso, this.other];
   public _isBusy = false;
 
   constructor() {
@@ -52,6 +53,10 @@ export class VEMiniOriginComponent implements OnInit, OnDestroy{
                 origin.attended += attendees.count;
               } else {
                 origin.notAttended += attendees.count;
+              }
+            } else {
+              if (attendees.count) {
+                this.other.total += attendees.count;
               }
             }
           });
