@@ -22,8 +22,8 @@
     iframe {
       position: absolute;
       top: 0px;
-      left: 150px;
-      width: calc(100% - 150px);
+      left: 280px;
+      width: calc(100% - 280px);
       height: 100vh;
       border: 0;
       transition: height 0.3s;
@@ -31,11 +31,12 @@
   </style>
 </head>
 <body>
-<div style="display: flex; flex-direction: column; width: 150px">
+<div style="display: flex; flex-direction: column; width: 280px">
   <sapn style="background: #cacaca" onclick="handleClick(event, 'engagement')">Engagement</sapn>
   <sapn onclick="handleClick(event, 'entry-webcast')">Webcast</sapn>
   <sapn onclick="handleClick(event, 'entry-live')">Realtime</sapn>
   <sapn onclick="handleClick(event, 'entry')">Video</sapn>
+  <sapn onclick="handleClick(event, 'entry-ep')">Webinar</sapn>
   <sapn onclick="handleClick(event, 'user')">User</sapn>
   <sapn onclick="handleClick(event, 've')">Virtual Event</sapn>
 </div>
@@ -62,6 +63,10 @@
           break;
          case 'entry':
           sendMessage({ messageType: 'navigate', payload: { url: '/entry/0_tsttld1e' } });
+           sendMessage({messageType: 'updateFilters', payload: {queryParams: {dateBy: 'sinceCreation'}}});
+          break;
+         case 'entry-ep':
+          sendMessage({ messageType: 'navigate', payload: { url: '/entry-ep/1_63g4ktsv' } });
            sendMessage({messageType: 'updateFilters', payload: {queryParams: {dateBy: 'sinceCreation'}}});
           break;
          case 've':
