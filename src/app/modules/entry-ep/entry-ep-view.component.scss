@@ -230,17 +230,8 @@
   z-index: 1;
 }
 @media (max-width: 991px) {
-  .kHeaderRight{
-    position: absolute;
-    top: 110px;
-    left: 0px;
-  }
   .kReport .kEntryDetails{
     height: 86px;
-  }
-
-  .kReport .kReportHeader.noTitle{
-    height: 32px;
   }
 
   .kHeaderRight.noTitle{
