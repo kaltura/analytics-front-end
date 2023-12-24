@@ -1,5 +1,5 @@
 <div data-aid="filter-entry-users" class="kTableHeader" [ngStyle]="{'padding-bottom': _tags.length ? 0 : '8px'}">
-  <span class="kTotalCount">
+  <span class="kTotalCount" *ngIf="showTotalUsers">
     {{'app.entry.totalViewersCount' | translate: { '0': _totalCount } }}
   </span>
   <div class="kSearch" *ngIf="showUserFilter">

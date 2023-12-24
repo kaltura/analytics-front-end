@@ -12,6 +12,7 @@ export class UserEngagementFilterComponent extends FilterComponent {
   public _totalCount = 0;
 
   @Input() showUserFilter = true;
+  @Input() showTotalUsers = true;
 
   @Input() set totalCount(val) {
     if (val !== undefined) {
