@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { KalturaClient, KalturaReportInputFilter, KalturaReportInterval, KalturaReportType, KalturaUser, UserGetAction } from 'kaltura-ngx-client';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
@@ -57,6 +58,7 @@ export class UserViewComponent implements OnInit, OnDestroy {
 
   constructor(private _router: Router,
               private _route: ActivatedRoute,
+              private _location: Location,
               private _translate: TranslateService,
               private _kalturaClient: KalturaClient,
               private _errorsManager: ErrorsManagerService,
@@ -131,6 +133,7 @@ export class UserViewComponent implements OnInit, OnDestroy {
           const actions = {
             'close': () => {
               this._blockerMessage = null;
+              this._location.back(); // go back in case of invalid user, probably obfuscated user id
             },
             'retry': () => {
               this.loadUserDetails();
