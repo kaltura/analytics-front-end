@@ -47,6 +47,7 @@ export class EpMiniViewersComponent implements OnInit, OnDestroy {
 
   public _livePercent = 0;
   public _recordingPercent = 0;
+  public _liveAndRecordingPercent = 0;
 
   constructor(private _translate: TranslateService,
               private _reportService: ReportService,
@@ -100,8 +101,11 @@ export class EpMiniViewersComponent implements OnInit, OnDestroy {
 
   private _handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
-    this._livePercent = this._tabsData.length > 1 ? parseInt(this._tabsData[1].rawValue.toString()) / parseInt(this._tabsData[0].rawValue.toString()) * 100 : 0;
-    this._recordingPercent = this._tabsData.length > 2 ? parseInt(this._tabsData[2].rawValue.toString()) / parseInt(this._tabsData[0].rawValue.toString()) * 100 : 0;
+    const allViewers = this._tabsData.length > 2 ? Number(this._tabsData[1].rawValue) + Number(this._tabsData[2].rawValue) : this._tabsData.length > 1 ?Number(this._tabsData[1].rawValue) : 0;
+    const liveAndRecordingViewers = allViewers * 2 - Number(this._tabsData[0].rawValue);
+    this._livePercent = this._tabsData.length > 1 ? Number(this._tabsData[1].rawValue) / liveAndRecordingViewers * 100 : 0;
+    this._recordingPercent = this._tabsData.length > 2 ? Number(this._tabsData[2].rawValue) / liveAndRecordingViewers * 100 : 0;
+    this._liveAndRecordingPercent = allViewers > Number(this._tabsData[0].rawValue) ? (allViewers - Number(this._tabsData[0].rawValue)) / liveAndRecordingViewers * 100 : 0;
   }
 
   public exportUsers(): void {

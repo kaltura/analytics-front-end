@@ -542,7 +542,10 @@
       "highlights": {
         "viewers": "Unique viewers",
         "live": "Live",
+        "live_tt": "Live only",
         "recordings": "Recordings",
+        "recordings_tt": "Recordings only",
+        "both_tt": "Live and recording",
         "export": "Export list",
         "avgMinutes": "Avg. minutes viewed",
         "seeMore": "See more",

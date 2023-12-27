@@ -14,19 +14,22 @@
         </div>
 
         <span class="value">{{_tabsData[0]?.value}}</span>
-        <span class="label">{{_tabsData[1]?.title}}</span>
+
         <div class="kBulletContainer">
-          <div class="bulletBkg">
-            <div class="kBullet" [style.width]="_livePercent + '%'"></div>
-          </div>
+          <div class="kLive"></div>
           <span class="graphValue">{{_tabsData[1]?.value}}</span>
+          <span class="label">{{_tabsData[1]?.title}}</span>
         </div>
-        <span class="label">{{_tabsData[2]?.title}}</span>
         <div class="kBulletContainer">
-          <div class="bulletBkg">
-            <div class="kBullet"[style.width]="_recordingPercent + '%'"></div>
-          </div>
+          <div class="kRecordings"></div>
           <span class="graphValue">{{_tabsData[2]?.value}}</span>
+          <span class="label">{{_tabsData[2]?.title}}</span>
+        </div>
+
+        <div class="bulletBkg">
+          <div class="kBullet kLiveBkg" [style.width]="_livePercent + '%'" [kTooltip]="'app.entryEp.highlights.live_tt' | translate"></div>
+          <div class="kBullet kBothBkg" [style.width]="_liveAndRecordingPercent + '%'" [kTooltip]="'app.entryEp.highlights.both_tt' | translate"></div>
+          <div class="kBullet kRecordingsBkg" [style.width]="_recordingPercent + '%'" [kTooltip]="'app.entryEp.highlights.recordings_tt' | translate"></div>
         </div>
       </div>
 
