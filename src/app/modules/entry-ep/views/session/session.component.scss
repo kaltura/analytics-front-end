@@ -25,6 +25,9 @@
   .kChart {
     margin-bottom: 0px;
     height: 224px;
+    padding-top: 10px;
+    box-sizing: border-box;
+    background-color: $kGrayscale1;
     position: relative;
     .progressLine {
       position: absolute;
