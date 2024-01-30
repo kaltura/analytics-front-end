@@ -36,7 +36,7 @@
               </th>
               <th [ngStyle]="{'width': 'auto'}">
                 <div class="tableCell">
-                  <span>{{_tabsData[0].value}}</span>
+                  <span class="bulletValue">{{_tabsData[0].value}}</span>
                   <div class="bulletContainer">
                     <app-bullet [value]="100" [formatter]="null" [showValue]="false"></app-bullet>
                   </div>
@@ -54,7 +54,7 @@
                 <ng-container>
                   <div class="tableCell">
                     <i *ngIf="col === 'device'" class="kIcon" [ngClass]="data[col] | appDeviceIcon"></i>
-                    <span>{{data[col]}}</span>
+                    <span class="bulletValue">{{data[col]}}</span>
                     <div class="bulletContainer" *ngIf="col === 'unique_combined_live_viewers'">
                       <app-bullet [value]="data['live_viewer_distribution']" [formatter]="null" [showValue]="false"></app-bullet>
                     </div>

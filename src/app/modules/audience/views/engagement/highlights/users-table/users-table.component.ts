@@ -156,6 +156,9 @@ export class UsersTableComponent implements OnInit, OnDestroy {
   }
 
   public _drillDown(row: TableRow): void {
+    // following lines can be used if we want to detect obfuscated usernames on the client side
+    // const obfuscated = new RegExp('^[A-Z0-9]{32}$');
+    // if (row['name'] === 'Unknown' || obfuscated.test(row['name'])) {
     if (row['name'] === 'Unknown') {
       return; // ignore unknown user drill-down
     }

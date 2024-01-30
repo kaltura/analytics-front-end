@@ -235,7 +235,9 @@ body {
 .ngx-charts .grid-panel.odd {
   display: none;
 }
-
+.bulletValue {
+  min-width: 24px;
+}
 .kTrend {
   cursor: default;
 
