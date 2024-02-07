@@ -208,7 +208,7 @@ export class AppService implements OnDestroy {
       new KalturaRequestOptions({
         responseProfile: new KalturaDetachedResponseProfile({
           type: KalturaResponseProfileType.includeFields,
-          fields: 'roleIds'
+          fields: 'roleIds,email'
         })
       })
     );
@@ -276,7 +276,8 @@ export class AppService implements OnDestroy {
               analyticsConfig.kalturaServer.previewUIConfV7 = v7UIConf ? v7UIConf.id : null;
             }
           }
-        }
+        };
+        this._authService.email = userResponse?.result?.email || null;
         if (responses.hasErrors()) {
           const err = responses.getFirstError();
           if (err.code === "SERVICE_FORBIDDEN") {

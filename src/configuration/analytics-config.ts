@@ -36,7 +36,7 @@ export interface AnalyticsConfig {
     userReportsEndpoint?: {
       uri: string;
     }
-  },
+  };
   analyticsServer?: {
     uri?: string
   };

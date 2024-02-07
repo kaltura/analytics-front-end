@@ -28,6 +28,7 @@ export interface Confirmation {
 	rejectEvent?: EventEmitter<any>;
 	alignMessage?: 'left' | 'center' | 'byContent';
   acceptLabel?: string;
+  rejectLabel?: string;
 }
 
 export type OnShowConfirmationFn = (confirmation: Confirmation) => void;

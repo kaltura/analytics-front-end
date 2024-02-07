@@ -30,11 +30,19 @@ export class AuthService implements OnDestroy {
       return this._partnerCreatedAt;
     }
 
+    public set email(value: string) {
+      this._email = value;
+    }
+    public get email(): string {
+      return this._email;
+    }
+
     public isChildAccount = false;
 
     private _ks: string = null; // current ks
     private _parentKs = null;   // parent ks for multi account
     private _pid = null;        // current partner id
+    private _email = null;      // current partner email
     private _parentPid = null;  // parent partner id for multi account
     private _partnerCreatedAt = null;  // partner creation date
 
