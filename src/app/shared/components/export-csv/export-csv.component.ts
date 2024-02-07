@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
-import { AppAnalytics, BrowserService, ReportService } from 'shared/services';
+import { AppAnalytics, AuthService, BrowserService } from 'shared/services';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
-import { KalturaClient, KalturaEndUserReportInputFilter, KalturaObjectBaseFactory, KalturaPager, KalturaReportExportItem, KalturaReportExportParams, KalturaReportResponseOptions, ReportExportToCsvAction } from 'kaltura-ngx-client';
+import { KalturaClient, KalturaEndUserReportInputFilter, KalturaObjectBaseFactory, KalturaPager, KalturaReportExportItem, KalturaReportExportParams, KalturaReportResponseOptions, ReportExportToCsvAction} from 'kaltura-ngx-client';
 import { TreeNode } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
@@ -19,7 +19,7 @@ import { isEmptyObject } from "shared/utils/is-empty-object";
   selector: 'app-export-csv',
   templateUrl: './export-csv.component.html',
   styleUrls: ['./export-csv.component.scss'],
-  providers: [KalturaLogger.createLogger('ExportCSV'),]
+  providers: [KalturaLogger.createLogger('ExportCSV')]
 })
 export class ExportCsvComponent implements OnDestroy {
   @Input() name = 'default';
@@ -62,7 +62,7 @@ export class ExportCsvComponent implements OnDestroy {
   public _showComponent = false;
   public _exportingCsv = false;
 
-  constructor(private _reportService: ReportService,
+  constructor(private _authService: AuthService,
               private _translate: TranslateService,
               private _browserService: BrowserService,
               private _analytics: AppAnalytics,
@@ -119,7 +119,7 @@ export class ExportCsvComponent implements OnDestroy {
     if (analyticsConfig.predefinedFilter !== null && !isEmptyObject(analyticsConfig.predefinedFilter)) {
       Object.keys(analyticsConfig.predefinedFilter).forEach(key => {
         filter[key] = analyticsConfig.predefinedFilter[key]; // override filter value
-      })
+      });
     }
 
     return filter;
@@ -155,112 +155,125 @@ export class ExportCsvComponent implements OnDestroy {
   }
 
   public _export(selected = [], additionalFilters = null): void {
-    if (!this._selected.length && selected.length) { // allow external override of selection
-      this._selected = selected;
-    }
-    if (!this._selected.length) {
-      return;
-    }
-
-    const timeZoneOffset = DateFilterUtils.getTimeZoneOffset();
-    const reportsItemsGroup = this.name;
-    const reportItems = [];
-    let filter = this._getFilter();
-    if (additionalFilters) {
-      filter = Object.assign(filter, additionalFilters);
-    }
-    const responseOptions = new KalturaReportResponseOptions({
-      delimiter: analyticsConfig.valueSeparator,
-      skipEmptyDates: analyticsConfig.skipEmptyBuckets
-    });
-    const selection: ExportItem[] = this._selected
-      .filter(({ parent, data }) => !!parent && data.id !== 'groupNode')
-      .map(({ data }) => data);
-
-    const mapReportItem = (item, label = null) => {
-      const itemFilter = Object.assign(KalturaObjectBaseFactory.createObject(filter), filter);
-      if (item.startDate && item.endDate) {
-        itemFilter.fromDate = typeof item.startDate === 'function' ? item.startDate() : item.startDate;
-        itemFilter.toDate = typeof item.endDate === 'function' ? item.endDate() : item.endDate;
+    const doExport = () => {
+      if (!this._selected.length && selected.length) { // allow external override of selection
+        this._selected = selected;
       }
-      if (item.ownerId) {
-        itemFilter.ownerIdsIn = item.ownerId;
-        delete itemFilter.userIds;
+      if (!this._selected.length) {
+        return;
       }
-      item.sections.forEach(section => {
-        const reportItem = new KalturaReportExportItem({
-          reportTitle: label || item.label,
-          action: section,
-          reportType: item.reportType,
-          filter: itemFilter,
-          responseOptions,
-        });
 
-        if (item.order) {
-          reportItem.order = item.order;
-        }
-
-        if (item.objectIds) {
-          reportItem.objectIds = item.objectIds;
-        }
-
-        if (item.additionalFilters) {
-          Object.keys(item.additionalFilters).forEach(key => {
-            reportItem.filter[key] = item.additionalFilters[key];
-          });
-        }
-
-        reportItems.push(reportItem);
+      const timeZoneOffset = DateFilterUtils.getTimeZoneOffset();
+      const reportsItemsGroup = this.name;
+      const reportItems = [];
+      let filter = this._getFilter();
+      if (additionalFilters) {
+        filter = Object.assign(filter, additionalFilters);
+      }
+      const responseOptions = new KalturaReportResponseOptions({
+        delimiter: analyticsConfig.valueSeparator,
+        skipEmptyDates: analyticsConfig.skipEmptyBuckets
       });
+      const selection: ExportItem[] = this._selected
+        .filter(({ parent, data }) => !!parent && data.id !== 'groupNode')
+        .map(({ data }) => data);
+
+      const mapReportItem = (item, label = null) => {
+        const itemFilter = Object.assign(KalturaObjectBaseFactory.createObject(filter), filter);
+        if (item.startDate && item.endDate) {
+          itemFilter.fromDate = typeof item.startDate === 'function' ? item.startDate() : item.startDate;
+          itemFilter.toDate = typeof item.endDate === 'function' ? item.endDate() : item.endDate;
+        }
+        if (item.ownerId) {
+          itemFilter.ownerIdsIn = item.ownerId;
+          delete itemFilter.userIds;
+        }
+        item.sections.forEach(section => {
+          const reportItem = new KalturaReportExportItem({
+            reportTitle: label || item.label,
+            action: section,
+            reportType: item.reportType,
+            filter: itemFilter,
+            responseOptions,
+          });
+
+          if (item.order) {
+            reportItem.order = item.order;
+          }
+
+          if (item.objectIds) {
+            reportItem.objectIds = item.objectIds;
+          }
+
+          if (item.additionalFilters) {
+            Object.keys(item.additionalFilters).forEach(key => {
+              reportItem.filter[key] = item.additionalFilters[key];
+            });
+          }
+
+          reportItems.push(reportItem);
+        });
+      };
+
+      selection.forEach(item => {
+        if (Array.isArray(item.items)) {
+          item.items.forEach(i => mapReportItem(i, item.label));
+        } else {
+          mapReportItem(item);
+        }
+      });
+
+      let baseUrl = '';
+      try {
+        const origin = window.parent && window.parent.location && window.parent.location.origin ? window.parent.location.origin : window.location.origin;
+        const isKMC = window.parent && typeof window.parent['kmcng'] === 'object';
+        const exportRoute = analyticsConfig.kalturaServer.exportRoute ? analyticsConfig.kalturaServer.exportRoute : isKMC ? '/index.php/kmcng/analytics/export?id=' : '/userreports/downloadreport?report_id=';
+        baseUrl = encodeURIComponent(`${origin}${exportRoute}`);
+      } catch (e) {
+        this._logger.error('Error accessing parent window location', e);
+      }
+
+      const exportAction = new ReportExportToCsvAction({ params: new KalturaReportExportParams({ timeZoneOffset, reportsItemsGroup, reportItems, baseUrl }) });
+
+      this._analytics.trackClickEvent('Export');
+      this._exportingCsv = true;
+
+      this._kalturaClient.request(exportAction)
+        .pipe(
+          cancelOnDestroy(this),
+          finalize(() => {
+            this._exportingCsv = false;
+
+            if (this._popup) {
+              this._popup.close();
+            }
+          })
+        )
+        .subscribe(
+          () => {
+            // this._browserService.alert({
+            //   header: this._translate.instant('app.exportReports.exportReports'),
+            //   message: this._translate.instant('app.exportReports.successMessage'),
+            // });
+          },
+          () => {
+            this._browserService.alert({
+              header: this._translate.instant('app.exportReports.exportReports'),
+              message: this._translate.instant('app.exportReports.errorMessage'),
+            });
+          });
     };
 
-    selection.forEach(item => {
-      if (Array.isArray(item.items)) {
-        item.items.forEach(i => mapReportItem(i, item.label));
-      } else {
-        mapReportItem(item);
-      }
-    });
-
-    let baseUrl = '';
-    try {
-      const origin = window.parent && window.parent.location && window.parent.location.origin ? window.parent.location.origin : window.location.origin;
-      const isKMC = window.parent && typeof window.parent['kmcng'] === 'object';
-      const exportRoute = analyticsConfig.kalturaServer.exportRoute ? analyticsConfig.kalturaServer.exportRoute : isKMC ? '/index.php/kmcng/analytics/export?id=' : '/userreports/downloadreport?report_id=';
-      baseUrl = encodeURIComponent(`${origin}${exportRoute}`);
-    } catch (e) {
-      this._logger.error('Error accessing parent window location', e);
-    }
-
-    const exportAction = new ReportExportToCsvAction({ params: new KalturaReportExportParams({ timeZoneOffset, reportsItemsGroup, reportItems, baseUrl }) });
-
-    this._analytics.trackClickEvent('Export');
-    this._exportingCsv = true;
-
-    this._kalturaClient.request(exportAction)
-      .pipe(
-        cancelOnDestroy(this),
-        finalize(() => {
-          this._exportingCsv = false;
-
-          if (this._popup) {
-            this._popup.close();
-          }
-        })
-      )
-      .subscribe(
-        () => {
-          this._browserService.alert({
-            header: this._translate.instant('app.exportReports.exportReports'),
-            message: this._translate.instant('app.exportReports.successMessage'),
-          });
-        },
-        () => {
-          this._browserService.alert({
-            header: this._translate.instant('app.exportReports.exportReports'),
-            message: this._translate.instant('app.exportReports.errorMessage'),
-          });
-        });
+    this._browserService.confirm(
+      {
+        header: this._translate.instant('app.exportReports.title'),
+        message: this._authService.email ? this._translate.instant('app.exportReports.withEmail', {emailAddress: this._authService.email}) : this._translate.instant('app.exportReports.withoutEmail'),
+        acceptLabel: this._translate.instant('app.exportReports.approve'),
+        rejectLabel: this._translate.instant('app.common.cancel'),
+        accept: () => {
+          doExport();
+        }
+      });
   }
   public toggleDropdown() {
     if (this._popup) {

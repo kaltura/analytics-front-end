@@ -147,6 +147,10 @@
     },
     "exportReports": {
       "exportReports": "Export Reports",
+      "withEmail": "You are about to export and email the report to {{emailAddress}}. Please confirm by clicking the button below.",
+      "withoutEmail": "You are about to export and email the report to your email address. Please confirm by clicking the button below.",
+      "approve": "Export via email",
+      "title": "Export report to email",
       "download": "Download Report",
       "exportDate": "Exported {{exportDate}}",
       "reportReady": "Your <b>{{reportName}}</b> report is ready for download",
