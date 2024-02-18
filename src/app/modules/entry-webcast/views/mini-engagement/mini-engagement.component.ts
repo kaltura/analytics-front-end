@@ -181,6 +181,8 @@ export class WebcastMiniEngagementComponent extends WebcastBaseReportComponent i
       });
       this._usersCount = uniqueUsers.length;
       this._loadingCuepoints = false;
+    } else {
+      this._loadingCuepoints = false;
     }
   }
 
@@ -227,6 +229,8 @@ export class WebcastMiniEngagementComponent extends WebcastBaseReportComponent i
           } else {
             if (data.objects) {
               this._parseCuePointsResponse(data.objects);
+            } else {
+              this._loadingCuepoints = false;
             }
           }
         },
