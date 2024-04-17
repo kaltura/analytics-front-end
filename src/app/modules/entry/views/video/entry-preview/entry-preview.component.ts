@@ -253,7 +253,7 @@ export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
     if (reportConfig['objectIds__null']) {
       delete reportConfig['objectIds__null'];
     }
-    reportConfig.objectIds = this.entryId;
+
     sections = { ...sections }; // make local copy
 
     this._reportService.getReport(reportConfig, sections)
@@ -262,11 +262,13 @@ export class VideoEntryPreviewComponent extends EntryBase implements OnInit {
           return ObservableOf({ report, compare: null });
         }
 
+        if (this.entryId) {
+          this._compareFilter.entryIdIn = this.entryId;
+        }
         const compareReportConfig: ReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: null };
         if (compareReportConfig['objectIds__null']) {
           delete compareReportConfig['objectIds__null'];
         }
-        compareReportConfig.objectIds = this.entryId;
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
       }))

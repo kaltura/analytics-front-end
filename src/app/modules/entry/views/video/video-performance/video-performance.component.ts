@@ -159,11 +159,12 @@ export class VideoEntryPerformanceComponent extends EntryBase implements OnDestr
     this._isBusy = true;
     this._blockerMessage = null;
 
+    this._filter.entryIdIn = this.entryId;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order };
     if (reportConfig['objectIds__null']) {
       delete reportConfig['objectIds__null'];
     }
-    reportConfig.objectIds = this.entryId;
+
 
     sections = { ...sections }; // make local copy
 
@@ -179,11 +180,11 @@ export class VideoEntryPerformanceComponent extends EntryBase implements OnDestr
           return ObservableOf({ report, compare: null });
         }
 
+        this._compareFilter.entryIdIn = this.entryId;
         const compareReportConfig: ReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: this._order };
         if (compareReportConfig['objectIds__null']) {
           delete compareReportConfig['objectIds__null'];
         }
-        compareReportConfig.objectIds = this.entryId;
 
         if (this._tableMode === TableModes.users) {
           compareReportConfig.pager = this._pager;
