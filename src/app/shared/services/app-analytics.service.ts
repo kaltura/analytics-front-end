@@ -187,6 +187,12 @@ export class AppAnalytics {
           kalturaApplication: ApplicationType.Analytics,
           kalturaApplicationVer: analyticsConfig.appVersion
         });
+        if (analyticsConfig.hostAppName) {
+          payload['application'] = analyticsConfig.hostAppName;
+        }
+        if (analyticsConfig.hostAppVersion) {
+          payload['applicationVer'] = analyticsConfig.hostAppVersion;
+        }
         if (pid) {
           Object.assign(payload, { partnerId: pid });
         }

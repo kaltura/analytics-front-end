@@ -51,6 +51,8 @@ export interface AnalyticsConfig {
   dateFormat?: string;
   showNavBar?: boolean;
   isHosted?: boolean;
+  hostAppName?: string;
+  hostAppVersion?: string;
   contrastTheme?: boolean;
   menuConfig?: {
     showMenu: boolean;
@@ -142,6 +144,12 @@ export function setConfig(config: AnalyticsConfig, hosted = false): void {
   analyticsConfig.multiAccount = config.multiAccount || false;
   analyticsConfig.previewPlayer = config.previewPlayer || { loadJquery: true };
   analyticsConfig.loadThumbnailWithKs = config.loadThumbnailWithKs || false;
+  if (config.hostAppName) {
+    analyticsConfig.hostAppName = config.hostAppName;
+  }
+  if (config.hostAppVersion) {
+    analyticsConfig.hostAppVersion = config.hostAppVersion;
+  }
   setLiveEntryUsersReports(config.liveEntryUsersReports);
   if (config.customStyle) {
     setCustomStyle(config.customStyle);
