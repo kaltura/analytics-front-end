@@ -27,25 +27,25 @@ export class HeatMapStoreService {
       }
     }
   };
-  
+
   constructor(private _reportService: ReportService) {
-  
+
   }
-  
-  
+
+
   public clearCache(): void {
     this._cache = {};
   }
-  
+
   public getHeatMap(userId: string, entryId: string, filter: KalturaEndUserReportInputFilter): Observable<HeatMapPoints> {
     if (!this._cache[`${userId}_${entryId}`]) {
       const userFilter = Object.assign(KalturaObjectBaseFactory.createObject(filter), filter); // don't mess with original filter
       userFilter.userIds = userId;
+      userFilter.entryIdIn = entryId;
       const reportConfig: ReportConfig = {
         filter: userFilter,
         reportType: reportTypeMap(KalturaReportType.percentiles),
         pager: this._pager,
-        objectIds: entryId,
         order: null,
       };
       this._cache[`${userId}_${entryId}`] = this._reportService.getReport(reportConfig, this._localConfig, false)
@@ -54,7 +54,7 @@ export class HeatMapStoreService {
             if (!report.table || !report.table.data || !report.table.header) {
               return Array.from({ length: 101 }, () => 0);
             }
-  
+
             const { tableData } = this._reportService.parseTableData(report.table, this._localConfig.table);
 
             // if we get 101 data points, remove the first data point as it always contains 0
@@ -70,7 +70,7 @@ export class HeatMapStoreService {
           refCount()
         );
     }
-    
+
     return this._cache[`${userId}_${entryId}`];
   }
 }

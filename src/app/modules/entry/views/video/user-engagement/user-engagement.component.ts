@@ -95,11 +95,12 @@ export class VideoEntryUserEngagementComponent extends EntryBase {
     this._isBusy = true;
     this._blockerMessage = null;
 
+    if (this.entryId) {
+      this._filter.entryIdIn = this.entryId;
+    }
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
 
-    if (this.entryId) {
-      reportConfig.objectIds = this.entryId;
-    }
+
 
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
@@ -107,10 +108,11 @@ export class VideoEntryUserEngagementComponent extends EntryBase {
           return ObservableOf({ report, compare: null });
         }
 
-        const compareReportConfig: ReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
         if (this.entryId) {
-          compareReportConfig.objectIds = this.entryId;
+          this._compareFilter.entryIdIn = this.entryId;
         }
+        const compareReportConfig: ReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
+
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
       }))

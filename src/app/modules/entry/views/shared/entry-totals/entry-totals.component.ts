@@ -68,12 +68,11 @@ export class BaseEntryTotalsComponent extends EntryBase {
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
-
+    this._filter.entryIdIn = this.entryId;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
     if (reportConfig['objectIds__null']) {
       delete reportConfig['objectIds__null'];
     }
-    reportConfig.objectIds = this.entryId;
 
     this._reportService.getReport(reportConfig, sections)
       .pipe(
@@ -82,11 +81,11 @@ export class BaseEntryTotalsComponent extends EntryBase {
             return ObservableOf({ report, compare: null });
           }
 
+          this._compareFilter.entryIdIn = this.entryId;
           const compareReportConfig: ReportConfig = { reportType: this._reportType, filter: this._compareFilter, pager: this._pager, order: this._order };
           if (compareReportConfig['objectIds__null']) {
             delete compareReportConfig['objectIds__null'];
           }
-          compareReportConfig.objectIds = this.entryId;
           return this._reportService.getReport(compareReportConfig, sections)
             .pipe(map(compare => ({ report, compare })));
         }),
