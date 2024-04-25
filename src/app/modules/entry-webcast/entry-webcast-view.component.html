@@ -183,6 +183,10 @@
           </app-webcast-domains>
         </div>
 
+        <div class="disclaimers" *ngIf="_exporting">
+          <span>* {{'app.entry.viewers_tt' | translate}}</span>
+        </div>
+
         <div *ngIf="_exporting" class="footer">
           <i></i>
           <span>{{'app.engagement.footer' | translate}}</span>

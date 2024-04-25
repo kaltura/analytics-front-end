@@ -30,6 +30,7 @@ export class EpMiniViewersComponent implements OnInit, OnDestroy {
   protected _componentId = 'ep-mini-viewers';
 
   @Input() entryIdIn = '';
+  @Input() exporting = false;
   @Input() startDate: Date;
   @Input() endDate: Date;
 

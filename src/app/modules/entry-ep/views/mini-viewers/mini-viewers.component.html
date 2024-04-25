@@ -9,10 +9,10 @@
 
       <div class="dataContainer">
         <div class="header">
-          <span class="title">{{_tabsData[0]?.title}}</span>
+          <span class="title" [kTooltip]="'app.engagement.highlightsReport.unique_known_users_tt' | translate">{{_tabsData[0]?.title}}</span>
+          <span class="title" *ngIf="exporting">*</span>
           <a class="kLink" (click)="exportUsers()">{{'app.entryEp.highlights.export' | translate}}</a>
         </div>
-
         <span class="value">{{_tabsData[0]?.value}}</span>
 
         <div class="kBulletContainer">

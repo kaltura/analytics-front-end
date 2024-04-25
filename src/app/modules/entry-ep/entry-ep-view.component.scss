@@ -318,3 +318,13 @@
     margin-left: 4px;
   }
 }
+.disclaimers {
+  display: flex;
+  flex-direction: column;
+  span {
+    color: $kGrayscale3;
+    font-size: 16px;
+    padding-left: 24px;
+    margin-bottom: 8px;
+  }
+}

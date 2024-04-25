@@ -34,6 +34,7 @@ export class EpMiniEngagementComponent implements OnInit {
   protected _componentId = 'ep-mini-minutes-viewed';
 
   @Input() entryIdIn = '';
+  @Input() exporting = false;
   @Input() startDate: Date;
   @Input() endDate: Date;
 
@@ -41,7 +42,7 @@ export class EpMiniEngagementComponent implements OnInit {
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
   private _order = '-date_id';
-  private _reportType = KalturaReportType.epWebcastEngagement;
+  private _reportType = KalturaReportType.cncParticipation;
   public _reportInterval = KalturaReportInterval.days;
   public _pager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
   public _filter = new KalturaEndUserReportInputFilter({

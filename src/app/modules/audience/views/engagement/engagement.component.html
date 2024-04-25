@@ -110,7 +110,11 @@
       </div>
     </div>
 
-    <span *ngIf="_exporting" class="disclaimer">{{'app.ve.disclaimer' | translate}}</span>
+    <div class="disclaimers" *ngIf="_exporting">
+      <span>{{'app.ve.disclaimer' | translate}}</span>
+      <span>* {{'app.entry.viewers_tt' | translate}}</span>
+    </div>
+
     <div *ngIf="_exporting" class="footer">
       <i></i>
       <span>{{'app.engagement.footer' | translate}}</span>

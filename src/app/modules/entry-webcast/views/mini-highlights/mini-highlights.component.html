@@ -22,8 +22,9 @@
           <span class="value">{{_tabsData[1]?.value}}</span>
           <span class="title">{{_tabsData[1]?.title}}</span>
           <kInputHelper *ngIf="!exporting">
-            <span>{{_tabsData[1]?.tooltip}}</span>
+            <span>{{'app.engagement.highlightsReport.unique_known_users_tt' | translate}}</span>
           </kInputHelper>
+          <span *ngIf="exporting" class="astrix">*</span>
         </div>
       </div>
 

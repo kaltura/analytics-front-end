@@ -13,6 +13,7 @@
   &.exporting {
     padding-left: 20px !important;
     padding-right: 20px !important;
+    background-color: $appBkgColor;
   }
 }
 .kReportHeader {
@@ -107,11 +108,17 @@
     }
   }
 }
-.disclaimer{
-  color: $kGrayscale3;
-  font-size: 16px;
-  padding-left: 24px;
+.disclaimers {
+  display: flex;
+  flex-direction: column;
+  span {
+    color: $kGrayscale3;
+    font-size: 16px;
+    padding-left: 24px;
+    margin-bottom: 8px;
+  }
 }
+
 .footer {
   width: 1600px;
   height: 64px;

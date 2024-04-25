@@ -65,6 +65,10 @@
                            [trend]="_tabsData[2]?.trend"></app-trend-value>
         </span>
         <span class="title">{{_tabsData[2]?.title}}</span>
+        <kInputHelper *ngIf="!exporting && !_isBusy">
+          <span>{{'app.engagement.highlightsReport.unique_known_users_tt' | translate}}</span>
+        </kInputHelper>
+        <span class="astrix" *ngIf="exporting">*</span>
       </div>
 
       <div class="kVal">
