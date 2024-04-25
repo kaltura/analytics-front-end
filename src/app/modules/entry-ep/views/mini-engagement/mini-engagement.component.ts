@@ -42,7 +42,7 @@ export class EpMiniEngagementComponent implements OnInit {
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
   private _order = '-date_id';
-  private _reportType = KalturaReportType.cncParticipation;
+  private _reportType = KalturaReportType.epWebcastEngagement;
   public _reportInterval = KalturaReportInterval.days;
   public _pager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
   public _filter = new KalturaEndUserReportInputFilter({
