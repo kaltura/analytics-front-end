@@ -41,9 +41,6 @@
         <div class="dataContainer">
           <div class="kBulletContainer">
             <span class="label">{{'app.entryEp.highlights.reactions' | translate: {'0': _reactionsRate, '1': _reactionsCount} }}</span>
-            <kInputHelper *ngIf="_reactionsRate === 0 && !exporting">
-              <span>{{'app.entryEp.highlights.noReactions' | translate}}</span>
-            </kInputHelper>
           </div>
           <div class="kBulletContainer">
             <div class="bulletBkg">

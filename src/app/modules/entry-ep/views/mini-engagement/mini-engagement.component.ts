@@ -125,12 +125,15 @@ export class EpMiniEngagementComponent implements OnInit {
 
   private _handleCncTotals(totals: KalturaReportTotal): void {
     const tabsData = this._reportService.parseTotals(totals, this._cncDataConfig.totals);
+
+    /*
     if (tabsData[0].rawValue !== '') {
       this._reactionsRate = ReportHelper.precisionRound(tabsData[0].rawValue as number * 100, 2); // update reactions rate
     }
     if (tabsData[1].rawValue !== '') {
       this._reactionsCount = ReportHelper.numberOrZero(tabsData[1].rawValue as number); // update reactions count
-    }
+    }*/
+
     this._messagesRate = tabsData[2].rawValue !== '' ? ReportHelper.precisionRound(tabsData[2].rawValue as number * 100, 2) : 0;
     this._messagesCount = tabsData[3].rawValue !== '' ? ReportHelper.numberOrZero(tabsData[3].rawValue as number) : '0';
     this._questionsRate = tabsData[4].rawValue !== '' ? ReportHelper.precisionRound(tabsData[4].rawValue as number * 100, 2) : 0;
