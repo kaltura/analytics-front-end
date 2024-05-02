@@ -13,6 +13,7 @@
       <div class="kTableContainer">
         <app-user-engagement-filter [totalCount]="_totalCount"
                                     [dateFilter]="_dateFilter"
+                                    [showTotalUsers]="false"
                                     [showUserFilter]="_viewConfig.userFilter"
                                     [selectedFilters]="_selectedRefineFilters"
                                     (filterChange)="_onRefineFilterChange($event)"></app-user-engagement-filter>
