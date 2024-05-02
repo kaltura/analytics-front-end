@@ -6,7 +6,7 @@
 
       <span class="title">{{'app.entryEp.highlights.engagement' | translate}}</span>
 
-      <div class="metric">
+      <div class="metric" [kTooltip]="'app.entryEp.highlights.engagementRate_tt' | translate">
         <div class="icons">
           <div class="kMiniIcon green"><i class="icon-small-impressions"></i></div>
         </div>
@@ -14,13 +14,13 @@
           <span class="label">{{'app.entryEp.highlights.engagementRate' | translate: {'0': _engagementRate} }}</span>
           <div class="kBulletContainer">
             <div class="bulletBkg">
-              <div class="kBullet" [style.width]="_engagementRate + '%'"></div>
+              <div class="kBullet kGreen" [style.width]="_engagementRate + '%'"></div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="metric">
+      <div class="metric" [kTooltip]="'app.entryEp.highlights.reactions_tt' | translate">
         <div class="reaction">
           <svg width="30" height="32" viewBox="0 0 30 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M3.73151 26.2685C-1.24384 20.9783 -1.24384 9.0244 3.73151 3.73148C9.02171 -1.24386 20.9756 -1.24386 26.2685 3.73148C31.2438 9.02169 31.2438 20.9755 26.2685 26.2685C20.9756 31.2438 9.02171 31.2438 3.73151 26.2685Z" fill="#FFD62F"/>
@@ -40,10 +40,7 @@
         </div>
         <div class="dataContainer">
           <div class="kBulletContainer">
-            <span class="label">{{'app.entryEp.highlights.reactions' | translate: {'0': _reactionsRate} }}</span>
-            <kInputHelper *ngIf="_reactionsRate === 0 && !exporting">
-              <span>{{'app.entryEp.highlights.noReactions' | translate}}</span>
-            </kInputHelper>
+            <span class="label">{{'app.entryEp.highlights.reactions' | translate: {'0': _reactionsRate, '1': _reactionsCount} }}</span>
           </div>
           <div class="kBulletContainer">
             <div class="bulletBkg">
@@ -52,6 +49,63 @@
           </div>
         </div>
       </div>
+
+      <div class="metric" [kTooltip]="'app.entryEp.highlights.messages_tt' | translate">
+        <div class="icons">
+          <div class="kMiniIcon blue"><i class="icon-captions"></i></div>
+        </div>
+        <div class="dataContainer">
+          <span class="label">{{'app.entryEp.highlights.messagesRate' | translate: {'0': _messagesRate, '1': _messagesCount} }}</span>
+          <div class="kBulletContainer">
+            <div class="bulletBkg">
+              <div class="kBullet" [style.width]="_messagesRate + '%'"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="metric" [kTooltip]="'app.entryEp.highlights.polls_tt' | translate">
+        <div class="icons">
+          <div class="kMiniIcon blue"><i class="icon-ic_poll"></i></div>
+        </div>
+        <div class="dataContainer">
+          <span class="label">{{'app.entryEp.highlights.pollsRate' | translate: {'0': _pollsRate} }}</span>
+          <div class="kBulletContainer">
+            <div class="bulletBkg">
+              <div class="kBullet" [style.width]="_pollsRate + '%'"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="metric" [kTooltip]="'app.entryEp.highlights.questions_tt' | translate">
+        <div class="icons">
+          <div class="kMiniIcon blue"><i class="icon-ic_questions"></i></div>
+        </div>
+        <div class="dataContainer">
+          <span class="label">{{'app.entryEp.highlights.questionsRate' | translate: {'0': _questionsRate, '1': _questionsCount} }}</span>
+          <div class="kBulletContainer">
+            <div class="bulletBkg">
+              <div class="kBullet" [style.width]="_questionsRate + '%'"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="metric" [kTooltip]="'app.entryEp.highlights.download_tt' | translate">
+        <div class="icons">
+          <div class="kMiniIcon blue"><i class="icon-download"></i></div>
+        </div>
+        <div class="dataContainer">
+          <span class="label">{{'app.entryEp.highlights.downloadsRate' | translate: {'0': _downloadRate, '1': _downloadCount} }}</span>
+          <div class="kBulletContainer">
+            <div class="bulletBkg">
+              <div class="kBullet" [style.width]="_downloadRate + '%'"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
   </k-area-blocker>

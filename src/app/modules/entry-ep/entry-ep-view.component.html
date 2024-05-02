@@ -14,19 +14,19 @@
         </div>
 
         <div class="kReportContainer" *ngIf="!_loadingEntry">
-          <div [class.kHidden]="!_viewConfig.miniViewers" class="kMiniReportContainer kSocialHighlights">
+          <div [class.kHidden]="!_viewConfig.miniViewers" class="kMiniReportContainer">
             <app-ep-mini-viewers [exporting]="_exporting" [entryIdIn]="_allEntryIds" [startDate]="_eventStartDate" [endDate]="_now"></app-ep-mini-viewers>
           </div>
-          <div [class.kHidden]="!_viewConfig.miniMinutesViewed" class="kMiniReportContainer kSocialHighlights">
+          <div [class.kHidden]="!_viewConfig.miniMinutesViewed" class="kMiniReportContainer">
             <app-ep-mini-minutes-viewed [entryIdIn]="_allEntryIds" [startDate]="_eventStartDate" [endDate]="_now"></app-ep-mini-minutes-viewed>
           </div>
         </div>
 
         <div class="kReportContainer" *ngIf="!_loadingEntry">
-          <div [class.kHidden]="!_viewConfig.miniEngagement" class="kMiniReportContainer kSocialHighlights">
+          <div [class.kHidden]="!_viewConfig.miniEngagement" class="kMiniReportContainer kHigh">
             <app-ep-mini-engagement [exporting]="_exporting"  [entryIdIn]="_liveEntryIds" [startDate]="_eventStartDate" [endDate]="_eventEndDate"></app-ep-mini-engagement>
           </div>
-          <div [class.kHidden]="!_viewConfig.miniPlays" class="kMiniReportContainer kSocialHighlights">
+          <div [class.kHidden]="!_viewConfig.miniPlays" class="kMiniReportContainer kHigh">
             <app-ep-mini-plays [entryIdIn]="_vodEntryIds" [startDate]="_eventStartDate" [endDate]="_now"></app-ep-mini-plays>
           </div>
         </div>
