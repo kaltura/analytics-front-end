@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportGraph, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, BrowserService, ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
+import {AppAnalytics, AuthService, BrowserService, ButtonType, ErrorsManagerService, ReportConfig, ReportService} from 'shared/services';
 import { switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
@@ -46,11 +46,9 @@ export class EpMiniPlaysComponent implements OnInit {
   });
   public _lineChartData: any = {};
 
-  constructor(private _translate: TranslateService,
-              private _reportService: ReportService,
-              private _browserService: BrowserService,
+  constructor(private _reportService: ReportService,
               private _errorsManager: ErrorsManagerService,
-              private _authService: AuthService,
+              private _analytics: AppAnalytics,
               private _frameEventManager: FrameEventManagerService,
               private pageScrollService: PageScrollService,
               private _dataConfigService: MiniPlaysConfig,
@@ -126,6 +124,7 @@ export class EpMiniPlaysComponent implements OnInit {
   }
 
   public scrollTo(target: string): void {
+    this._analytics.trackButtonClickEvent(ButtonType.Navigate, 'Events_session_recordings_see_more');
     this._logger.trace('Handle scroll to details report action by user', { target });
     if (analyticsConfig.isHosted) {
       const targetEl = document.getElementById(target.substr(1)) as HTMLElement;

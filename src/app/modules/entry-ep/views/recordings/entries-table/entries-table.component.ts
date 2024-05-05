@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import {
+  AppAnalytics,
   AuthService,
-  BrowserService,
+  BrowserService, ButtonType,
   ErrorsManagerService,
   NavigationDrillDownService,
   Report,
@@ -64,14 +65,10 @@ export class EntriesTableComponent implements OnInit {
   public _blockerMessage: AreaBlockerMessage = null;
 
   constructor(private _reportService: ReportService,
-              private _browserService: BrowserService,
-              private _frameEventManager: FrameEventManagerService,
-              private _activatedRoute: ActivatedRoute,
+              private _analytics: AppAnalytics,
               private _authService: AuthService,
-              private _router: Router,
-              private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
-              private _dataConfigService: EntriesTableConfig,
+              _dataConfigService: EntriesTableConfig,
               private _navigationDrillDownService: NavigationDrillDownService) {
     this._dataConfig = _dataConfigService.getConfig();
   }
@@ -155,6 +152,15 @@ export class EntriesTableComponent implements OnInit {
       const order = event.order === 1 ? '+' + event.field : '-' + event.field;
       if (order !== this._order) {
         this._order = order;
+        const trackEventValues = {
+          'entry_name': 'name',
+          'count_loads': 'impressions',
+          'count_plays': 'plays',
+          'unique_viewers': 'viewers',
+          'avg_completion_rate': 'completion'
+
+        };
+        this._analytics.trackButtonClickEvent(ButtonType.Filter, 'Events_session_recordings_associated_sort', trackEventValues[event.field]);
         this._loadReport();
       }
     }

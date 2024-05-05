@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { AuthService, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
+import {AppAnalytics, AuthService, ButtonType, ErrorsManagerService, ReportConfig, ReportHelper, ReportService} from 'shared/services';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
@@ -46,8 +46,8 @@ export class EpDevicesComponent implements OnInit, OnDestroy {
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
               private _reportService: ReportService,
-              private _authService: AuthService,
-              private _dataConfigService: DevicesDataConfig,
+              private _analytics: AppAnalytics,
+              _dataConfigService: DevicesDataConfig,
               private _logger: KalturaLogger) {
 
     this._dataConfig = _dataConfigService.getConfig();
@@ -77,6 +77,12 @@ export class EpDevicesComponent implements OnInit, OnDestroy {
         this._logger.trace('Handle sort changed action by user, reset page index to 1', { order });
         this.order = order;
         this._pager.pageIndex = 1;
+        const trackEventValues = {
+          'unique_combined_live_viewers': 'live',
+          'unique_vod_viewers': 'recording'
+
+        };
+        this._analytics.trackButtonClickEvent(ButtonType.Filter, 'Events_session_devices_sort', trackEventValues[event.field]);
         this._loadReport({ table: this._dataConfig.table });
       }
     }

@@ -97,40 +97,43 @@ export class AppAnalytics {
                 const route = (event as NavigationEnd).urlAfterRedirects;
                 switch (true) {
                     case route.startsWith('/audience/engagement'):
-                        this.trackEvent(EventType.PageLoad, PageType.Login, 'Analytics_engagement');
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_engagement');
                         break;
                     case route.startsWith('/entry/'):
-                        this.trackEvent(EventType.PageLoad, PageType.List, 'Analytics_entry');
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_entry');
                         break;
                     case route.startsWith('/audience/content-interactions'):
-                        this.trackEvent(EventType.PageLoad, PageType.List, 'Analytics_content_interactions');
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_content_interactions');
                         break;
                     case route.startsWith('/audience/technology'):
-                        this.trackEvent(EventType.PageLoad, PageType.List, 'Analytics_technology');
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_technology');
                         break;
                     case route.startsWith('/audience/geo-location'):
-                        this.trackEvent(EventType.PageLoad, PageType.List, 'Analytics_geo_location');
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_geo_location');
                         break;
                     case route.startsWith('/contributors/top-contributors'):
-                        this.trackEvent(EventType.PageLoad, PageType.List, 'Analytics_contributors');
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_contributors');
                         break;
                     case route.startsWith('/bandwidth/overview'):
-                        this.trackEvent(EventType.PageLoad, PageType.Admin, 'Analytics_usage_overview');
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_usage_overview');
                         break;
                     case route.startsWith('/bandwidth/publisher'):
-                        this.trackEvent(EventType.PageLoad, PageType.Admin, 'Analytics_publishers_bandwidth_storage');
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_publishers_bandwidth_storage');
                         break;
                     case route.startsWith('/bandwidth/end-user'):
-                        this.trackEvent(EventType.PageLoad, PageType.Admin, 'Analytics_end_user_storage');
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_end_user_storage');
                         break;
                     case route.startsWith('/live'):
-                        this.trackEvent(EventType.PageLoad, PageType.Admin, 'Analytics_live');
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_live');
                         break;
                     case route.startsWith('/entry-live/'):
-                        this.trackEvent(EventType.PageLoad, PageType.Admin, 'Analytics_entry_live');
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_entry_live');
                         break;
                     case route.startsWith('/entry-webcast/'):
-                        this.trackEvent(EventType.PageLoad, PageType.Admin, 'Analytics_entry_webcast');
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_entry_webcast');
+                        break;
+                    case route.startsWith('/entry-ep/'):
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_events_session');
                         break;
                 }
             });
@@ -153,7 +156,11 @@ export class AppAnalytics {
         }
     }
 
-    private trackEvent(eventType: EventType, eventVar1: ButtonType | PageType, eventVar2: string): void {
+  public trackButtonClickEvent(type: ButtonType, name: string, value: string = null): void {
+    this.trackEvent(EventType.ButtonClicked, type, name, value);
+  }
+
+    private trackEvent(eventType: EventType, eventVar1: ButtonType | PageType, eventVar2: string, eventVar3: string = null): void {
         if (!this._enabled || eventVar2 === this._lastTrackedEventName) {
             return;
         }
@@ -165,7 +172,16 @@ export class AppAnalytics {
         const pid = this._appAuthentication.pid ? this._appAuthentication.pid :  null;
         // check for entry ID in URL
         const urlParts = this.router.url.split('/');
-        const entryIndex = urlParts.indexOf('entry') + 1;
+        let entryIndex = urlParts.indexOf('entry') + 1; // for entry Analytics
+        if (entryIndex === 0) {
+          entryIndex = urlParts.indexOf('entry-ep') + 1; // for EP session Analytics
+        }
+        if (entryIndex === 0) {
+          entryIndex = urlParts.indexOf('entry-webcast') + 1; // for webcast Analytics
+        }
+        if (entryIndex === 0) {
+          entryIndex = urlParts.indexOf('entry-live') + 1; // for live Analytics
+        }
         const entryId =  entryIndex > 0 && urlParts.length >= entryIndex ? urlParts[entryIndex].split('?')[0] : null;
         // build track event url and payload
         let url = `${this._analyticsBaseUrl}/api_v3/index.php?service=analytics&action=trackEvent`;
@@ -182,6 +198,9 @@ export class AppAnalytics {
             buttonType: eventVar1,
             buttonName: eventVar2
           };
+          if (eventVar3) {
+            payload['buttonValue'] = eventVar3;
+          }
         }
         Object.assign(payload, {
           kalturaApplication: ApplicationType.Analytics,

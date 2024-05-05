@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { BaseEntryGetAction, KalturaClient, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaMediaEntry, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
+import {AppAnalytics, AuthService, ButtonType, ErrorsManagerService, ReportConfig, ReportHelper, ReportService} from 'shared/services';
 import { forkJoin, Observable } from 'rxjs';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
 import { TranslateService } from '@ngx-translate/core';
@@ -78,6 +78,7 @@ export class EpSessionComponent implements OnInit, OnDestroy {
               private _reportService: ReportService,
               private _errorsManager: ErrorsManagerService,
               private _dataConfigService: SessionConfig,
+              private _analytics: AppAnalytics,
               private _kalturaClient: KalturaClient,
               private _authService: AuthService,
               private _logger: KalturaLogger) {
@@ -343,6 +344,7 @@ export class EpSessionComponent implements OnInit, OnDestroy {
   }
 
   public togglePlay(): void {
+    this._analytics.trackButtonClickEvent(ButtonType.Browse, 'Events_session_play_toggle');
     this._playing = !this._playing;
     if (this._playing && this._timerIntervalId === null && this._currentPositionPercent < 100) {
       this._timerIntervalId = setInterval(this.tick.bind(this) , 1000);
@@ -372,6 +374,7 @@ export class EpSessionComponent implements OnInit, OnDestroy {
   }
 
   private _seekTo(percent: number): void {
+    this._analytics.trackButtonClickEvent(ButtonType.Browse, 'Events_session_scrub');
     this._playerInstance.currentTime = this._recordingDuration * percent / 100;
   }
 

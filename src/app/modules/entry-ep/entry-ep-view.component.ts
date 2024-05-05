@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
 import {
   BaseEntryGetAction,
   KalturaAPIException,
@@ -12,26 +12,26 @@ import {
   KalturaMultiResponse,
   KalturaReportInterval,
   KalturaScheduleEventListResponse,
-  ScheduleEventListAction } from 'kaltura-ngx-client';
-import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
-import { analyticsConfig } from 'configuration/analytics-config';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { ErrorsManagerService, NavigationDrillDownService } from 'shared/services';
-import { EntryEPExportConfig } from "./entry-ep-export.config";
-import { ExportItem } from "shared/components/export-csv/export-config-base.service";
-import { DateChangeEvent } from "shared/components/date-filter/date-filter.service";
-import { DateFilterUtils, DateRanges } from "shared/components/date-filter/date-filter-utils";
-import { PageScrollConfig, PageScrollInstance, PageScrollService } from "ngx-page-scroll";
-import { KalturaLogger } from "@kaltura-ng/kaltura-logger";
-import { map } from 'rxjs/operators';
-import * as moment from "moment";
+  ScheduleEventListAction
+} from 'kaltura-ngx-client';
+import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
+import {FrameEventManagerService, FrameEvents} from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import {analyticsConfig} from 'configuration/analytics-config';
+import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import {AppAnalytics, ButtonType, ErrorsManagerService, NavigationDrillDownService} from 'shared/services';
+import {ExportItem} from "shared/components/export-csv/export-config-base.service";
+import {DateChangeEvent} from "shared/components/date-filter/date-filter.service";
+import {DateFilterUtils, DateRanges} from "shared/components/date-filter/date-filter-utils";
+import {PageScrollConfig, PageScrollInstance, PageScrollService} from "ngx-page-scroll";
+import {KalturaLogger} from "@kaltura-ng/kaltura-logger";
+import {map} from 'rxjs/operators';
+import {ExportConfig} from "./export.config";
 
 @Component({
   selector: 'app-ep-webcast',
   templateUrl: './entry-ep-view.component.html',
   styleUrls: ['./entry-ep-view.component.scss'],
-  providers: [EntryEPExportConfig]
+  providers: [ExportConfig]
 })
 export class EntryEpViewComponent implements OnInit, OnDestroy {
 
@@ -42,6 +42,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
   public _entryId = '';
   public _exportConfig: ExportItem[] = [];
   public _exporting = false;
+  public _exportDateFilter: DateChangeEvent = null;
 
   public _dateFilter: DateChangeEvent = null;
   public _dateRange = DateRanges.Last30D;
@@ -61,8 +62,9 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
   private _saveTitleConfig = this._viewConfig.title;
 
   constructor(private _router: Router,
+              private _analytics: AppAnalytics,
               private _route: ActivatedRoute,
-              private _exportConfigService: EntryEPExportConfig,
+              private _exportConfigService: ExportConfig,
               private _kalturaClient: KalturaClient,
               protected _logger: KalturaLogger,
               private _errorsManager: ErrorsManagerService,
@@ -73,7 +75,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._exportConfig = this._exportConfigService.getConfig(this._viewConfig);
+    this._exportConfig = this._exportConfigService.getConfig();
     this._route.params
       .pipe(cancelOnDestroy(this))
       .subscribe(params => {
@@ -181,6 +183,15 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
           }
           // we will use the webcast recording if available for the recording preview. If not available - use the room recording instead;
           this._recordingEntryId = this._vodEntryIds.split(analyticsConfig.valueSeparator)[0];
+          this._exportDateFilter = {
+            startDate: Math.floor(this._eventStartDate.getTime() / 1000),
+            endDate: Math.floor(this._eventEndDate.getTime() / 1000),
+            timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
+            timeUnits: KalturaReportInterval.days,
+            endDay: null,
+            startDay: null,
+            compare: null
+          };
         },
         error => {
           this._loadingEntry = false;
@@ -212,6 +223,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
   public preExportHandler(): void {
     this._viewConfig.devices = null;
     this._viewConfig.title = {}; // force show title for export
+    this._analytics.trackButtonClickEvent(ButtonType.Export, 'Events_session_PDF');
   }
 
   public postExportHandler(): void {
@@ -226,6 +238,10 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
 
   public onExporting(exporting: boolean): void {
     this._exporting = exporting;
+  }
+
+  public onExport(): void {
+    this._analytics.trackButtonClickEvent(ButtonType.Export, 'Events_session_export_report');
   }
 
   public _back(): void {

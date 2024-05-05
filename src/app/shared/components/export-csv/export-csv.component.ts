@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, Output, ViewChild} from '@angular/core';
 import { AppAnalytics, AuthService, BrowserService } from 'shared/services';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { KalturaClient, KalturaEndUserReportInputFilter, KalturaObjectBaseFactory, KalturaPager, KalturaReportExportItem, KalturaReportExportParams, KalturaReportResponseOptions, ReportExportToCsvAction} from 'kaltura-ngx-client';
@@ -22,6 +22,7 @@ import { isEmptyObject } from "shared/utils/is-empty-object";
   providers: [KalturaLogger.createLogger('ExportCSV')]
 })
 export class ExportCsvComponent implements OnDestroy {
+  @Output() onExport = new EventEmitter();
   @Input() name = 'default';
   @Input() dateFilter: DateChangeEvent = null;
   @Input() refineFilter: RefineFilter = [];
@@ -236,6 +237,7 @@ export class ExportCsvComponent implements OnDestroy {
       const exportAction = new ReportExportToCsvAction({ params: new KalturaReportExportParams({ timeZoneOffset, reportsItemsGroup, reportItems, baseUrl }) });
 
       this._analytics.trackClickEvent('Export');
+      this.onExport.emit();
       this._exportingCsv = true;
 
       this._kalturaClient.request(exportAction)

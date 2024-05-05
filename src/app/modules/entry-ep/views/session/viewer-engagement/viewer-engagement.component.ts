@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorsManagerService, NavigationDrillDownService, ReportConfig, ReportService } from 'shared/services';
+import {AppAnalytics, AuthService, ButtonType, ErrorsManagerService, NavigationDrillDownService, ReportConfig, ReportService} from 'shared/services';
 import { switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
@@ -61,14 +61,12 @@ export class EpViewerEngagementComponent implements OnInit {
   });
 
   constructor(private _frameEventManager: FrameEventManagerService,
-              private _heatMapStore: HeatMapStoreService,
-              private _translate: TranslateService,
               private _reportService: ReportService,
-              private _compareService: CompareService,
+              private _analytics: AppAnalytics,
               private _errorsManager: ErrorsManagerService,
-              private _dataConfigService: ViewerEngagementConfig,
+              _dataConfigService: ViewerEngagementConfig,
               private _authService: AuthService,
-              private _exportConfigService: ExportConfig,
+              _exportConfigService: ExportConfig,
               private _navigationDrillDownService: NavigationDrillDownService) {
 
     this._dataConfig = _dataConfigService.getConfig();
@@ -146,6 +144,7 @@ export class EpViewerEngagementComponent implements OnInit {
   public _onPaginationChanged(event: any): void {
     if (event.page !== (this._pager.pageIndex - 1)) {
       this._pager.pageIndex = event.page + 1;
+      this._analytics.trackButtonClickEvent(ButtonType.Navigate, 'Events_session_paginate_users');
       this._loadReport({ table: this._dataConfig[ReportDataSection.table] });
     }
   }
@@ -157,6 +156,14 @@ export class EpViewerEngagementComponent implements OnInit {
         this._order = order;
         this._sortField = event.field;
         this._pager.pageIndex = 1;
+        const trackEventValues = {
+          'live_view_time': 'minutes',
+          'count_reaction_clicked': 'reactions',
+          'count_raise_hand_clicked': 'raised',
+          'combined_live_engaged_users_play_time_ratio': 'engagement'
+
+        };
+        this._analytics.trackButtonClickEvent(ButtonType.Filter, 'Events_session_users_sort', trackEventValues[event.field]);
         this._loadReport({ table: this._dataConfig[ReportDataSection.table] });
       }
     }
@@ -177,5 +184,9 @@ export class EpViewerEngagementComponent implements OnInit {
         this._frameEventManager.publish(FrameEvents.UpdateLayout, { height });
       }, 0);
     }
+  }
+
+  public onRowExpanded(): void {
+    this._analytics.trackButtonClickEvent(ButtonType.Expand, 'Events_session_expand_user');
   }
 }

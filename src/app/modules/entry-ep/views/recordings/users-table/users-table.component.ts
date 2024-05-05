@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
-import { BrowserService, ErrorsManagerService, NavigationDrillDownService, Report, ReportConfig, ReportService } from 'shared/services';
+import {AppAnalytics, BrowserService, ButtonType, ErrorsManagerService, NavigationDrillDownService, Report, ReportConfig, ReportService} from 'shared/services';
 import { switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
 import {
@@ -52,13 +52,9 @@ export class UsersTableComponent implements OnInit {
   public _blockerMessage: AreaBlockerMessage = null;
 
   constructor(private _reportService: ReportService,
-              private _browserService: BrowserService,
-              private _frameEventManager: FrameEventManagerService,
-              private _activatedRoute: ActivatedRoute,
-              private _router: Router,
-              private _compareService: CompareService,
+              private _analytics: AppAnalytics,
               private _errorsManager: ErrorsManagerService,
-              private _dataConfigService: UsersTableConfig,
+              _dataConfigService: UsersTableConfig,
               private _navigationDrillDownService: NavigationDrillDownService) {
     this._dataConfig = _dataConfigService.getConfig();
   }
@@ -137,6 +133,14 @@ export class UsersTableComponent implements OnInit {
       const order = event.order === 1 ? '+' + event.field : '-' + event.field;
       if (order !== this._order) {
         this._order = order;
+        const trackEventValues = {
+          'name': 'name',
+          'count_loads': 'impressions',
+          'sum_vod_view_period': 'minutes',
+          'avg_completion_rate': 'completion'
+
+        };
+        this._analytics.trackButtonClickEvent(ButtonType.Filter, 'Events_session_recordings_viewers_sort', trackEventValues[event.field]);
         this._loadReport();
       }
     }

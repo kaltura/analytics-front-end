@@ -1,4 +1,5 @@
 import {Component, Input} from '@angular/core';
+import {AppAnalytics, ButtonType} from "shared/services";
 
 @Component({
   selector: 'app-ep-reaction-icon',
@@ -11,8 +12,11 @@ export class ReactionIconComponent {
 
   public isHover = false;
 
+  constructor(private _analytics: AppAnalytics) {
+  }
   public onMouseEnter(): void {
     this.isHover = true;
+    this._analytics.trackButtonClickEvent(ButtonType.Browse, 'Events_session_hover_reactions');
   }
   public onMouseLeave(): void {
     this.isHover = false;

@@ -1,19 +1,18 @@
 import {Component, Input, OnInit} from '@angular/core';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportGraph, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
-import { switchMap } from 'rxjs/operators';
-import { of as ObservableOf, Subject } from 'rxjs';
-import { CompareService } from 'shared/services/compare.service';
-import { ReportDataConfig } from 'shared/services/storage-data-base.config';
-import { TranslateService } from '@ngx-translate/core';
-import { RecordingsConfig } from './recordings.config';
-import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
-import { isEmptyObject } from 'shared/utils/is-empty-object';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { analyticsConfig } from 'configuration/analytics-config';
-import { TableRow } from 'shared/utils/table-local-sort-handler';
-import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
+import {KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportGraph, KalturaReportInterval, KalturaReportType} from 'kaltura-ngx-client';
+import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
+import {AppAnalytics, ButtonType, ErrorsManagerService, ReportConfig, ReportService} from 'shared/services';
+import {switchMap} from 'rxjs/operators';
+import {of as ObservableOf} from 'rxjs';
+import {ReportDataConfig} from 'shared/services/storage-data-base.config';
+import {TranslateService} from '@ngx-translate/core';
+import {RecordingsConfig} from './recordings.config';
+import {FrameEventManagerService, FrameEvents} from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import {isEmptyObject} from 'shared/utils/is-empty-object';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import {analyticsConfig} from 'configuration/analytics-config';
+import {TableRow} from 'shared/utils/table-local-sort-handler';
+import {TableModes} from 'shared/pipes/table-mode-icon.pipe';
 import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
 import {SelectItem} from "primeng/api";
 
@@ -68,10 +67,9 @@ export class EpRecordingsComponent implements OnInit {
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _reportService: ReportService,
-              private _compareService: CompareService,
+              private _analytics: AppAnalytics,
               private _errorsManager: ErrorsManagerService,
-              private _authService: AuthService,
-              private _dataConfigService: RecordingsConfig,
+              _dataConfigService: RecordingsConfig,
               private _logger: KalturaLogger) {
 
     this._dataConfig = _dataConfigService.getConfig();
@@ -130,7 +128,11 @@ export class EpRecordingsComponent implements OnInit {
   public _toggleTable(): void {
     this._logger.trace('Handle toggle table visibility action by user', { tableVisible: !this._showTable });
     this._showTable = !this._showTable;
-
+    if (this._showTable) {
+      this._analytics.trackButtonClickEvent(ButtonType.Expand, 'Events_session_recordings_view_details');
+    } else {
+      this._analytics.trackButtonClickEvent(ButtonType.Collapse, 'Events_session_recordings_hide_details');
+    }
     if (analyticsConfig.isHosted) {
       setTimeout(() => {
         const height = document.getElementById('analyticsApp').getBoundingClientRect().height;
@@ -149,6 +151,11 @@ export class EpRecordingsComponent implements OnInit {
   }
 
   public onTimeUnitsChange(): void {
+    this._analytics.trackButtonClickEvent(ButtonType.Filter, 'Events_session_recordings_timeframe', this._reportInterval === KalturaReportInterval.days ? 'daily' : 'monthly');
     this._loadReport();
+  }
+
+  public onTableModeChange(): void {
+    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'Events_session_recordings_dropdown', this._tableMode === TableModes.users ? 'unique_users' : 'unique_recordings');
   }
 }

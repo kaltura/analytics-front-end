@@ -37,6 +37,7 @@
           <div class="kTableModeSelector" [class.kHidden]="exporting">
             <p-dropdown [style]="{'width': '200px'}"
                         [options]="_tableModesOptions"
+                        (onChange)="onTableModeChange()"
                         [(ngModel)]="_tableMode">
             </p-dropdown>
             <span *ngIf="_tableMode === _tableModes.users" class="label">{{'app.entryEp.recordings.numViewers' | translate: { '0': _totalViewers} }}</span>

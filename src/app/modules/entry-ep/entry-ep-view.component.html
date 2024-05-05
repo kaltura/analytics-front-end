@@ -7,6 +7,11 @@
                   [kTooltip]="'app.entry.back' | translate" [placement]="'bottom'"></button>
           <h1 *ngIf="_viewConfig.title" class="kTitle kTruncateTitle" [kTooltip]="_entry?.name" [showOnEllipsis]="true" [placement]="'bottom'">{{_exporting ? ('app.entryEp.exportTitle' | translate: {'0': _entry?.name}) : _entry?.name}}</h1>
           <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title">
+            <app-export-csv name="Viewers Engagement"
+                            [entryId]="_liveEntryIds"
+                            [reports]="_exportConfig"
+                            (onExport)="onExport()"
+                            [dateFilter]="_exportDateFilter"></app-export-csv>
             <app-pdf-export *ngIf="_viewConfig.download" [elementToExport]="reportToExport"
                             [filename]="_entry.name + '_summary_report.pdf'" (preExport)="preExportHandler()"
                             (postExport)="postExportHandler()" (exporting)="onExporting($event)"></app-pdf-export>
