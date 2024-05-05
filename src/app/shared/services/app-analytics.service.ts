@@ -102,6 +102,9 @@ export class AppAnalytics {
                     case route.startsWith('/entry/'):
                         this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_entry');
                         break;
+                    case route.startsWith('/user/'):
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_user');
+                        break;
                     case route.startsWith('/audience/content-interactions'):
                         this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_content_interactions');
                         break;
