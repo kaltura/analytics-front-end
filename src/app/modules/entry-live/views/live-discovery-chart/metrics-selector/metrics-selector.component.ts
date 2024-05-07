@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core
 import { SelectItem, SelectItemGroup } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { ReportDataFields } from 'shared/services/storage-data-base.config';
+import {AppAnalytics, ButtonType} from "shared/services";
 
 export interface MetricsSelectorChangeEvent {
   selected: string[];
@@ -26,7 +27,8 @@ export class MetricsSelectorComponent implements OnChanges {
   public _selectedMain: string;
   public _selectedSecondary: string;
 
-  constructor(private _translate: TranslateService) {
+  constructor(private _translate: TranslateService,
+              private _analytics: AppAnalytics) {
   }
 
   ngOnChanges() {
@@ -63,9 +65,15 @@ export class MetricsSelectorComponent implements OnChanges {
     }));
   }
 
-  public _onChange(initial = false): void {
+  public _onChange(initial = false, component: string = ''): void {
     this._updateOptions(initial);
 
+    if (component === 'RT_line_graph_dropdown1') {
+      this._analytics.trackButtonClickEvent(ButtonType.Choose, 'RT_line_graph_dropdown1', this._selectedMain);
+    }
+    if (component === 'RT_line_graph_dropdown2') {
+      this._analytics.trackButtonClickEvent(ButtonType.Choose, 'RT_line_graph_dropdown2', this._selectedSecondary);
+    }
     this.selectorChange.emit({
       selected: [this._selectedMain, this._selectedSecondary],
       initialRun: initial,

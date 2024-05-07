@@ -4,6 +4,7 @@ import { ReportDataFields } from 'shared/services/storage-data-base.config';
 import { getPrimaryColor } from 'shared/utils/colors';
 import { LiveDiscoveryData } from '../live-discovery.widget';
 import { LiveDiscoveryConfig } from '../live-discovery.config';
+import {AppAnalytics, ButtonType} from "shared/services";
 
 @Component({
   selector: 'app-discovery-chart',
@@ -51,6 +52,9 @@ export class DiscoveryChartComponent implements OnDestroy{
   public _totalsData: { [key: string]: string };
   public _selectedMetrics: string[];
   public _selectedTotalsMetrics: string[];
+
+  constructor(private _analytics: AppAnalytics) {
+  }
 
   private _handleData(value: LiveDiscoveryData): void {
     const chartData = value.graphs;
@@ -302,6 +306,11 @@ export class DiscoveryChartComponent implements OnDestroy{
     this._echartsIntance.dispatchAction({
       type: 'restore'
     });
+    if (this.isPolling) {
+      this._analytics.trackButtonClickEvent(ButtonType.Toggle, 'RT_line_graph_pause_updates');
+    } else {
+      this._analytics.trackButtonClickEvent(ButtonType.Toggle, 'RT_line_graph_resume_updates');
+    }
     this.togglePolling.emit();
   }
 

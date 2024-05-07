@@ -57,6 +57,14 @@ export enum ButtonType
     Browse = 19,
     Load = 20,
     Add = 21,
+    Menu = 22,
+    Register = 23,
+    Login = 24,
+    Link = 25,
+    Toggle = 26,
+    Thumbnail = 27,
+    Download = 28,
+    Share = 29
 }
 
 @Injectable()
@@ -83,7 +91,7 @@ export class AppAnalytics {
             this._analyticsBaseUrl = 'https://' + this._analyticsBaseUrl;
         }
         // enable analytics only if base URL was set correctly
-        this._enabled = this._analyticsBaseUrl.length > 0;
+        this._enabled = true;//this._analyticsBaseUrl.length > 0;
 
         if (this._enabled) {
             this.registerPageLoadEvents();

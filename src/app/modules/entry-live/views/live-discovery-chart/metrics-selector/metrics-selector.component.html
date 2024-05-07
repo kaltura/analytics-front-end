@@ -1,13 +1,13 @@
 <div class="kMetricsSelector">
   <app-metrics-selector-dropdown [options]="_mainMetricsOptions"
                                  [colorsMap]="colorsMap"
-                                 (change)="_onChange()"
+                                 (change)="_onChange(false, 'RT_line_graph_dropdown1')"
                                  [(selection)]="_selectedMain"></app-metrics-selector-dropdown>
 
   <span class="kVersus">{{'app.entryLive.discovery.vs' | translate}}</span>
 
   <app-metrics-selector-dropdown [options]="_secondaryMetricsOptions"
                                  [colorsMap]="colorsMap"
-                                 (change)="_onChange()"
+                                 (change)="_onChange(false, 'RT_line_graph_dropdown2')"
                                  [(selection)]="_selectedSecondary"></app-metrics-selector-dropdown>
 </div>

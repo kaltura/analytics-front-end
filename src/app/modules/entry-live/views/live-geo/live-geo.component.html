@@ -29,7 +29,7 @@
         </a>
       </div>
       <div class="kTableContainer" [class.kOpen]="_showTable" [class.kClose]="!_showTable">
-        <p-table #table [value]="_tableData" [paginator]="true" [rows]="5">
+        <p-table #table [value]="_tableData" [paginator]="true" [rows]="5" (onPage)="onPaginationChange()">
           <ng-template pTemplate="header">
             <tr>
               <th [ngStyle]="{'width': '50px'}">

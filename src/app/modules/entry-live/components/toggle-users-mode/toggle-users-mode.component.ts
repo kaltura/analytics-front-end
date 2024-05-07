@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { EntryLiveUsersMode } from 'configuration/analytics-config';
 import { ToggleUsersModeService } from './toggle-users-mode.service';
+import {AppAnalytics, ButtonType} from "shared/services";
 
 @Component({
   selector: 'app-toggle-users-mode',
@@ -12,7 +13,7 @@ import { ToggleUsersModeService } from './toggle-users-mode.service';
 })
 export class ToggleUsersModeComponent implements OnDestroy {
   @Output() modeChanges = new EventEmitter<void>();
-  
+
   public _selected = this._toggleUsersModeService.usersMode;
   public _options: SelectItem[] = [
     {
@@ -24,17 +25,18 @@ export class ToggleUsersModeComponent implements OnDestroy {
       label: this._translate.instant(`app.entryLive.userModes.${EntryLiveUsersMode.All}.title`)
     }
   ];
-  
+
   constructor(private _translate: TranslateService,
-              private _frameEventManager: FrameEventManagerService,
+              private _analytics: AppAnalytics,
               private _toggleUsersModeService: ToggleUsersModeService) {
   }
-  
+
   ngOnDestroy(): void {
   }
-  
+
   public _onModeChange(event: { originalEvent: MouseEvent, value: EntryLiveUsersMode }): void {
     this._toggleUsersModeService.changeMode(event.value);
+    this._analytics.trackButtonClickEvent(ButtonType.Filter, event.value === 'All' ? 'RT_all_users' : 'RT_authenticated_users');
     this.modeChanges.emit();
   }
 }

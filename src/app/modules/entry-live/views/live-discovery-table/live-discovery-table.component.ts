@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { ErrorsManagerService } from 'shared/services';
+import {AppAnalytics, ButtonType, ErrorsManagerService} from 'shared/services';
 import { TableModes } from 'shared/pipes/table-mode-icon.pipe';
 import { KalturaFilterPager, KalturaReportType } from 'kaltura-ngx-client';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
@@ -45,6 +45,7 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
   constructor(private _errorsManager: ErrorsManagerService,
               private _timeSelector: TimeSelectorService,
               public _usersModeService: ToggleUsersModeService,
+              private _analytics: AppAnalytics,
               public _widget: LiveDiscoveryTableWidget) {
     _timeSelector.filterLabelChange$
       .pipe(cancelOnDestroy(this))
@@ -92,6 +93,11 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
 
   public _toggleTable(): void {
     this._showTable = !this._showTable;
+    if (this._showTable) {
+      this._analytics.trackButtonClickEvent(ButtonType.Expand, 'RT_line_graph_view_presence');
+    } else {
+      this._analytics.trackButtonClickEvent(ButtonType.Collapse, 'RT_line_graph_view_presence');
+    }
     this._widget.toggleTable(this._showTable, this.isPolling);
   }
 

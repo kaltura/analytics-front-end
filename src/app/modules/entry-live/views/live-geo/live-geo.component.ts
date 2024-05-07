@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { KalturaEndUserReportInputFilter, KalturaReportInterval, KalturaReportType } from 'kaltura-ngx-client';
-import { ErrorsManagerService } from 'shared/services';
+import {AppAnalytics, ButtonType, ErrorsManagerService} from 'shared/services';
 import { TranslateService } from '@ngx-translate/core';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
@@ -60,6 +60,7 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
   constructor(private _translate: TranslateService,
               private _errorsManager: ErrorsManagerService,
               private _http: HttpClient,
+              private _analytics: AppAnalytics,
               private _liveGeoWidget: LiveGeoWidget,
               private _dataConfigService: LiveGeoConfig,
               private _userModeService: ToggleUsersModeService) {
@@ -222,7 +223,15 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
 
   public _toggleTable(): void {
     this._showTable = !this._showTable;
-
+    if (this._showTable) {
+      this._analytics.trackButtonClickEvent(ButtonType.Expand, 'RT_geo_view_details');
+    } else {
+      this._analytics.trackButtonClickEvent(ButtonType.Collapse, 'RT_geo_view_details');
+    }
     this._liveGeoWidget.updateLayout();
+  }
+
+  public onPaginationChange(): void {
+    this._analytics.trackButtonClickEvent(ButtonType.Navigate, 'RT_geo_paginate');
   }
 }

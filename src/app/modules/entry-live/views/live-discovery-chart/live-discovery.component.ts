@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} fr
 import { LiveDiscoveryData, LiveDiscoveryWidget } from './live-discovery.widget';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { ErrorsManagerService } from 'shared/services';
+import {AppAnalytics, ButtonType, ErrorsManagerService} from 'shared/services';
 import { DateFiltersChangedEvent } from './filters/filters.component';
 import { LiveDiscoveryConfig } from './live-discovery.config';
 import { ReportDataFields, ReportDataSection } from 'shared/services/storage-data-base.config';
@@ -44,6 +44,7 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
               private _liveDevicesWidget: LiveDevicesWidget,
               private _errorsManager: ErrorsManagerService,
               private _translate: TranslateService,
+              private _analytics: AppAnalytics,
               private _usersModeService: ToggleUsersModeService,
               protected _dataConfigService: LiveDiscoveryConfig) {
     _usersModeService.usersMode$
@@ -126,6 +127,7 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
   }
 
   public onZoom(event): void {
+    this._analytics.trackButtonClickEvent(ButtonType.Filter, 'RT_line_graph_drag_select_time');
     this._liveExploreWidget.updateFiltersDateRange(event);
   }
 }
