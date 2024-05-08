@@ -1,0 +1,147 @@
+<div #reportToExport data-aid="report-group-category" class="kMain">
+  <k-area-blocker [showLoader]="_loadingVirtualEvent" [message]="_blockerMessage">
+    <div class="kReportView">
+      <div class="kReport kContent kOverrideFAIcons">
+        <div class="kReportHeader" [class.noTitle]="!_viewConfig.title">
+          <button tabindex="0" aria-label="Back" role="button" pButton *ngIf="_viewConfig.title && !_exporting"
+                  class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_back()"
+                  [kTooltip]="'app.entry.back' | translate" [placement]="'bottom'"></button>
+          <h1 *ngIf="_viewConfig.title && !_exporting" class="kTitle kTruncateTitle" [kTooltip]="_virtualEvent?.name" [showOnEllipsis]="true" [placement]="'bottom'">{{_virtualEvent?.name}}</h1>
+          <h1 *ngIf="_exporting" class="kTitle kTruncateTitle">{{'app.ve.reportTitle' | translate: {'0': _virtualEvent.name} }}</h1>
+          <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title" [class.exporting]="_exporting">
+            <!--app-export-csv aria-label="Export" #export
+                            role="button"
+                            [class.kHidden]="!_viewConfig.export" name="Category"
+                            [reports]="_exportConfig"
+                            [refineFilter]="_refineFilter"
+                            [dateFilter]="_dateFilter"
+                            [virtualEventId]="_virtualEventId"></app-export-csv-->
+            <div class="kFilter kOverrideFAIcons" [class.kFloatLeft]="!_viewConfig.download">
+              <div role="button" aria-label="Refine Filter" tabindex="0" class="kDropDown kHidden" *ngIf="_viewConfig.refineFilter"
+                   (click)="_refineFilterOpened = !_refineFilterOpened"
+                   (keydown.enter)="_refineFilterOpened = !_refineFilterOpened">
+                <span>{{'app.filters.filter' | translate}}</span>
+                <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
+                <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
+              </div>
+            </div>
+            <app-pdf-export *ngIf="_viewConfig.download" [disabled]="_refineFilterOpened" [elementToExport]="reportToExport" [filename]="exportFilename" (preExport)="preExportHandler()" (postExport)="postExportHandler()" (exporting)="onExporting($event)"></app-pdf-export>
+
+          </div>
+        </div>
+
+<!--        <div *ngIf="_viewConfig.details" class="kEntryDetails" aria-label="Virtual Event Details"-->
+<!--             [class.kFloatingDetails]="!_viewConfig.title">-->
+<!--          <span class="kLabel">{{'app.category.id' | translate}}</span>-->
+<!--          <span>{{_virtualEvent?.id}}</span>-->
+<!--          <div class="kSeparator"></div>-->
+<!--          <span class="kLabel">{{'app.category.created' | translate}}</span>-->
+<!--          <span>{{_virtualEventDateLabel}}</span>-->
+<!--          <div class="kSeparator"></div>-->
+<!--          <span class="kLabel">{{'app.category.updated' | translate}}</span>-->
+<!--          <span>{{_updateDate}}</span>-->
+<!--        </div>-->
+
+<!--        <app-ve-filter class="kRefineFiltersHost"-->
+<!--                        name="virtualEvent" #virtualEvent-->
+<!--                        [exporting]="_exporting"-->
+<!--                        [virtualEvent]="_virtualEvent"-->
+<!--                        [viewConfig]="_viewConfig.refineFilter"-->
+<!--                        [opened]="_refineFilterOpened"-->
+<!--                        [dateFilter]="_dateFilter"-->
+<!--                        [selectedFilters]="_selectedRefineFilters"-->
+<!--                        (closeFilters)="_refineFilterOpened = false"-->
+<!--                        (filterChange)="_onRefineFilterChange($event)"></app-ve-filter>-->
+
+
+        <!--span class="kTitle" *ngIf="_exporting">{{'app.ve.registration' | translate}}</span>
+        <div class="kSummary" *ngIf="_exporting">{{'app.ve.summary' | translate}}</div-->
+
+        <div [class.kHidden]="!_virtualEventLoaded" class="kReportContainer stickToBottom">
+          <div [class.kHidden]="!_viewConfig.miniFunnel" class="kMiniReportContainer">
+            <app-registration-funnel [appGuid]="_appGuid" #funnel
+                                     [refineFilter]="_refineFilter"
+                                     [virtualEventId]="_virtualEventId"
+                                     [disabled]="_disableMiniViews"
+                                     [exporting]="_exporting">
+            </app-registration-funnel>
+          </div>
+<!--          <div *ngIf="_viewConfig.miniAttendance" class="kMiniReportContainer">-->
+<!--            <app-ve-mini-attendance [attendees$]="funnel.attendees$" [disabled]="_disableMiniViews"></app-ve-mini-attendance>-->
+<!--          </div>-->
+<!--          <div *ngIf="_viewConfig.miniOrigin" class="kMiniReportContainer">-->
+<!--            <app-ve-mini-origin [attendees$]="funnel.attendees$" [disabled]="_disableMiniViews" [exporting]="_exporting"></app-ve-mini-origin>-->
+<!--          </div>-->
+        </div>
+
+        <div class="kDateSelector kHidden">
+          <app-date-filter #dateFilter *ngIf="_creationDate" [class.noTitle]="!_viewConfig.title"
+                           name="virtual-event"
+                           [appendTo]="reportToExport"
+                           [creationDateLabels]="_creationDateLabels"
+                           [dateRange]="_dateRange"
+                           [exporting]="_exporting"
+                           [selectedTimeUnit]="_timeUnit"
+                           [showCompare]="false"
+                           [showMonthsAndYears]="false"
+                           [creationDate]="_creationDate"
+                           (filterChange)="_onDateFilterChange($event)"></app-date-filter>
+        </div>
+
+<!--        <div class="offscreen">-->
+<!--          <app-ve-status [dateFilter]="_dateFilter" #status-->
+<!--                         [refineFilter]="_refineFilter"-->
+<!--                         [virtualEventId]="_virtualEventId">-->
+<!--          </app-ve-status>-->
+<!--        </div>-->
+
+<!--        <div *ngIf="_viewConfig.highlights" class="kReportContainer">-->
+<!--          <app-ve-highlights [dateFilter]="_dateFilter"-->
+<!--                             [exporting]="_exporting"-->
+<!--                             [hideDetails]="true"-->
+<!--                             [highlights$]="status.status$">-->
+<!--          </app-ve-highlights>-->
+<!--        </div>-->
+
+<!--        <div *ngIf="_viewConfig.topDevices" class="kReportContainer">-->
+<!--          <app-ve-devices [refineFilter]="_refineFilter" [dateFilter]="_dateFilter" [virtualEventId]="_virtualEventId"></app-ve-devices>-->
+<!--        </div>-->
+
+<!--        <div [class.kHidden]="!_viewConfig.geo" class="kReportContainer">-->
+<!--          <app-ve-geo #geo [exporting]="_exporting"-->
+<!--                           [dateFilter]="_dateFilter"-->
+<!--                           [refineFilter]="_refineFilter"-->
+<!--                           [virtualEventId]="_virtualEventId">-->
+<!--          </app-ve-geo>-->
+<!--        </div>-->
+
+<!--        <div *ngIf="_viewConfig.roles || _viewConfig.industries" class="kReportContainer">-->
+<!--          <div class="kSmallReportContainer" *ngIf="_viewConfig.roles">-->
+<!--            <app-ve-roles-->
+<!--              [dateFilter]="_dateFilter"-->
+<!--              [exporting]="_exporting"-->
+<!--              [refineFilter]="_refineFilter"-->
+<!--              [virtualEventId]="_virtualEventId">-->
+<!--            </app-ve-roles>-->
+<!--          </div>-->
+
+<!--          <div class="kSmallReportContainer" *ngIf="_viewConfig.industries">-->
+<!--            <app-ve-industries-->
+<!--              [dateFilter]="_dateFilter"-->
+<!--              [exporting]="_exporting"-->
+<!--              [refineFilter]="_refineFilter"-->
+<!--              [virtualEventId]="_virtualEventId">-->
+<!--            </app-ve-industries>-->
+<!--          </div>-->
+<!--        </div>-->
+
+      </div>
+
+      <div *ngIf="_exporting" class="footer">
+        <i></i>
+        <span>{{'app.ve.footer' | translate}}</span>
+      </div>
+    </div>
+
+  </k-area-blocker>
+</div>

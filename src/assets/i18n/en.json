@@ -1177,6 +1177,7 @@
       "confirmation": "Confirmation",
       "confirmed_tt": "Attendees that verified their email address",
       "participated": "Attended",
+      "postParticipated": "Post attendance",
       "participated_tt": "Attendees that entered the event site",
       "turnout": "Overall Turnout",
       "turnout_tt": "Attendence rate",

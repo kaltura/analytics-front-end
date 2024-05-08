@@ -1,0 +1,312 @@
+@import '../../../styles/variables';
+
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.kReportView .kContent:first-child {
+  background-color: #f2f2f2;
+}
+@media screen and (max-width: 1060px) {
+  .kBackBtn {
+    margin-left: 0 !important;
+  }
+}
+.kMain {
+  position: relative;
+}
+.disclaimer{
+  color: $kGrayscale3;
+  font-size: 16px;
+  padding-left: 16px;
+}
+.footer {
+  width: 100%;
+  height: 64px;
+  background-color: $kGrayscale7;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  display: flex;
+  align-items: center;
+  i {
+    height: 24px;
+    width: 183px;
+    margin-left: 16px;
+    background-image: url('data:image/png;base64,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');
+  }
+  span {
+    font-size: 14px;
+    color: $kGrayscale1;
+    margin-left: 4px;
+  }
+}
+.kFloatLeft {
+  margin-left: auto;
+}
+.kReportContainer{
+  padding-bottom: 24px;
+  background-color: $appBkgColor;
+  display: flex;
+  flex-wrap: wrap;
+  &.stickToBottom {
+    padding-bottom: 0px;
+  }
+  .kSmallReportContainer {
+    width: calc(50% - 12px);
+    &:first-child {
+      margin-right: 24px;
+    }
+  }
+  .kMiniReportContainer{
+    width: 30%;
+    flex: 1 1 auto;
+    &:not(:last-child)  {
+      margin-right: 24px;
+      height: 400px;
+    }
+    &.kMiniTopReportContainer{
+      height: 184px;
+    }
+    .col {
+      display: flex;
+      flex-direction: column;
+      ::ng-deep app-devices-overview .kNoResults {
+        height: 166px;
+      }
+    }
+  }
+  .kMiniTopReportSmall{
+    width: 30%;
+  }
+  .kMiniTopReportWide{
+    width: calc(60% + 48px);
+  }
+  .showOnTablet {
+    display: none;
+  }
+  .separator {
+    width: 24px;
+  }
+  .divider {
+    height: 24px;
+    width: 100%;
+  }
+}
+.kReport {
+  background-color: $appBkgColor;
+
+  .kBackBtn {
+    margin-top: 4px;
+    margin-left: -40px;
+    margin-right: 22px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    color: $kGrayscale3;
+    height: 20px;
+    width: 18px;
+    font-size: 24px;
+    overflow: hidden;
+    flex: 0 0 auto;
+
+    &:active {
+      box-shadow: none;
+    }
+
+    &:hover {
+      color: $kPrimary;
+    }
+  }
+
+  .kReportHeader {
+    height: 80px;
+    position: relative;
+  }
+  .kDateSelector {
+    height: 32px;
+    margin-bottom: 24px;
+    justify-content: flex-end;
+    display: flex;
+  }
+  .kTitle {
+    color: $kGrayscale1;
+    font-size: 48px;
+    font-weight: 700;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    &.kTitleMargin {
+      margin-top: 24px;
+      margin-bottom: 24px;
+    }
+  }
+  .kSummary {
+    color: $kGrayscale1;
+    font-size: 20px;
+    margin-top: 12px;
+    margin-bottom: 24px;
+    white-space: pre-wrap;
+    line-height: 32px;
+  }
+  .fixedHeight {
+    height: 400px;
+  }
+  .kTruncateTitle {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .kFloatingDetails{
+    position: absolute;
+    top: 32px;
+  }
+
+  .kEntryDetails {
+    display: flex;
+    font-size: 14px;
+    color: $kGrayscale2;
+    height: 36px;
+    background-color: $appBkgColor;
+    .kParentLink {
+      font-size: 14px;
+      height: 15px;
+    }
+    .kLabel{
+      margin-right: 8px;
+      white-space: nowrap;
+    }
+    .kSeparator {
+      width: 1px;
+      height: 12px;
+      margin-top: 2px;
+      background-color: $kGrayscale4;
+      margin-left: 16px;
+      margin-right: 16px;
+    }
+
+  }
+}
+.kFilter {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  margin-left: auto;
+  .kDropDown {
+    background-color: white;
+    height: 34px;
+    border: 1px solid $kGrayscale4;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+    padding-right: 8px;
+    box-sizing: border-box;
+    cursor: pointer;
+    margin-right: 16px;
+
+    &:hover {
+      border-color: $kPrimary;
+    }
+
+    &:active {
+      box-shadow: 0 0 0 3px rgba(0, 167, 132, 0.4);
+    }
+
+    span {
+      font-size: 15px;
+      white-space: nowrap;
+      margin-right: 12px;
+    }
+
+    i {
+      margin-left: auto;
+      font-size: 12px;
+      color: $kGrayscale3;
+    }
+  }
+}
+/* responsive design */
+.kHeaderRight{
+  display: flex;
+  margin-left: auto;
+  width: 100%;
+  &.noTitle {
+    justify-content: flex-end;
+  }
+  &.exporting {
+    padding-top: 80px;
+    justify-content: flex-end;
+  }
+}
+@media (max-width: 1280px) {
+  ::ng-deep app-checkboxes-list-filter {
+    min-width: 118px !important;
+  }
+}
+@media (max-width: 991px) {
+  .kHeaderRight{
+    position: absolute;
+    top: 110px;
+    left: 0px;
+  }
+  .kReport .kEntryDetails{
+    height: 86px;
+  }
+
+  .kHeaderRight.noTitle{
+    top: 0px;
+    position: relative;
+  }
+
+  .kReport .kFloatingDetails{
+    position: relative;
+    top: 0px;
+  }
+  .kReportContainer {
+    .kMiniTopReportSmall {
+      width: 40%;
+    }
+    .kSmallReportContainer {
+      width: 100%;
+      &:first-child {
+        margin-right: 0px;
+      }
+    }
+    .kMiniTopReportWide {
+      width: 80%;
+      height: 248px !important;
+    }
+    .hideOnTablet {
+      display: none;
+    }
+    .showOnTablet {
+      display: block;
+    }
+    .kMiniReportContainer.kMiniTopReportContainer {
+      height: 308px;
+    }
+  }
+
+}
+::ng-deep app-devices-overview {
+  .kReport {
+    padding-bottom: 12px;
+    box-sizing: border-box;
+  }
+}
+.kHighContrast :host {
+  .kEntryDetails, .kBackBtn {
+    color: $kGrayscale1;
+  }
+}
+.fixHeight {
+  max-height: 272px;
+  overflow: hidden;
+}
+.offscreen {
+  position: absolute;
+  top: -3000px;
+}
