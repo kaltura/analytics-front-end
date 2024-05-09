@@ -85,7 +85,7 @@ export class RegistrationFunnelDataConfig extends ReportDataBaseConfig implement
           top: 0,
           bottom: 0,
           width: '50%',
-          height: 270,
+          height: 172,
           min: 0,
           max: 100,
           minSize: '0%',

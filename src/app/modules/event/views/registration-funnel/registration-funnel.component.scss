@@ -8,13 +8,12 @@
 .kReport.kFunnel {
   height: 100%;
 }
-.kCharts{
+.kCharts {
   display: flex;
-  padding-right: 16px;
-  .kChart{
-    height: 270px !important;
+  .kChart {
+    height: 172px !important;
     width: 100%;
-    margin-bottom: 0px;
+    margin-top: 8px;
   }
 }
 .kTurnout {
@@ -62,8 +61,8 @@
 .kData {
   width: 63%;
   position: absolute;
-  margin-top: 106px;
-  height: 270px;
+  margin-top: 80px;
+  height: 170px;
   display: flex;
   flex-direction: column;
   padding-left: 24px;

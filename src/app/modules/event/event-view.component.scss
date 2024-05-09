@@ -62,10 +62,7 @@
   .kMiniReportContainer{
     width: 30%;
     flex: 1 1 auto;
-    &:not(:last-child)  {
-      margin-right: 24px;
-      height: 400px;
-    }
+    height: 274px;
     &.kMiniTopReportContainer{
       height: 184px;
     }
