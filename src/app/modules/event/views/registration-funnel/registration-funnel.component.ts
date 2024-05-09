@@ -29,7 +29,7 @@ export type attendeesData = {
       regOrigin: string;
     }
   }
-}
+};
 
 @Component({
   selector: 'app-registration-funnel',
@@ -50,18 +50,10 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
     }
   }
 
-  @Input() set refineFilter(value: RefineFilter) {
-    if (value) {
-      this._refineFilter = value;
-      this._loadReport();
-    }
-  }
-
   @Input() virtualEventId: string;
   @Input() exporting = false;
   @Input() disabled = false;
 
-  private _refineFilter: RefineFilter = [];
   private _appGuid = '';
 
   public _isBusy: boolean;
@@ -104,7 +96,7 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._isBusy = false;
+    this._loadReport();
   }
 
   ngOnDestroy(): void {
@@ -145,10 +137,10 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
       }
     ];
     if (this._showConfirmed) {
-      data.splice(1, 0,{
+      data.splice(1, 0, {
         value: Math.round(parseFloat(confirmed)),
         name: this._translate.instant('app.ve.confirmed')
-      })
+      });
     }
     this._setEchartsOption({
       series: [{ data }]
@@ -168,17 +160,10 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
 
     const filter = {
       "appGuidIn": [this._appGuid]
-    }
+    };
 
     // add origin filter
     const regOrigin = [];
-    if (this._refineFilter.length) {
-      this._refineFilter.forEach(refineFilter => {
-        if (refineFilter.type === 'origin') {
-          regOrigin.push(refineFilter.value.toLowerCase());
-        }
-      })
-    }
     if (regOrigin.length) {
       filter["regOriginIn"] = regOrigin;
     } else {
@@ -186,7 +171,7 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
     }
 
     // set minimal pager
-    const dimensions = ["regOrigin","attendanceStatus"];
+    const dimensions = ["regOrigin", "attendanceStatus"];
 
 
     const headers = new HttpHeaders({

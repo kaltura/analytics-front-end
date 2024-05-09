@@ -13,7 +13,9 @@ import { AreaBlockerModule, InputHelperModule, TagsModule, TooltipModule } from 
 import { TableModule } from 'primeng/table';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { EventViewComponent } from "./event-view.component";
-import {RegistrationFunnelComponent} from "./views/registration-funnel/registration-funnel.component";
+import { RegistrationFunnelComponent } from "./views/registration-funnel/registration-funnel.component";
+import { MiniScoringComponent } from "./views/mini-scoring/mini-scoring.component";
+import { EventMiniMinutesViewedComponent } from "./views/mini-minutes-viewed/mini-minutes-viewed.component";
 
 @NgModule({
   imports: [
@@ -36,6 +38,8 @@ import {RegistrationFunnelComponent} from "./views/registration-funnel/registrat
   declarations: [
     EventViewComponent,
     RegistrationFunnelComponent,
+    MiniScoringComponent,
+    EventMiniMinutesViewedComponent
   ],
   exports: [],
   providers: []

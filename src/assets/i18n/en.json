@@ -1163,6 +1163,11 @@
       },
       "accountError": "This entry belongs to another account however you do not have privileges to view this account.\nPartner ID: {{0}}"
     },
+    "event": {
+      "scoring": "Lead scoring",
+      "breakdown": "See breakdown",
+      "avgMinutes": "Avg. minutes viewed per viewer"
+    },
     "ve": {
       "all": "Registrants",
       "registration": "Registration",

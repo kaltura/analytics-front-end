@@ -5,7 +5,7 @@ import {
   KalturaDetachedResponseProfile,
   KalturaReportInterval,
   KalturaReportType,
-  KalturaResponseProfileType, KalturaVirtualEvent, VirtualEventGetAction
+  KalturaResponseProfileType, KalturaVirtualEvent, ScheduleEventGetAction, VirtualEventGetAction
 } from 'kaltura-ngx-client';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
@@ -34,15 +34,13 @@ export class EventViewComponent implements OnInit, OnDestroy {
   @ViewChild('export', {static: true}) export: ExportCsvComponent;
 
   public _selectedRefineFilters: RefineFilter = null;
-  public _viewConfig: ViewConfig =  analyticsConfig.viewsConfig.virtualEvent;
+  public _viewConfig: ViewConfig =  analyticsConfig.viewsConfig.event;
   public _dateRange = DateRanges.SinceCreation;
   public _timeUnit = KalturaReportInterval.days;
   public _virtualEventDateLabel = '';
   public _creationDate: moment.Moment = null;
   public _updateDate = '';
-  public _dateFilter: DateChangeEvent = null;
   public _exportConfig: ExportItem[] = [];
-  public _refineFilter: RefineFilter = null;
   public _refineFilterOpened = false;
   public _loadingVirtualEvent = false;
   public _loadingAppGuid = false;
@@ -51,6 +49,12 @@ export class EventViewComponent implements OnInit, OnDestroy {
   public _virtualEvent: KalturaVirtualEvent;
   public _virtualEventId = null;
   public _creationDateLabels = {label: null, prefix: null};
+
+  public _eventStartDate: Date = null;
+  public _actualEventStartDate: Date = null;
+  public _eventEndDate: Date = null;
+  public _now: Date = new Date();
+
   public _exporting = false;
   public _disableMiniViews = false;
 
@@ -90,20 +94,12 @@ export class EventViewComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
-  public _onDateFilterChange(event: DateChangeEvent): void {
-    this._dateFilter = event;
-  }
-
-  public _onRefineFilterChange(event: RefineFilter): void {
-    this._refineFilter = event;
-  }
-
   private _loadAppGuid(): void {
     this._loadingAppGuid = true;
     this._disableMiniViews = false;
     const filter = {
       "appCustomIdIn": [this._virtualEventId]
-    }
+    };
     const headers = new HttpHeaders({
       'authorization': `KS ${this._authService.ks}`,
       'Content-Type': 'application/json',
@@ -135,7 +131,7 @@ export class EventViewComponent implements OnInit, OnDestroy {
         };
         this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
       }
-    )
+    );
   }
 
 
@@ -148,7 +144,7 @@ export class EventViewComponent implements OnInit, OnDestroy {
         .setRequestOptions({
           responseProfile: new KalturaDetachedResponseProfile({
             type: KalturaResponseProfileType.includeFields,
-            fields: 'id,name,createdAt,updatedAt'
+            fields: 'id,name,createdAt,updatedAt,agendaScheduleEventId'
           })
         });
 
@@ -157,13 +153,39 @@ export class EventViewComponent implements OnInit, OnDestroy {
       .pipe(cancelOnDestroy(this))
       .subscribe(
         (virtualEvent: KalturaVirtualEvent) => {
-          this._virtualEventLoaded = true;
           this._virtualEvent = virtualEvent;
           const dateFormat = analyticsConfig.dateFormat === 'month-day-year' ? 'MM/DD/YYYY' : 'DD/MM/YYYY';
           this._virtualEventDateLabel = DateFilterUtils.getMomentDate(virtualEvent.createdAt).format(dateFormat);
           this._creationDate = DateFilterUtils.getMomentDate(virtualEvent.createdAt);
           this._updateDate = DateFilterUtils.getMomentDate(virtualEvent.updatedAt).format(dateFormat);
-          this._loadingVirtualEvent = false;
+          const loadScheduledEvent = new ScheduleEventGetAction({scheduleEventId: virtualEvent.agendaScheduleEventId});
+          this._kalturaClient
+            .request(loadScheduledEvent)
+            .pipe(cancelOnDestroy(this))
+            .subscribe(
+              event => {
+                this._actualEventStartDate = new Date(event.startDate * 1000); // save actual start date before calculating round down start date
+                this._eventStartDate = new Date(this._actualEventStartDate.getTime()); // copy the actual start dat object
+                // need to round down to the last half hour because this is our data aggregation interval
+                const minutes = this._actualEventStartDate.getMinutes();
+                if (minutes !== 0 && minutes !== 30) {
+                  const roundDownMinutes = minutes > 30 ? 30 : 0;
+                  this._eventStartDate.setMinutes(roundDownMinutes); // round down minutes
+                  this._eventStartDate.setSeconds(0); // round down seconds
+                }
+                this._eventEndDate = new Date(event.endDate * 1000);
+                this._virtualEventLoaded = true;
+                this._loadingVirtualEvent = false;
+              },
+              error => {
+                const actions = {
+                  'close': () => {
+                    this._blockerMessage = null;
+                  }
+                };
+                this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
+              }
+            );
         },
         error => {
           this._loadingVirtualEvent = false;
