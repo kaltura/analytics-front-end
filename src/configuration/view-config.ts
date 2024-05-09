@@ -204,7 +204,8 @@ export const viewsConfig = {
   event: {
     title: {},
     miniFunnel: {},
-    miniScoring: {}
+    miniScoring: {},
+    miniMinutesViewed: {}
   },
   virtualEvent: {
     title: {},

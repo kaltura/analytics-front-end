@@ -69,7 +69,7 @@
                 </div>
 
                 <div [class.kHidden]="!_virtualEventLoaded" class="kReportContainer stickToBottom">
-                    <app-event-mini-minutes-viewed *ngIf="_virtualEventLoaded"
+                    <app-event-mini-minutes-viewed *ngIf="_virtualEventLoaded && _viewConfig.miniMinutesViewed"
                         [startDate]="_eventStartDate" [endDate]="_now" [virtualEventId]="_virtualEventId">
                     </app-event-mini-minutes-viewed>
                 </div>
