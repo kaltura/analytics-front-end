@@ -1,0 +1,19 @@
+<div data-aid="report-engagement-mini-highlights" class="kReport kOverrideFAIcons">
+
+  <k-area-blocker [showLoader]="isBusy">
+
+    <div class="reportContent">
+      <div class="icons">
+        <div class="kMiniIcon"><i class="icon-captions"></i></div>
+      </div>
+
+      <div class="dataContainer">
+        <span class="value">{{messagesRate || 0}}%</span>
+        <span class="title">{{'app.event.messages' | translate: {'0': messagesCount} }}</span>
+      </div>
+
+    </div>
+
+  </k-area-blocker>
+</div>
+

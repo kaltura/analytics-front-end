@@ -1,0 +1,68 @@
+@import '../../../../../styles/variables';
+:host {
+  display: block;
+  height: 100%;
+  width: 50%;
+}
+.reportContent {
+  height: 260px;
+  padding: 24px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  .kMiniIcon {
+    flex: 0 0 auto;
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    margin-right: 12px;
+    &.blue{
+      background-color: rgba(72,122,223,0.2);
+      color: #487ADF;
+    }
+    &.green{
+      background-color: rgba(49,190,166,0.2);
+      color: #31BEA6;
+
+    }
+    &.aqua {
+      background-color: rgba(22, 168, 215, 0.2);
+      color: #16a8d7;
+    }
+    &.orange{
+      background-color: rgba(225,150,46,0.2);
+      color: #E1962E;
+    }
+  }
+  .title {
+    font-weight: 700;
+    font-size: 20px;
+    color: $kGrayscale1;
+    margin-bottom: 24px;
+  }
+  .metric {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    &:last-child {
+      margin-bottom: 0px;
+    }
+  }
+  .label {
+    font-size: 15px;
+    line-height: 18px;
+    color: black;
+  }
+}
+@media (max-width: 991px) {
+  .reportContent {
+    .metric {
+      margin-bottom: 20px;
+    }
+  }
+}

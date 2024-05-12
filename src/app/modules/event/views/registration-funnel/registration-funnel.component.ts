@@ -96,7 +96,6 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._loadReport();
   }
 
   ngOnDestroy(): void {

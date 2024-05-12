@@ -16,6 +16,9 @@ import { EventViewComponent } from "./event-view.component";
 import { RegistrationFunnelComponent } from "./views/registration-funnel/registration-funnel.component";
 import { MiniScoringComponent } from "./views/mini-scoring/mini-scoring.component";
 import { EventMiniMinutesViewedComponent } from "./views/mini-minutes-viewed/mini-minutes-viewed.component";
+import {EventMiniEngagementComponent} from "./views/mini-engagement/mini-engagement.component";
+import {EventMiniReactionsComponent} from "./views/mini-reactions/mini-reactions.component";
+import {EventMiniMessagesComponent} from "./views/mini-messages/mini-messages.component";
 
 @NgModule({
   imports: [
@@ -39,7 +42,10 @@ import { EventMiniMinutesViewedComponent } from "./views/mini-minutes-viewed/min
     EventViewComponent,
     RegistrationFunnelComponent,
     MiniScoringComponent,
-    EventMiniMinutesViewedComponent
+    EventMiniMinutesViewedComponent,
+    EventMiniEngagementComponent,
+    EventMiniReactionsComponent,
+    EventMiniMessagesComponent
   ],
   exports: [],
   providers: []

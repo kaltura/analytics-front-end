@@ -1166,7 +1166,10 @@
     "event": {
       "scoring": "Lead scoring",
       "breakdown": "See breakdown",
-      "avgMinutes": "Avg. minutes viewed per viewer"
+      "avgMinutes": "Avg. minutes viewed per viewer",
+      "reactions": "of attendees sent {{0}} reactions",
+      "messages": "of attendees sent {{0}} messages on group chat",
+      "interactivity": "Attendee interactivity"
     },
     "ve": {
       "all": "Registrants",
