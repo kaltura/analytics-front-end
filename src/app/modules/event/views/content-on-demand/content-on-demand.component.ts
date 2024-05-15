@@ -1,18 +1,15 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import {KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaPager, KalturaReportInterval, KalturaReportTable, KalturaReportType} from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaPager, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import {AuthService, BrowserService, ErrorsManagerService, NavigationDrillDownService, Report, ReportConfig, ReportService} from 'shared/services';
-import { CompareService } from 'shared/services/compare.service';
+import { AuthService, ErrorsManagerService, NavigationDrillDownService, ReportConfig, ReportService } from 'shared/services';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { SortEvent } from 'primeng/api';
 import { ContentOnDemandConfig } from './content-on-demand.config';
-import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
-import { ActivatedRoute, Router } from '@angular/router';
 import { reportTypeMap } from 'shared/utils/report-type-map';
-import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
+import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils";
 
 @Component({
   selector: 'app-event-content-on-demand',
@@ -66,7 +63,7 @@ export class ContentOnDemandComponent implements OnDestroy {
     this._isBusy = true;
     this._blockerMessage = null;
     this.totalCount = 0;
-    // this._filter.virtualEventIdIn = this.eventIn;
+    this._filter.virtualEventIdIn = this.eventIn;
     this._filter.timeZoneOffset = DateFilterUtils.getTimeZoneOffset();
     this._filter.fromDate = Math.floor(this.startDate.getTime() / 1000);
     this._filter.toDate = Math.floor(new Date().getTime() / 1000);
