@@ -226,7 +226,7 @@ export class LiveGeoComponent implements OnInit, OnDestroy {
     if (this._showTable) {
       this._analytics.trackButtonClickEvent(ButtonType.Expand, 'RT_geo_view_details');
     } else {
-      this._analytics.trackButtonClickEvent(ButtonType.Collapse, 'RT_geo_view_details');
+      this._analytics.trackButtonClickEvent(ButtonType.Collapse, 'RT_geo_hide_details');
     }
     this._liveGeoWidget.updateLayout();
   }
