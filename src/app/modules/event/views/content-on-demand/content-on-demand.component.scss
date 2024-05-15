@@ -1,0 +1,21 @@
+@import '../../../../../styles/variables';
+
+k-area-blocker {
+  display: block;
+}
+.reportContent {
+  .title {
+    font-weight: 700;
+    font-size: 20px;
+    color: $kGrayscale1;
+    margin-bottom: 24px;
+    display: block;
+    margin: 24px;
+  }
+  .row {
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}

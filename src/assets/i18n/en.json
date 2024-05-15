@@ -1169,7 +1169,9 @@
       "avgMinutes": "Avg. minutes viewed per viewer",
       "reactions": "of attendees sent {{0}} reactions",
       "messages": "of attendees sent {{0}} messages on group chat",
-      "interactivity": "Attendee interactivity"
+      "interactivity": "Attendee interactivity",
+      "topMoment": "Top moment",
+      "content": "Content on-demand"
     },
     "ve": {
       "all": "Registrants",

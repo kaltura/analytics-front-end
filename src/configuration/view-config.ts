@@ -208,7 +208,8 @@ export const viewsConfig = {
     miniMinutesViewed: {},
     miniReactions: {},
     miniMessages: {},
-    miniEngagement: {}
+    miniEngagement: {},
+    contentOnDemand: {}
   },
   virtualEvent: {
     title: {},

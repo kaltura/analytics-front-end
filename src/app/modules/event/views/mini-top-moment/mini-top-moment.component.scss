@@ -1,0 +1,13 @@
+@import '../../../../../styles/variables';
+:host {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+.kReport {
+  height: 260px;
+  margin-bottom: 0px !important;
+  .kFilters {
+    margin-bottom: 28px;
+  }
+}

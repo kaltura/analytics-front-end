@@ -93,7 +93,23 @@
                 </div>
 
                 <div [class.kHidden]="!_virtualEventLoaded || !_viewConfig.miniEngagement" class="kReportContainer">
-                    <app-event-mini-engagement #engagement [virtualEventLoaded]="_virtualEventLoaded" [exporting]="_exporting"  [eventIn]="_virtualEventId" [startDate]="_eventStartDate" [endDate]="_eventEndDate"></app-event-mini-engagement>
+                    <app-event-mini-engagement #engagement
+                                               [virtualEventLoaded]="_virtualEventLoaded"
+                                               [exporting]="_exporting"
+                                               [eventIn]="_virtualEventId"
+                                               [startDate]="_eventStartDate"
+                                               [endDate]="_eventEndDate">
+                    </app-event-mini-engagement>
+                    <div class="separator"></div>
+                    <app-event-mini-top-moment></app-event-mini-top-moment>
+                </div>
+
+                <div *ngIf="_viewConfig.contentOnDemand" class="kReportContainer">
+                  <app-event-content-on-demand [virtualEventLoaded]="_virtualEventLoaded"
+                                               [exporting]="_exporting"
+                                               [eventIn]="_virtualEventId"
+                                               [startDate]="_eventStartDate">
+                  </app-event-content-on-demand>
                 </div>
 
                 <!--        <div class="offscreen">-->
@@ -103,13 +119,7 @@
                 <!--          </app-ve-status>-->
                 <!--        </div>-->
 
-                <!--        <div *ngIf="_viewConfig.highlights" class="kReportContainer">-->
-                <!--          <app-ve-highlights [dateFilter]="_dateFilter"-->
-                <!--                             [exporting]="_exporting"-->
-                <!--                             [hideDetails]="true"-->
-                <!--                             [highlights$]="status.status$">-->
-                <!--          </app-ve-highlights>-->
-                <!--        </div>-->
+
 
                 <!--        <div *ngIf="_viewConfig.topDevices" class="kReportContainer">-->
                 <!--          <app-ve-devices [refineFilter]="_refineFilter" [dateFilter]="_dateFilter" [virtualEventId]="_virtualEventId"></app-ve-devices>-->
