@@ -17,5 +17,12 @@ k-area-blocker {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    .tableCell {
+      display: flex;
+      align-items: center;
+      span {
+        margin-right: 8px;
+      }
+    }
   }
 }

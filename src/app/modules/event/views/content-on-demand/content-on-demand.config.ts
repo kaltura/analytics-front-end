@@ -49,6 +49,14 @@ export class ContentOnDemandConfig extends ReportDataBaseConfig {
             sortOrder: 7,
           },
         }
+      },
+      [ReportDataSection.totals]: {
+        fields: {
+          'count_plays': {
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 1,
+          }
+        }
       }
     };
   }
