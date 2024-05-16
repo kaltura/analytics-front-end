@@ -60,6 +60,7 @@ export class EventMiniEngagementComponent implements OnInit {
   public _downloadRate = 0;
   public _downloadCount = '0';
   public _pollsRate = 0;
+  public _chatRate = 0;
 
   constructor(private _reportService: ReportService,
               private _errorsManager: ErrorsManagerService,
@@ -113,10 +114,10 @@ export class EventMiniEngagementComponent implements OnInit {
 
   private _handleTotals(totals: KalturaReportTotal): void {
     const tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
-    this._engagementRate = tabsData[0].rawValue !== '' ? ReportHelper.precisionRound(tabsData[0].rawValue as number * 100, 2) : 0;
-    this._reactionsRate = tabsData[1].rawValue !== '' ? ReportHelper.precisionRound(tabsData[1].rawValue as number * 100, 2) : 0;
+    this._engagementRate = tabsData[0].rawValue !== '' ? ReportHelper.precisionRound(tabsData[0].rawValue as number * 100, 1) : 0;
+    this._reactionsRate = tabsData[1].rawValue !== '' ? ReportHelper.precisionRound(tabsData[1].rawValue as number * 100, 1) : 0;
     this._reactionsCount = tabsData[2].rawValue !== '' ? ReportHelper.numberOrZero(tabsData[2].rawValue as number) : '0';
-    this._downloadRate = tabsData[3].rawValue !== '' ? ReportHelper.precisionRound(tabsData[3].rawValue as number * 100, 2) : 0;
+    this._downloadRate = tabsData[3].rawValue !== '' ? ReportHelper.precisionRound(tabsData[3].rawValue as number * 100, 1) : 0;
     this._downloadCount = tabsData[4].rawValue !== '' ? ReportHelper.numberOrZero(tabsData[4].rawValue as number) : '0';
   }
 
