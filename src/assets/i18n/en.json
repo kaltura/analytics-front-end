@@ -613,7 +613,7 @@
       "webcastLiveText": "Once the webcast ends, refresh the page\nand the webcast recording will be available.",
       "liveLink": "Go to Real Time Dashboard",
       "highlights": {
-        "knownUsers": "Known Viewers",
+        "knownUsers": "Unique Viewers",
         "knownUsers_tt": "The number of viewers that are logged in",
         "countries": "Countries",
         "percentLive": "{{0}}% Live"
