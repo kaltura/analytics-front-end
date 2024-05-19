@@ -96,7 +96,7 @@ export class LiveDiscoveryTableComponent implements OnInit, OnDestroy {
     if (this._showTable) {
       this._analytics.trackButtonClickEvent(ButtonType.Expand, 'RT_line_graph_view_presence');
     } else {
-      this._analytics.trackButtonClickEvent(ButtonType.Collapse, 'RT_line_graph_view_presence');
+      this._analytics.trackButtonClickEvent(ButtonType.Collapse, 'RT_line_graph_hide_presence');
     }
     this._widget.toggleTable(this._showTable, this.isPolling);
   }
