@@ -69,6 +69,10 @@ export class MiniEngagementConfig extends ReportDataBaseConfig {
           'poll_participation': {
             format: value => ReportHelper.percents(value, false),
             sortOrder: 7,
+          },
+          'private_chat_participation': {
+            format: value => ReportHelper.percents(value, false),
+            sortOrder: 8,
           }
         }
       }
