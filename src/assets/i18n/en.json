@@ -1182,7 +1182,13 @@
       "download_tt": "Percentage of attendees that downloaded at least one attachment during the event",
       "chat": "{{0}}% of attendees engaged in 1:1 chat",
       "chat_tt": "Percentage of attendees that engaged in 1:1 chat at least once during the event",
-      "content": "Content on-demand"
+      "overTime": "Event over time",
+      "during": "During the event",
+      "post": "Post event",
+      "content": "Content on-demand",
+      "attendees": "Attendees",
+      "minutes": "Minutes viewed",
+      "allDays": "All days"
     },
     "ve": {
       "all": "Registrants",

@@ -21,25 +21,28 @@ import { EventMiniReactionsComponent } from "./views/mini-reactions/mini-reactio
 import { EventMiniMessagesComponent } from "./views/mini-messages/mini-messages.component";
 import { MiniTopMomentComponent } from "./views/mini-top-moment/mini-top-moment.component";
 import { ContentOnDemandComponent } from "./views/content-on-demand/content-on-demand.component";
+import {EventOverTimeComponent} from "./views/event-over-time/event-over-time.component";
+import {SelectButtonModule} from "primeng/selectbutton";
 
 @NgModule({
-  imports: [
-    AreaBlockerModule,
-    TagsModule,
-    CommonModule,
-    FormsModule,
-    TranslateModule,
-    DropdownModule,
-    ButtonModule,
-    PaginatorModule,
-    SharedModule,
-    TableModule,
-    TooltipModule,
-    NgxEchartsModule,
-    RouterModule.forChild(routing),
-    AutoCompleteModule,
-    InputHelperModule
-  ],
+    imports: [
+        AreaBlockerModule,
+        TagsModule,
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+        DropdownModule,
+        ButtonModule,
+        PaginatorModule,
+        SharedModule,
+        TableModule,
+        TooltipModule,
+        NgxEchartsModule,
+        RouterModule.forChild(routing),
+        AutoCompleteModule,
+        InputHelperModule,
+        SelectButtonModule
+    ],
   declarations: [
     EventViewComponent,
     RegistrationFunnelComponent,
@@ -49,6 +52,7 @@ import { ContentOnDemandComponent } from "./views/content-on-demand/content-on-d
     EventMiniReactionsComponent,
     EventMiniMessagesComponent,
     MiniTopMomentComponent,
+    EventOverTimeComponent,
     ContentOnDemandComponent
   ],
   exports: [],

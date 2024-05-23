@@ -78,7 +78,7 @@ export class ContentOnDemandComponent implements OnDestroy {
       .subscribe((report) => {
           this._tableData = [];
           this.firstTimeLoading = false;
-          if (report.totals && report.totals.data && report.table.header) {
+          if (report.totals && report.totals.data && report.totals.header) {
             this._handleTotals(report.totals); // handle totals
           }
           if (report.table && report.table.data && report.table.header) {

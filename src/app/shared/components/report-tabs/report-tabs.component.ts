@@ -2,12 +2,12 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 export type Tab = {
   title: string;
-  tooltip: string;
+  tooltip?: string;
   value: string;
   selected: boolean;
-  units: string;
-  key: string;
-  rawValue: number | string;
+  units?: string;
+  key?: string;
+  rawValue?: number | string;
   trend?: number;
   sortOrder?: number;
   hidden?: boolean;
@@ -27,7 +27,7 @@ export class ReportTabsComponent implements OnInit {
   @Input() narrowTabs = false;
 
   @Output() tabChange: EventEmitter<Tab> = new EventEmitter();
-  
+
   constructor() {
   }
 

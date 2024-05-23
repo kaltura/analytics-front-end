@@ -104,6 +104,15 @@
                     <app-event-mini-top-moment></app-event-mini-top-moment>
                 </div>
 
+                <div *ngIf="_viewConfig.eventOverTime" class="kReportContainer">
+                  <app-event-over-time [virtualEventLoaded]="_virtualEventLoaded"
+                                               [exporting]="_exporting"
+                                               [eventIn]="_virtualEventId"
+                                               [endDate]="_eventEndDate"
+                                               [startDate]="_eventStartDate">
+                  </app-event-over-time>
+                </div>
+
                 <div *ngIf="_viewConfig.contentOnDemand" class="kReportContainer">
                   <app-event-content-on-demand [virtualEventLoaded]="_virtualEventLoaded"
                                                [exporting]="_exporting"
