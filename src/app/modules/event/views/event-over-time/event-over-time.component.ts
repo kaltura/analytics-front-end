@@ -88,7 +88,7 @@ export class EventOverTimeComponent implements OnDestroy {
     // check if the event lasted more than 1 day
     const date1 = moment(this.startDate);
     const date2 = moment(this.endDate);
-    const daysDifference = date2.diff(date1, 'days');
+    const daysDifference = Math.ceil(date2.diff(date1, 'days', true));
     this._multiDatesEvent = daysDifference > 0;
     if (this._multiDatesEvent) {
       const dateFormat = analyticsConfig.dateFormat === 'month-day-year' ? 'MM/DD/YYYY' : 'DD/MM/YYYY';
@@ -113,7 +113,7 @@ export class EventOverTimeComponent implements OnDestroy {
     if (this._selectedTab === 'during') {
       // for single day event of multi day event with 'all days' selected
       this._filter.fromDate = Math.floor(this.startDate.getTime() / 1000);
-      this._filter.toDate = Math.floor(this.endDate.getTime() / 1000);
+      this._filter.toDate = Math.floor(this.endDate.getTime() / 1000 + 1);
       if (this._multiDatesEvent && this._selectedDay > -1) {
         this._filter.interval = KalturaReportInterval.hours;
         if (this._selectedDay > 0) {
@@ -124,7 +124,7 @@ export class EventOverTimeComponent implements OnDestroy {
         }
       }
     } else {
-      this._filter.fromDate = Math.floor(this.endDate.getTime() / 1000);
+      this._filter.fromDate = Math.floor(this.endDate.getTime() / 1000 + 1);
       this._filter.toDate = Math.floor(new Date().getTime() / 1000);
       this._filter.interval = this._selectedTimeUnit;
     }
