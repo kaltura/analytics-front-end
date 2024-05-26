@@ -41,6 +41,8 @@ export class EventOverTimeComponent implements OnDestroy {
   private _totalAttendees = 0;
   private _totalMinutesViewed = 0;
 
+  private _echartsIntance: any;
+
   public _tabsData: Tab[] = [
     {title: this._translate.instant('app.event.during'), selected: true, value: 'during'},
     {title: this._translate.instant('app.event.post'), selected: false, value: 'post'}
@@ -207,6 +209,14 @@ export class EventOverTimeComponent implements OnDestroy {
     tab.selected = true;
     this._selectedTab = tab.value;
     this._loadReport();
+  }
+
+  public _onChartInit(chartInstance): void {
+    this._echartsIntance = chartInstance;
+    this._echartsIntance.on('click', 'series.bar', (params: any) => {
+      this._selectedDay = params.dataIndex;
+      this._loadReport();
+    });
   }
 }
 

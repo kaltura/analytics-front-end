@@ -36,10 +36,10 @@
         </div>
       </div>
       <div class="chart">
-        <div echarts class="kChart"
+        <div echarts class="kChart" (chartInit)="_onChartInit($event)"
              *ngIf="_selectedTab === 'during' && _multiDatesEvent && _selectedDay < 0 && _barChartData && _barChartData?.series && _barChartData?.series[0]?.data?.length"
              [options]="_barChartData"></div>
-        <div echarts class="kChart"
+        <div echarts class="kChart" (chartInit)="_onChartInit($event)"
              *ngIf="_selectedTab === 'post' || ((!_multiDatesEvent || _selectedDay > -1) && _lineChartData && _lineChartData?.series && _lineChartData?.series[0]?.data?.length)"
              [options]="_lineChartData"></div>
       </div>
