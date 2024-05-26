@@ -114,30 +114,34 @@ export class EventMiniEngagementComponent implements OnInit {
 
   private _handleTotals(totals: KalturaReportTotal): void {
     const tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
-    this._engagementRate = tabsData.length > 0 && tabsData[0].rawValue !== '' ? ReportHelper.precisionRound(tabsData[0].rawValue as number * 100, 1) : 0;
-    this._reactionsRate = tabsData.length > 1 && tabsData[1].rawValue !== '' ? ReportHelper.precisionRound(tabsData[1].rawValue as number * 100, 1) : 0;
-    this._reactionsCount = tabsData.length > 2 && tabsData[2].rawValue !== '' ? ReportHelper.numberOrZero(tabsData[2].rawValue as number) : '0';
-    this._downloadRate = tabsData.length > 3 && tabsData[3].rawValue !== '' ? ReportHelper.precisionRound(tabsData[3].rawValue as number * 100, 1) : 0;
-    this._downloadCount = tabsData.length > 4 && tabsData[4].rawValue !== '' ? ReportHelper.numberOrZero(tabsData[4].rawValue as number) : '0';
+    const totalUsers = tabsData[5].rawValue !== '' ? parseInt(tabsData[5].rawValue.toString()) : 0;
+    if (totalUsers > 0) {
+      this._engagementRate = tabsData[0].rawValue !== '' ? ReportHelper.precisionRound(tabsData[0].rawValue as number * 100, 1) : 0;
+      this._reactionsRate = tabsData[1].rawValue !== '' ? ReportHelper.precisionRound(tabsData[1].rawValue as number / totalUsers * 100, 1) : 0;
+      this._reactionsCount = tabsData[2].rawValue !== '' ? ReportHelper.numberOrZero(tabsData[2].rawValue as number) : '0';
+      this._downloadRate = tabsData[3].rawValue !== '' ? ReportHelper.precisionRound(tabsData[3].rawValue as number / totalUsers * 100, 1) : 0;
+      this._downloadCount = tabsData[4].rawValue !== '' ? ReportHelper.numberOrZero(tabsData[4].rawValue as number) : '0';
+    }
   }
 
   private _handleCncTotals(totals: KalturaReportTotal): void {
     const tabsData = this._reportService.parseTotals(totals, this._cncDataConfig.totals);
-
-    /*
-    if (tabsData[0].rawValue !== '') {
-      this._reactionsRate = ReportHelper.precisionRound(tabsData[0].rawValue as number * 100, 2); // update reactions rate
+    const totalUsers = tabsData.length > 7 && tabsData[8].rawValue !== '' ? parseInt(tabsData[8].rawValue.toString()) : 0;
+    if (totalUsers > 0) {
+      /*
+      if (tabsData[0].rawValue !== '') {
+        this._reactionsRate = ReportHelper.precisionRound(tabsData[0].rawValue as number / totalUsers * 100, 2); // update reactions rate
+      }
+      if (tabsData[1].rawValue !== '') {
+        this._reactionsCount = ReportHelper.numberOrZero(tabsData[1].rawValue as number); // update reactions count
+      }*/
+      this._messagesRate = tabsData[2].rawValue !== '' ? ReportHelper.precisionRound(tabsData[2].rawValue as number / totalUsers * 100, 1) : 0;
+      this._messagesCount = tabsData[3].rawValue !== '' ? ReportHelper.numberOrZero(tabsData[3].rawValue as number) : '0';
+      this._questionsRate = tabsData[4].rawValue !== '' ? ReportHelper.precisionRound(tabsData[4].rawValue as number / totalUsers * 100, 1) : 0;
+      this._questionsCount = tabsData[5].rawValue !== '' ? ReportHelper.numberOrZero(tabsData[5].rawValue as number) : '0';
+      this._pollsRate = tabsData[6].rawValue !== '' ? ReportHelper.precisionRound(tabsData[6].rawValue as number / totalUsers * 100, 1) : 0;
+      this._chatRate = tabsData[7].rawValue !== '' ? ReportHelper.precisionRound(tabsData[7].rawValue as number / totalUsers * 100, 1) : 0;
     }
-    if (tabsData[1].rawValue !== '') {
-      this._reactionsCount = ReportHelper.numberOrZero(tabsData[1].rawValue as number); // update reactions count
-    }*/
-
-    this._messagesRate = tabsData.length > 2 && tabsData[2].rawValue !== '' ? ReportHelper.precisionRound(tabsData[2].rawValue as number * 100, 2) : 0;
-    this._messagesCount = tabsData.length > 3 && tabsData[3].rawValue !== '' ? ReportHelper.numberOrZero(tabsData[3].rawValue as number) : '0';
-    this._questionsRate = tabsData.length > 4 && tabsData[4].rawValue !== '' ? ReportHelper.precisionRound(tabsData[4].rawValue as number * 100, 2) : 0;
-    this._questionsCount = tabsData.length > 5 && tabsData[5].rawValue !== '' ? ReportHelper.numberOrZero(tabsData[5].rawValue as number) : '0';
-    this._pollsRate = tabsData.length > 6 && tabsData[6].rawValue !== '' ? ReportHelper.precisionRound(tabsData[6].rawValue as number * 100, 2) : 0;
-    this._chatRate = tabsData.length > 7 && tabsData[7].rawValue !== '' ? ReportHelper.precisionRound(tabsData[7].rawValue as number * 100, 2) : 0;
   }
 
 }
