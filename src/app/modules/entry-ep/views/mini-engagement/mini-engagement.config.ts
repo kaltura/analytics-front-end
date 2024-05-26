@@ -17,21 +17,25 @@ export class MiniEngagementConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.percents(value, false),
             sortOrder: 1,
           },
-          'reaction_clicked_user_ratio': {
-            format: value => ReportHelper.percents(value, false),
+          'reaction_clicked_unique_users': {
+            format: value => ReportHelper.integerOrZero(value),
             sortOrder: 2,
           },
           'count_reaction_clicked': {
             format: value => ReportHelper.integerOrZero(value),
             sortOrder: 3,
           },
-          'download_attachment_user_ratio': {
+          'download_attachment_unique_users': {
             format: value => ReportHelper.percents(value, false),
             sortOrder: 4,
           },
           'count_download_attachment_clicked': {
             format: value => ReportHelper.integerOrZero(value),
             sortOrder: 5,
+          },
+          'unique_combined_live_viewers': {
+            format: value => ReportHelper.integerOrZero(value),
+            sortOrder: 6,
           }
         }
       }
@@ -42,33 +46,37 @@ export class MiniEngagementConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.totals]: {
         fields: {
-          'reaction_clicked_participation': {
-            format: value => ReportHelper.percents(value, false),
+          'reaction_clicked_unique_users': {
+            format: value => ReportHelper.integerOrZero(value),
             sortOrder: 1,
           },
           'count_reaction_clicked': {
             format: value => ReportHelper.integerOrZero(value),
             sortOrder: 2,
           },
-          'group_participation': {
-            format: value => ReportHelper.percents(value, false),
+          'unique_users_sent_group_message': {
+            format: value => ReportHelper.integerOrZero(value),
             sortOrder: 3,
           },
           'count_cnc_group_message_sent': {
             format: value => ReportHelper.integerOrZero(value),
             sortOrder: 4,
           },
-          'q_and_a_participation': {
-            format: value => ReportHelper.percents(value, false),
+          'unique_users_q_and_a_thread': {
+            format: value => ReportHelper.integerOrZero(value),
             sortOrder: 5,
           },
           'q_and_a_threads_count': {
             format: value => ReportHelper.integerOrZero(value),
             sortOrder: 6,
           },
-          'poll_participation': {
-            format: value => ReportHelper.percents(value, false),
+          'unique_users_answered_poll': {
+            format: value => ReportHelper.integerOrZero(value),
             sortOrder: 7,
+          },
+          'unique_logged_in_users': {
+            format: value => ReportHelper.integerOrZero(value),
+            sortOrder: 8,
           }
         }
       }
