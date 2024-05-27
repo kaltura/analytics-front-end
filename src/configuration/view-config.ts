@@ -204,12 +204,13 @@ export const viewsConfig = {
   event: {
     title: {},
     miniFunnel: {},
-    miniScoring: {},
+    miniProfile: {},
     miniMinutesViewed: {},
     miniReactions: {},
     miniMessages: {},
     miniEngagement: {},
     eventOverTime: {},
+    sessions: {},
     contentOnDemand: {}
   },
   virtualEvent: {

@@ -14,15 +14,16 @@ import { TableModule } from 'primeng/table';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { EventViewComponent } from "./event-view.component";
 import { RegistrationFunnelComponent } from "./views/registration-funnel/registration-funnel.component";
-import { MiniScoringComponent } from "./views/mini-scoring/mini-scoring.component";
+import { MiniProfileComponent } from "./views/mini-profile/mini-profile.component";
 import { EventMiniMinutesViewedComponent } from "./views/mini-minutes-viewed/mini-minutes-viewed.component";
 import { EventMiniEngagementComponent } from "./views/mini-engagement/mini-engagement.component";
 import { EventMiniReactionsComponent } from "./views/mini-reactions/mini-reactions.component";
 import { EventMiniMessagesComponent } from "./views/mini-messages/mini-messages.component";
 import { MiniTopMomentComponent } from "./views/mini-top-moment/mini-top-moment.component";
 import { ContentOnDemandComponent } from "./views/content-on-demand/content-on-demand.component";
-import {EventOverTimeComponent} from "./views/event-over-time/event-over-time.component";
-import {SelectButtonModule} from "primeng/selectbutton";
+import { EventOverTimeComponent } from "./views/event-over-time/event-over-time.component";
+import { SelectButtonModule } from "primeng/selectbutton";
+import { SessionsComponent } from "./views/sessions/sessions.component";
 
 @NgModule({
     imports: [
@@ -46,13 +47,14 @@ import {SelectButtonModule} from "primeng/selectbutton";
   declarations: [
     EventViewComponent,
     RegistrationFunnelComponent,
-    MiniScoringComponent,
+    MiniProfileComponent,
     EventMiniMinutesViewedComponent,
     EventMiniEngagementComponent,
     EventMiniReactionsComponent,
     EventMiniMessagesComponent,
     MiniTopMomentComponent,
     EventOverTimeComponent,
+    SessionsComponent,
     ContentOnDemandComponent
   ],
   exports: [],

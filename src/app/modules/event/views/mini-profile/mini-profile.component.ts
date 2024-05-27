@@ -3,17 +3,17 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
 
 @Component({
-  selector: 'app-event-mini-scoring',
-  templateUrl: './mini-scoring.component.html',
-  styleUrls: ['./mini-scoring.component.scss'],
+  selector: 'app-event-mini-profile',
+  templateUrl: './mini-profile.component.html',
+  styleUrls: ['./mini-profile.component.scss'],
   providers: [
-    KalturaLogger.createLogger('MiniScoringComponent')
+    KalturaLogger.createLogger('MiniProfileComponent')
   ]
 })
 
-export class MiniScoringComponent implements OnInit, OnDestroy {
+export class MiniProfileComponent implements OnInit, OnDestroy {
 
-  protected _componentId = 'event-mini-scoring';
+  protected _componentId = 'event-mini-profile';
 
   public _isBusy = false;
 

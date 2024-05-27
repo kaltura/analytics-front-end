@@ -1164,7 +1164,7 @@
       "accountError": "This entry belongs to another account however you do not have privileges to view this account.\nPartner ID: {{0}}"
     },
     "event": {
-      "scoring": "Lead scoring",
+      "attendeeProfile": "Attendee profile",
       "breakdown": "See breakdown",
       "avgMinutes": "Avg. minutes viewed per attendee",
       "avgMinutes_tt": "Average minutes viewed per attendee across live, real-time, and VOD sessions",
@@ -1188,7 +1188,8 @@
       "content": "Content on-demand",
       "attendees": "Attendees",
       "minutes": "Minutes viewed",
-      "allDays": "All days"
+      "allDays": "All days",
+      "sessions": "Sessions"
     },
     "ve": {
       "all": "Registrants",

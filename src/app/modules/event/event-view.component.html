@@ -62,8 +62,8 @@
                         </app-registration-funnel>
                     </div>
                     <div class="separator"></div>
-                    <div *ngIf="_viewConfig.miniScoring" class="kMiniReportContainer">
-                        <app-event-mini-scoring></app-event-mini-scoring>
+                    <div *ngIf="_viewConfig.miniProfile" class="kMiniReportContainer">
+                        <app-event-mini-profile></app-event-mini-profile>
                     </div>
 
                 </div>
@@ -113,6 +113,14 @@
                   </app-event-over-time>
                 </div>
 
+                <div *ngIf="_viewConfig.sessions" class="kReportContainer">
+                  <app-event-sessions [virtualEventLoaded]="_virtualEventLoaded"
+                                               [exporting]="_exporting"
+                                               [eventIn]="_virtualEventId"
+                                               [startDate]="_eventStartDate">
+                  </app-event-sessions>
+                </div>
+
                 <div *ngIf="_viewConfig.contentOnDemand" class="kReportContainer">
                   <app-event-content-on-demand [virtualEventLoaded]="_virtualEventLoaded"
                                                [exporting]="_exporting"
@@ -120,47 +128,6 @@
                                                [startDate]="_eventStartDate">
                   </app-event-content-on-demand>
                 </div>
-
-                <!--        <div class="offscreen">-->
-                <!--          <app-ve-status [dateFilter]="_dateFilter" #status-->
-                <!--                         [refineFilter]="_refineFilter"-->
-                <!--                         [virtualEventId]="_virtualEventId">-->
-                <!--          </app-ve-status>-->
-                <!--        </div>-->
-
-
-
-                <!--        <div *ngIf="_viewConfig.topDevices" class="kReportContainer">-->
-                <!--          <app-ve-devices [refineFilter]="_refineFilter" [dateFilter]="_dateFilter" [virtualEventId]="_virtualEventId"></app-ve-devices>-->
-                <!--        </div>-->
-
-                <!--        <div [class.kHidden]="!_viewConfig.geo" class="kReportContainer">-->
-                <!--          <app-ve-geo #geo [exporting]="_exporting"-->
-                <!--                           [dateFilter]="_dateFilter"-->
-                <!--                           [refineFilter]="_refineFilter"-->
-                <!--                           [virtualEventId]="_virtualEventId">-->
-                <!--          </app-ve-geo>-->
-                <!--        </div>-->
-
-                <!--        <div *ngIf="_viewConfig.roles || _viewConfig.industries" class="kReportContainer">-->
-                <!--          <div class="kSmallReportContainer" *ngIf="_viewConfig.roles">-->
-                <!--            <app-ve-roles-->
-                <!--              [dateFilter]="_dateFilter"-->
-                <!--              [exporting]="_exporting"-->
-                <!--              [refineFilter]="_refineFilter"-->
-                <!--              [virtualEventId]="_virtualEventId">-->
-                <!--            </app-ve-roles>-->
-                <!--          </div>-->
-
-                <!--          <div class="kSmallReportContainer" *ngIf="_viewConfig.industries">-->
-                <!--            <app-ve-industries-->
-                <!--              [dateFilter]="_dateFilter"-->
-                <!--              [exporting]="_exporting"-->
-                <!--              [refineFilter]="_refineFilter"-->
-                <!--              [virtualEventId]="_virtualEventId">-->
-                <!--            </app-ve-industries>-->
-                <!--          </div>-->
-                <!--        </div>-->
 
             </div>
 
