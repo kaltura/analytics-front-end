@@ -50,7 +50,7 @@
         </div>
       </div>
 
-      <div class="metric" [kTooltip]="'app.entryEp.highlights.messages_tt' | translate">
+      <div class="metric" [kTooltip]="'app.entryEp.highlights.messages_tt' | translate" *ngIf="_displayNewMetrics">
         <div class="icons">
           <div class="kMiniIcon blue"><i class="icon-captions"></i></div>
         </div>
@@ -64,7 +64,7 @@
         </div>
       </div>
 
-      <div class="metric" [kTooltip]="'app.entryEp.highlights.polls_tt' | translate">
+      <div class="metric" [kTooltip]="'app.entryEp.highlights.polls_tt' | translate" *ngIf="_displayNewMetrics">
         <div class="icons">
           <div class="kMiniIcon blue"><i class="icon-ic_poll"></i></div>
         </div>
@@ -78,7 +78,7 @@
         </div>
       </div>
 
-      <div class="metric" [kTooltip]="'app.entryEp.highlights.questions_tt' | translate">
+      <div class="metric" [kTooltip]="'app.entryEp.highlights.questions_tt' | translate" *ngIf="_displayNewMetrics">
         <div class="icons">
           <div class="kMiniIcon blue"><i class="icon-ic_questions"></i></div>
         </div>
