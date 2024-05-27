@@ -122,7 +122,7 @@ export class EventOverTimeComponent implements OnDestroy {
           this._filter.fromDate = moment(this.startDate).add(this._selectedDay, 'days').startOf('day').unix();
         }
         if (this._selectedDay < this._days.length - 2) {
-          this._filter.toDate = moment(this.startDate).add(this._selectedDay, 'days').endOf('day').unix();
+          this._filter.toDate = moment(this.startDate).add(this._selectedDay, 'days').endOf('day').add(1, 'minute').unix();
         }
       }
     } else {

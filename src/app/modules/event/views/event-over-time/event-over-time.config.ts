@@ -16,7 +16,7 @@ export class EventOverTimeConfig extends ReportDataBaseConfig {
         fields: {
           'unique_event_attendees': {
             format: value => value,
-            colors: [getPrimaryColor(), getSecondaryColor()],
+            colors: ["#487ADF"],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.event.attendees`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}%</span>`
           }
         }
@@ -38,7 +38,7 @@ export class EventOverTimeConfig extends ReportDataBaseConfig {
         fields: {
           'live_meeting_play_time': {
             format: value => value,
-            colors: [getPrimaryColor(), getSecondaryColor()],
+            colors: ["#EEAC41"],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.event.minutes`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}%</span>`
           }
         }
