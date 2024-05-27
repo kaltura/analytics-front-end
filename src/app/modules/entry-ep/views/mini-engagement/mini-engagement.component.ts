@@ -32,6 +32,10 @@ export class EpMiniEngagementComponent implements OnInit {
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
+
+  private NEW_METRICS_RELEASE_DATE = new Date(2024, 6, 2);
+  public _displayNewMetrics = false;
+
   private _order = '-date_id';
   private _reportType = KalturaReportType.epWebcastEngagement;
   private _cncReportType = KalturaReportType.cncParticipation;
@@ -65,6 +69,7 @@ export class EpMiniEngagementComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._displayNewMetrics = this.startDate.getTime() > this.NEW_METRICS_RELEASE_DATE.getTime();
     this._loadReport();
   }
 
