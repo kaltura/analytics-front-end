@@ -36,7 +36,7 @@ export class EventOverTimeConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.graph]: {
         fields: {
-          'live_meeting_play_time': {
+          'sum_view_period': {
             format: value => value,
             colors: ["#EEAC41"],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.event.minutes`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}%</span>`
@@ -45,7 +45,7 @@ export class EventOverTimeConfig extends ReportDataBaseConfig {
       },
       [ReportDataSection.totals]: {
         fields: {
-          'live_meeting_play_time': {
+          'sum_view_period': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 1,
           }
