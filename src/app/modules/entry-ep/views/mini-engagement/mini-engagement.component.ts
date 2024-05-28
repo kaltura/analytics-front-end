@@ -69,7 +69,7 @@ export class EpMiniEngagementComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._displayNewMetrics = true; // this.startDate.getTime() > this.NEW_METRICS_RELEASE_DATE.getTime();
+    this._displayNewMetrics = this.startDate.getTime() > this.NEW_METRICS_RELEASE_DATE.getTime();
     this._loadReport();
   }
 
