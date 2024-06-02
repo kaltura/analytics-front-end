@@ -23,7 +23,7 @@
       <div class="kTable">
         <div class="kToggle">
           <i [class.kIcondropdown_arrow_bottom]="!_showTable" [class.kIcondropdown_arrow_top]="_showTable"></i>
-          <a (click)="_toggleTable()">
+          <a (click)="_toggleTable()" (keydown.enter)="_toggleTable()" tabindex="0">
             {{(_showTable ? 'app.common.hideDetails' : 'app.common.viewDetails') | translate}}
           </a>
         </div>

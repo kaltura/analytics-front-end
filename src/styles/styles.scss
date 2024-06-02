@@ -777,3 +777,10 @@ p-carousel {
     box-sizing: border-box;
   }
 }
+// ADA fixes
+.p-checkbox-focused {
+  outline: 5px auto #0096ff !important;
+}
+.p-inputwrapper-focus {
+  outline: 5px auto #0096ff !important;
+}

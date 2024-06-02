@@ -32,7 +32,8 @@
                   *ngIf="col === 'full_name' && allowUserDrilldown"
                   [kTooltip]="data[col].length ? data[col] : data['name']"
                   [showOnEllipsis]="true"
-                  (click)="_drillDown(data)">{{data[col].length ? data[col] : data['name']}}</a>
+                  tabindex="0"
+                  (click)="_drillDown(data)" (keydown.enter)="_drillDown(data)">{{data[col].length ? data[col] : data['name']}}</a>
             <span class="kTableColumn"
                   *ngIf="col === 'full_name' && !allowUserDrilldown"
                   [kTooltip]="data[col].length ? data[col] : data['name']"

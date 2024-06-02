@@ -1,7 +1,7 @@
 <div class="kDateFilter kOverrideFAIcons">
 
   <div #datesBtn class="datesRangeDropDown" [class.comparing]="comparing"
-       tabindex="0" role="button" aria-label="Date filter"
+       tabindex="0" role="button" aria-label="Date filter" id="dateFilterBtn"
        (keydown.enter)="datesPopup.toggle()">
     <i *ngIf="comparing" class="compareIcon icon-bolt"></i>
     <span class="kDateRangePrefix">{{_dateRangePrefix}}</span>

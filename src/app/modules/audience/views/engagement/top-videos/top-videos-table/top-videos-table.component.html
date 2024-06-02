@@ -57,8 +57,9 @@
             <thumb-loader [useBase64]="true" [thumbnailUrl]="data.thumbnailUrl" (onClick)="_drillDown(data)" [width]="128" [height]="72"></thumb-loader>
           </td>
           <td [ngStyle]="{'width': '100%', 'padding-left': 0}">
-            <div class="kTopVideoEntryColumn"
+            <div class="kTopVideoEntryColumn" tabindex="0"
                  (click)="_drillDown(data)"
+                 (keydown.enter)="_drillDown(data)"
                  (mouseleave)="_hideOverlay()"
                  (mouseenter)="_showOverlay($event, data['object_id'])">
               <span class="kTableColumn kEntryName" [class.noCreator]="!data['creator_name']">{{data['entry_name']}}</span>

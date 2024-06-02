@@ -1,4 +1,4 @@
-<div [attr.data-aid]="'filter-' + name" class="kRefineFilters kReport">
+<div [attr.data-aid]="'filter-' + name" class="kRefineFilters kReport" tabindex="0" #filterContainer>
   <div class="kTagsContainer" *ngIf="_tags.length">
     <span class="kDisclaimer" *ngIf="_showDisclaimer">
       <i class="kIconInfo_Full"></i>
@@ -92,6 +92,7 @@
       <div class="kRefineFiltersFooter">
         <button type="button" class="kButtonBranded" pButton
                 [label]="'app.common.apply' | translate"
+                (keydown.tab)="onApplyTab()"
                 (click)="_apply()"></button>
       </div>
     </div>

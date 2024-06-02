@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
+import {Component, ElementRef, EventEmitter, HostBinding, Input, Output, ViewChild} from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { CategoryData } from 'shared/services/categories-search.service';
 import { animate, AnimationEvent, group, state, style, transition, trigger } from '@angular/animations';
@@ -66,10 +66,13 @@ export type RefineFilter = { value: any, type: string }[];
 })
 export class FilterComponent {
   @HostBinding('style.padding-bottom') _bottomPadding = '0';
+  @ViewChild('filterContainer', {static: true}) filterContainer: ElementRef;
 
   @Input() name = 'default';
 
   @Input() locationFiltersWarning: string;
+
+  @Input() nextTabElementId?: string;
 
   @Input() showAutocompleteGroup = true;
 
@@ -101,12 +104,14 @@ export class FilterComponent {
 
     if (this.showFilters !== isOpened) {
       this.showFilters = !!value;
-
       if (this.showFilters) {
         this._onPopupOpen();
       } else {
         this._onPopupClose();
       }
+    }
+    if (isOpened) {
+      this.filterContainer.nativeElement.focus();
     }
   }
 
@@ -428,6 +433,19 @@ export class FilterComponent {
     }
 
     this.closeFilters.emit();
+  }
+
+  public onApplyTab(): void {
+    this.closeFilters.emit();
+    if (this.nextTabElementId) {
+      const nextTabElement = document.getElementById(this.nextTabElementId);
+      if (nextTabElement) {
+        setTimeout(() => {
+          nextTabElement.focus();
+        }, 0);
+
+      }
+    }
   }
 
   public _filtersAnimationDone(event: AnimationEvent): void {

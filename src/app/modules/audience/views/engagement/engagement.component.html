@@ -13,7 +13,7 @@
                         [refineFilter]="_refineFilter"
                         [dateFilter]="_dateFilter"></app-export-csv>
         <div *ngIf="_engagementViewConfig.refineFilter" class="kFilter kOverrideFAIcons">
-          <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened">
+          <div class="kDropDown" (click)="_refineFilterOpened = !_refineFilterOpened" tabindex="0" (keydown.enter)="_refineFilterOpened = !_refineFilterOpened">
             <span>{{'app.filters.filter' | translate}}</span>
             <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
             <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
@@ -32,6 +32,7 @@
                            [exporting]="_exporting"
                            [opened]="_refineFilterOpened"
                            [dateFilter]="_dateFilter"
+                           [nextTabElementId]="'dateFilterBtn'"
                            [selectedFilters]="_selectedRefineFilters"
                            (closeFilters)="_refineFilterOpened = false"
                            (filterChange)="_onRefineFilterChange($event)"></app-refine-filter>

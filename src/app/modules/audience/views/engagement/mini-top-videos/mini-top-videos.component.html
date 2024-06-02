@@ -1,10 +1,10 @@
-<div data-aid="report-mini-top-videos" class="kReport kMini kOverrideFAIcons">
+<div data-aid="report-mini-top-videos" class="kReport kMini kOverrideFAIcons" tabindex="0">
   <div class="kFilters">
     <span class="kTitle">{{'app.engagement.topVideos' | translate}}</span>
     <kInputHelper>
       <span>{{'app.engagement.topVideos_tt' | translate}}</span>
     </kInputHelper>
-    <a (click)="scrollTo('#top-videos')" class="kDetails">{{'app.common.details' | translate}}</a>
+    <a (click)="scrollTo('#top-videos')" (keydown.enter)="scrollTo('#top-videos')" class="kDetails" tabindex="0">{{'app.common.details' | translate}}</a>
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
@@ -17,10 +17,10 @@
         <div class="kReportRowIndex" *ngIf="item.index !== 1">{{item.index}}</div>
         <thumb-loader [thumbnailUrl]="item.thumbnailUrl" (onClick)="_drillDown(item)"></thumb-loader>
         <div class="kReportRowDetails">
-          <span class="kTitle"
+          <span class="kTitle" tabindex="0"
                 [kTooltip]="item.entry_name"
                 [showOnEllipsis]="true"
-                (click)="_drillDown(item)">{{item.entry_name}}</span>
+                (click)="_drillDown(item)" (keydown.enter)="_drillDown(item)">{{item.entry_name}}</span>
           <span class="kScore">{{item.engagement_ranking}}/10</span>
         </div>
       </div>

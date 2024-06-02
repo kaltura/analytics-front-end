@@ -1,10 +1,10 @@
-<div data-aid="report-engagement-mini-highlights" class="kReport kMini kOverrideFAIcons">
+<div data-aid="report-engagement-mini-highlights" class="kReport kMini kOverrideFAIcons" tabindex="0">
   <div class="kFilters">
     <span class="kTitle">{{'app.engagement.highlights' | translate}}</span>
     <kInputHelper *ngIf="!exporting">
       <span>{{'app.engagement.highlights_tt' | translate}}</span>
     </kInputHelper>
-    <a  *ngIf="!exporting" (click)="scrollTo('#highlights-report')" class="kDetails">{{'app.common.details' | translate}}</a>
+    <a  *ngIf="!exporting" (click)="scrollTo('#highlights-report')" class="kDetails" tabindex="0" (keydown.enter)="scrollTo('#highlights-report')">{{'app.common.details' | translate}}</a>
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">

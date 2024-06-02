@@ -5,7 +5,7 @@
     <ng-content *ngIf="!isLoading" select=".label-addition"></ng-content>
   </div>
   <div class="kColumnContent">
-    <p-multiSelect appendTo="body"
+    <p-multiSelect #dropdown
                    role="button"
                    [style]="{'width':'192px'}"
                    [options]="options"
