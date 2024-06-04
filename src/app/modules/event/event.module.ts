@@ -24,6 +24,7 @@ import { ContentOnDemandComponent } from "./views/content-on-demand/content-on-d
 import { EventOverTimeComponent } from "./views/event-over-time/event-over-time.component";
 import { SelectButtonModule } from "primeng/selectbutton";
 import { SessionsComponent } from "./views/sessions/sessions.component";
+import {OverlayPanelModule} from "primeng/overlaypanel";
 
 @NgModule({
     imports: [
@@ -42,7 +43,8 @@ import { SessionsComponent } from "./views/sessions/sessions.component";
         RouterModule.forChild(routing),
         AutoCompleteModule,
         InputHelperModule,
-        SelectButtonModule
+        SelectButtonModule,
+        OverlayPanelModule
     ],
   declarations: [
     EventViewComponent,

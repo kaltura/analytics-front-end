@@ -21,6 +21,7 @@ export class MiniTopMomentComponent implements OnInit, OnDestroy {
   public serverUri = getKalturaServerUri();
   public _playerConfig: any = {};
 
+  public _noData = false;
   public _entryId = '';
   public _entryName = '';
   public _seekFrom = 0;

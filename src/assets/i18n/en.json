@@ -1175,6 +1175,7 @@
       "interactivity": "Attendee interactivity",
       "topMoment": "Top moment",
       "moment": "During this moment in <b>{{0}}</b>, the event reached its <b>{{1}}</b> peak viewers",
+      "noTopMoment": "No video available yet",
       "polls": "{{0}}% of attendees participated in polls",
       "polls_tt": "Percentage of attendees that answered at least one poll during the event",
       "questions": "{{0}}% of attendees created {{1}} Q&A threads",

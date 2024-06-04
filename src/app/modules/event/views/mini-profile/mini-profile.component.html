@@ -5,8 +5,15 @@
         <span class="kTitle">{{'app.event.attendeeProfile' | translate}}</span>
         <a class="kLink" (click)="breakdown()">{{'app.event.breakdown' | translate}}</a>
       </div>
-
+      <div class="tags">
+        <div *ngFor="let profile of _profiles" class="tag" [kTooltip]="profile" [showOnEllipsis]="true">
+          <span (mouseleave)="_hideOverlay()" (mouseenter)="_showOverlay($event, profile)">{{profile}}</span>
+        </div>
+      </div>
     </div>
   </k-area-blocker>
 </div>
 
+<p-overlayPanel [showTransitionOptions]="'0ms'" [hideTransitionOptions]="'0ms'" #overlay appendTo="body">
+  <span>{{_currentProfile}}</span>
+</p-overlayPanel>

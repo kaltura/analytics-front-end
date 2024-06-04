@@ -38,21 +38,6 @@
                     </div>
                 </div>
 
-                <!--        <div *ngIf="_viewConfig.details" class="kEntryDetails" aria-label="Virtual Event Details"-->
-                <!--             [class.kFloatingDetails]="!_viewConfig.title">-->
-                <!--          <span class="kLabel">{{'app.category.id' | translate}}</span>-->
-                <!--          <span>{{_virtualEvent?.id}}</span>-->
-                <!--          <div class="kSeparator"></div>-->
-                <!--          <span class="kLabel">{{'app.category.created' | translate}}</span>-->
-                <!--          <span>{{_virtualEventDateLabel}}</span>-->
-                <!--          <div class="kSeparator"></div>-->
-                <!--          <span class="kLabel">{{'app.category.updated' | translate}}</span>-->
-                <!--          <span>{{_updateDate}}</span>-->
-                <!--        </div>-->
-
-                <!--span class="kTitle" *ngIf="_exporting">{{'app.ve.registration' | translate}}</span>
-                <div class="kSummary" *ngIf="_exporting">{{'app.ve.summary' | translate}}</div-->
-
                 <div [class.kHidden]="!_virtualEventLoaded" class="kReportContainer">
                     <div [class.kHidden]="!_viewConfig.miniFunnel" class="kMiniReportContainer">
                         <app-registration-funnel [appGuid]="_appGuid" #funnel
@@ -63,7 +48,7 @@
                     </div>
                     <div class="separator"></div>
                     <div *ngIf="_viewConfig.miniProfile" class="kMiniReportContainer">
-                        <app-event-mini-profile></app-event-mini-profile>
+                        <app-event-mini-profile [eventIn]="_virtualEventId"></app-event-mini-profile>
                     </div>
 
                 </div>
