@@ -1164,7 +1164,7 @@
       "accountError": "This entry belongs to another account however you do not have privileges to view this account.\nPartner ID: {{0}}"
     },
     "event": {
-      "attendeeProfile": "Attendee profile",
+      "attendeeProfile": "Registrants profile",
       "breakdown": "See breakdown",
       "avgMinutes": "Avg. minutes viewed per attendee",
       "avgMinutes_tt": "Average minutes viewed per attendee across live, real-time, and VOD sessions",
@@ -1174,6 +1174,7 @@
       "messages_tt": "Percentage of attendees that sent at least one message during the event and total number of messages sent during the event",
       "interactivity": "Attendee interactivity",
       "topMoment": "Top moment",
+      "moment": "During this moment in <b>{{0}}</b>, the event reached its <b>{{1}}</b> peak viewers",
       "polls": "{{0}}% of attendees participated in polls",
       "polls_tt": "Percentage of attendees that answered at least one poll during the event",
       "questions": "{{0}}% of attendees created {{1}} Q&A threads",

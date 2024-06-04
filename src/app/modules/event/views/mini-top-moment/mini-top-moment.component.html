@@ -1,10 +1,12 @@
-<div data-aid="report-event-mini-top-moment" class="kReport kMini kOverrideFAIcons">
+<div data-aid="report-event-mini-top-moment" class="kReport kMini kOverrideFAIcons kEventTopMoments">
   <k-area-blocker [showLoader]="_isBusy">
-    <div class="kReportContent">
-      <div class="kFilters">
-        <span class="kTitle">{{'app.event.topMoment' | translate}}</span>
-      </div>
-
+    <div class="kReportContent" *ngIf="_entryId.length">
+      <app-k-player-v7 [cdnUrl]="serverUri" [pid]="_playerConfig.pid" [preload]="true" [fillWidth]="true" [fillHeight]="true" *ngIf="_entryId.length"
+                       [uiconfid]="_playerConfig.uiconfid" [entryid]="_entryId" [ks]="_playerConfig.ks" [clipTo]="_clipTo" [seekFrom]="_seekFrom"
+                       [plugins]="_playerConfig.plugins" (kalturaPlayerReady)="_onPlayerReady($event)"></app-k-player-v7>
+      <div class="cover" *ngIf="!_playing"></div>
+      <span class="title" *ngIf="!_playing">{{'app.event.topMoment' | translate}}</span>
+      <span class="info" *ngIf="!_playing" [innerHTML]="'app.event.moment' | translate:{'0': _entryName, '1': _peakViewers}"></span>
     </div>
   </k-area-blocker>
 </div>
