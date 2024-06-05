@@ -97,7 +97,7 @@ export class EventOverTimeComponent implements OnDestroy {
       this._days = [];
       this._days.push({ label: this._translate.instant('app.event.allDays'), value: -1 });
       for (let i = 0; i <= daysDifference; i++) {
-        this._days.push({label: date1.add(i, 'days').format(dateFormat), value: i});
+        this._days.push({label: moment(this.startDate).add(i, 'days').format(dateFormat), value: i});
       }
     }
   }
@@ -203,6 +203,10 @@ export class EventOverTimeComponent implements OnDestroy {
     this._barChartData = calcPercent(this._barChartData);
     this._lineChartData = !isEmptyObject(lineChartData) ? lineChartData[graphMetric] : null;
     this._lineChartData = calcPercent(this._lineChartData);
+    // remove redundant dates caused by timezone offset
+    if (this._barChartData?.series[0]?.data?.length < (this._days.length - 1)) {
+      this._days.length = this._barChartData.series[0].data.length + 1;
+    }
   }
 
   public _onTabChange(tab: Tab): void {

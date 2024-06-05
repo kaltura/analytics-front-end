@@ -13,24 +13,7 @@
                     <h1 *ngIf="_exporting"
                         class="kTitle kTruncateTitle">{{ 'app.ve.reportTitle' | translate: {'0': _virtualEvent.name} }}</h1>
                     <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title" [class.exporting]="_exporting">
-                        <!--app-export-csv aria-label="Export" #export
-                                        role="button"
-                                        [class.kHidden]="!_viewConfig.export" name="Category"
-                                        [reports]="_exportConfig"
-                                        [refineFilter]="_refineFilter"
-                                        [dateFilter]="_dateFilter"
-                                        [virtualEventId]="_virtualEventId"></app-export-csv-->
-                        <div class="kFilter kOverrideFAIcons" [class.kFloatLeft]="!_viewConfig.download">
-                            <div role="button" aria-label="Refine Filter" tabindex="0" class="kDropDown kHidden"
-                                 *ngIf="_viewConfig.refineFilter"
-                                 (click)="_refineFilterOpened = !_refineFilterOpened"
-                                 (keydown.enter)="_refineFilterOpened = !_refineFilterOpened">
-                                <span>{{ 'app.filters.filter' | translate }}</span>
-                                <i *ngIf="!_refineFilterOpened" class="kIcondropdown_arrow_bottom"></i>
-                                <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
-                            </div>
-                        </div>
-                        <app-pdf-export *ngIf="_viewConfig.download" [disabled]="_refineFilterOpened"
+                        <app-pdf-export *ngIf="_viewConfig.download"
                                         [elementToExport]="reportToExport" [filename]="exportFilename"
                                         (preExport)="preExportHandler()" (postExport)="postExportHandler()"
                                         (exporting)="onExporting($event)"></app-pdf-export>
@@ -86,7 +69,12 @@
                                                [endDate]="_eventEndDate">
                     </app-event-mini-engagement>
                     <div class="separator"></div>
-                    <app-event-mini-top-moment></app-event-mini-top-moment>
+                    <app-event-mini-top-moment [virtualEventLoaded]="_virtualEventLoaded"
+                                               [eventIn]="_virtualEventId"
+                                               [eventStartDate]="_eventStartDate"
+                                               [eventEndDate]="_eventEndDate"
+                                               [eventActualStartDate]="_actualEventStartDate">
+                    </app-event-mini-top-moment>
                 </div>
 
                 <div *ngIf="_viewConfig.eventOverTime" class="kReportContainer">

@@ -33,15 +33,11 @@ export class EventViewComponent implements OnInit, OnDestroy {
 
   @ViewChild('export', {static: true}) export: ExportCsvComponent;
 
-  public _selectedRefineFilters: RefineFilter = null;
   public _viewConfig: ViewConfig =  analyticsConfig.viewsConfig.event;
   public _dateRange = DateRanges.SinceCreation;
-  public _timeUnit = KalturaReportInterval.days;
   public _virtualEventDateLabel = '';
   public _creationDate: moment.Moment = null;
   public _updateDate = '';
-  public _exportConfig: ExportItem[] = [];
-  public _refineFilterOpened = false;
   public _loadingVirtualEvent = false;
   public _loadingAppGuid = false;
   public _virtualEventLoaded = false;
@@ -71,14 +67,12 @@ export class EventViewComponent implements OnInit, OnDestroy {
               private _kalturaClient: KalturaClient,
               private _browserService: BrowserService,
               private _errorsManager: ErrorsManagerService,
-              private _exportConfigService: EventExportConfig,
               private _frameEventManager: FrameEventManagerService,
               private _navigationDrillDownService: NavigationDrillDownService) {
     this._creationDateLabels = {label: this._translate.instant('app.dateFilter.publish'), prefix: this._translate.instant('app.dateFilter.sincePublish')};
   }
 
   ngOnInit() {
-    this._exportConfig = this._exportConfigService.getConfig(this._viewConfig);
     this._route.params
       .pipe(cancelOnDestroy(this))
       .subscribe(params => {

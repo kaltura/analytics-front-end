@@ -2,14 +2,22 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
 import {analyticsConfig, getKalturaServerUri} from "configuration/analytics-config";
-import {AuthService} from "shared/services";
+import {AuthService, ErrorsManagerService, ReportConfig, ReportService} from "shared/services";
+import {AreaBlockerMessage} from "@kaltura-ng/kaltura-ui";
+import {BaseEntryGetAction, KalturaAPIException, KalturaClient, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaLiveEntry, KalturaMediaEntry, KalturaReportInterval, KalturaReportTable, KalturaReportType} from "kaltura-ngx-client";
+import {MiniTopMomentConfig} from "./mini-top-moment.config";
+import {ReportDataConfig} from "shared/services/storage-data-base.config";
+import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
+import * as moment from "moment";
 
 @Component({
   selector: 'app-event-mini-top-moment',
   templateUrl: './mini-top-moment.component.html',
   styleUrls: ['./mini-top-moment.component.scss'],
   providers: [
-    KalturaLogger.createLogger('MiniTopMomentComponent')
+    KalturaLogger.createLogger('MiniTopMomentComponent'),
+    MiniTopMomentConfig,
+    ReportService,
   ]
 })
 
@@ -17,7 +25,31 @@ export class MiniTopMomentComponent implements OnInit, OnDestroy {
 
   protected _componentId = 'event-mini-top-moment';
 
+  @Input() eventActualStartDate: Date;
+  @Input() eventStartDate: Date;
+  @Input() eventEndDate: Date;
+  @Input() eventIn = '';
+  @Input() set virtualEventLoaded(value: boolean) {
+    if (value === true) {
+      // use timeout to allow data binding to finish
+      setTimeout(() => {
+        this._loadReport();
+      }, 0);
+    }
+  }
+
   public _isBusy = false;
+  public _blockerMessage: AreaBlockerMessage = null;
+  private _dataConfig: ReportDataConfig;
+  private _order = '-position';
+  private _reportType = KalturaReportType.epTopMoments;
+  private _pager = new KalturaFilterPager({ pageSize: 1, pageIndex: 1 });
+  private _filter = new KalturaEndUserReportInputFilter({
+    searchInTags: true,
+    searchInAdminTags: false
+  });
+  private _liveEntryPosition = 0;
+
   public serverUri = getKalturaServerUri();
   public _playerConfig: any = {};
 
@@ -31,7 +63,12 @@ export class MiniTopMomentComponent implements OnInit, OnDestroy {
   public _playerInstance: any = {};
   public _playing = false;
 
-  constructor(private _authService: AuthService) {
+  constructor(private _authService: AuthService,
+              private _reportService: ReportService,
+              private _kalturaClient: KalturaClient,
+              private _errorsManager: ErrorsManagerService,
+              _dataConfigService: MiniTopMomentConfig) {
+    this._dataConfig = _dataConfigService.getConfig();
   }
 
   ngOnInit(): void {
@@ -92,14 +129,106 @@ export class MiniTopMomentComponent implements OnInit, OnDestroy {
         }
       }
     };
-    setTimeout(() => {
-      this._isBusy = false;
-      this._entryId = '1_e0k67kye';
-      this._entryName = 'Event platform registration';
-      this._seekFrom = 60;
-      this._clipTo = 120;
-      this._peakViewers = '4,032';
-    }, 1000);
+    // setTimeout(() => {
+    //   this._isBusy = false;
+    //   this._entryId = '1_e0k67kye';
+    //   this._entryName = 'Event platform registration';
+    //   this._seekFrom = 60;
+    //   this._clipTo = 120;
+    //   this._peakViewers = '4,032';
+    // }, 1000);
+  }
+
+  private _loadReport(sections = this._dataConfig): void {
+    this._isBusy = true;
+    this._noData = false;
+    this._blockerMessage = null;
+    this._filter.virtualEventIdIn = this.eventIn;
+    this._filter.timeZoneOffset = DateFilterUtils.getTimeZoneOffset();
+    this._filter.fromDate = Math.floor(this.eventStartDate.getTime() / 1000);
+    this._filter.toDate = Math.floor(this.eventEndDate.getTime() / 1000);
+    this._filter.interval = KalturaReportInterval.days;
+    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order, pager: this._pager };
+    this._reportService.getReport(reportConfig, sections, false).subscribe(
+      report => {
+        if (report.table && report.table.data && report.table.header) {
+          this._handleTable(report.table); // handle table
+        } else {
+          this._isBusy = false;
+          this._noData = true;
+        }
+      },
+      error => {
+        this._isBusy = false;
+        this.displayServerError(error, () => this._loadReport());
+      }
+    );
+  }
+
+  private _handleTable(table: KalturaReportTable): void {
+    const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
+    if (tableData.length > 0) {
+      this._entryName = tableData[0].entry_name;
+      this._peakViewers = tableData[0].combined_live_view_period_count;
+      this._liveEntryPosition = parseInt(tableData[0].position);
+      this.loadRecordingEntry(tableData[0].entry_id);
+    }
+  }
+
+  private loadRecordingEntry(liveEntryId: string): void {
+    this._kalturaClient
+      .request(new BaseEntryGetAction({ entryId: liveEntryId }))
+      .pipe(cancelOnDestroy(this)).subscribe(
+      (entry: KalturaLiveEntry) => {
+          if (entry.recordedEntryId || entry.redirectEntryId) {
+            // need to fetch the entry to get its creation date
+            const vod = entry.recordedEntryId || entry.redirectEntryId;
+            this._kalturaClient
+              .request(new BaseEntryGetAction({ entryId: vod }))
+              .pipe(cancelOnDestroy(this)).subscribe(
+              (recording: KalturaMediaEntry) => {
+                // calculate start point of the video
+                let recordingStartTime = recording.createdAt;
+                const eventStartTime = Math.round(this.eventActualStartDate.getTime() / 1000);
+                // for simulive, the recording is a predefined entry with older creation date so we set its start time to the session start time
+                if (recordingStartTime < eventStartTime) {
+                  recordingStartTime = eventStartTime;
+                }
+                const recordingOffset = eventStartTime - recordingStartTime;
+                const liveOffsetFromStart = this._liveEntryPosition - (this.eventActualStartDate.getTime() / 1000);
+                let recordingPosition = liveOffsetFromStart + recordingOffset;
+                recordingPosition = recordingPosition < 0 ? 0 : recordingPosition; // protect from negative values (should not happen)
+                this._seekFrom = recordingPosition;
+                this._clipTo = recordingPosition + 60; // play 1 minute from start position
+                this._entryId = vod;
+                this._isBusy = false;
+              },
+              error => {
+                this.displayServerError(error, () => this.loadRecordingEntry(liveEntryId));
+              }
+            );
+          } else {
+            this._noData = true;
+          }
+          this._isBusy = false;
+        },
+        error => {
+          this._isBusy = false;
+          this.displayServerError(error, () => this.loadRecordingEntry(liveEntryId));
+        }
+      );
+  }
+
+  private displayServerError(error: KalturaAPIException, retryFunction: Function): void {
+    const actions = {
+      'close': () => {
+        this._blockerMessage = null;
+      },
+      'retry': () => {
+        retryFunction();
+      },
+    };
+    this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
   }
 
   public _onPlayerReady(player): void {

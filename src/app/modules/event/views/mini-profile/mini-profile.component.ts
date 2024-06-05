@@ -6,6 +6,12 @@ import {FrameEventManagerService, FrameEvents} from "shared/modules/frame-event-
 import {Router} from "@angular/router";
 import {OverlayPanel} from "primeng/overlaypanel";
 
+export type Profile = {
+  metric: string; // 'company' | 'role' | 'industry' | 'country';
+  label: string;
+  count: number;
+};
+
 @Component({
   selector: 'app-event-mini-profile',
   templateUrl: './mini-profile.component.html',
@@ -24,8 +30,8 @@ export class MiniProfileComponent implements OnInit, OnDestroy {
 
   public _isBusy = false;
 
-  public _profiles = [];
-  public _currentProfile = '';
+  public _profiles: Profile[] = [];
+  public _currentProfile: Profile = null;
 
   constructor(private _frameEventManager: FrameEventManagerService,
               private _router: Router) {
@@ -35,11 +41,29 @@ export class MiniProfileComponent implements OnInit, OnDestroy {
     this._isBusy = true;
     setTimeout(() => {
       this._isBusy = false;
-      this._profiles = ['Oracle', 'Amazon', 'Kaltura', 'Canada', 'United sates of america', 'Israel', 'CEO', 'Director of customer success', 'Technology', 'Helthcare & Biotech'];
+      const profiles = [{metric: 'country', label: 'Canada', count: 100},
+        {metric: 'country', label: 'United sates of america', count: 100},
+        {metric: 'country', label: 'Israel', count: 100},
+        {metric: 'role', label: 'CEO', count: 100},
+        {metric: 'role', label: 'Director of customer success', count: 100},
+        {metric: 'role', label: 'Front-end developer', count: 100},
+        {metric: 'industry', label: 'Technology', count: 100},
+        {metric: 'industry', label: 'Healthcare & Biotech', count: 100},
+        {metric: 'industry', label: 'Marketing', count: 100}];
+      this._profiles = this.shuffle(profiles);
     }, 1000);
   }
 
-  public _showOverlay(event: any, profile: string): void {
+  private shuffle = (array: Profile[]) => {
+    // Fisher-Yates Sorting Algorithm
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  public _showOverlay(event: any, profile: Profile): void {
     if (this._overlay) {
       this._currentProfile = profile;
       this._overlay.show(event);
@@ -48,7 +72,7 @@ export class MiniProfileComponent implements OnInit, OnDestroy {
 
   public _hideOverlay(): void {
     if (this._overlay) {
-      this._currentProfile = '';
+      this._currentProfile = null;
       this._overlay.hide();
     }
   }

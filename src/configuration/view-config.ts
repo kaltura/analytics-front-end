@@ -203,6 +203,7 @@ export const viewsConfig = {
   },
   event: {
     title: {},
+    download: {},
     miniFunnel: {},
     miniProfile: {},
     miniMinutesViewed: {},
