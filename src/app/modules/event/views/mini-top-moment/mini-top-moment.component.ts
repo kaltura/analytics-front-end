@@ -4,7 +4,7 @@ import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
 import {analyticsConfig, getKalturaServerUri} from "configuration/analytics-config";
 import {AuthService, ErrorsManagerService, ReportConfig, ReportService} from "shared/services";
 import {AreaBlockerMessage} from "@kaltura-ng/kaltura-ui";
-import {BaseEntryGetAction, KalturaAPIException, KalturaClient, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaLiveEntry, KalturaMediaEntry, KalturaReportInterval, KalturaReportTable, KalturaReportType} from "kaltura-ngx-client";
+import {BaseEntryGetAction, KalturaAPIException, KalturaClient, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaLiveEntry, KalturaMediaEntry, KalturaReportInterval, KalturaReportTable, KalturaReportType, KalturaRoomEntry} from "kaltura-ngx-client";
 import {MiniTopMomentConfig} from "./mini-top-moment.config";
 import {ReportDataConfig} from "shared/services/storage-data-base.config";
 import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
@@ -179,10 +179,10 @@ export class MiniTopMomentComponent implements OnInit, OnDestroy {
     this._kalturaClient
       .request(new BaseEntryGetAction({ entryId: liveEntryId }))
       .pipe(cancelOnDestroy(this)).subscribe(
-      (entry: KalturaLiveEntry) => {
-          if (entry.recordedEntryId || entry.redirectEntryId) {
-            // need to fetch the entry to get its creation date
-            const vod = entry.recordedEntryId || entry.redirectEntryId;
+      (entry: KalturaLiveEntry | KalturaRoomEntry) => {
+          if ((entry as KalturaLiveEntry).recordedEntryId || entry.redirectEntryId) {
+            // need to load the recording entry to get its creation date
+            const vod = (entry as KalturaLiveEntry).recordedEntryId || entry.redirectEntryId;
             this._kalturaClient
               .request(new BaseEntryGetAction({ entryId: vod }))
               .pipe(cancelOnDestroy(this)).subscribe(
@@ -191,9 +191,9 @@ export class MiniTopMomentComponent implements OnInit, OnDestroy {
                 let recordingStartTime = recording.createdAt;
                 const eventStartTime = Math.round(this.eventActualStartDate.getTime() / 1000);
                 // for simulive, the recording is a predefined entry with older creation date so we set its start time to the session start time
-                if (recordingStartTime < eventStartTime) {
-                  recordingStartTime = eventStartTime;
-                }
+                // if (recordingStartTime < eventStartTime) {
+                //   recordingStartTime = eventStartTime;
+                // }
                 const recordingOffset = eventStartTime - recordingStartTime;
                 const liveOffsetFromStart = this._liveEntryPosition - (this.eventActualStartDate.getTime() / 1000);
                 let recordingPosition = liveOffsetFromStart + recordingOffset;
