@@ -37,6 +37,24 @@
     }
   }
 }
+.overlay {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding: 16px;
+  box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.10), 0px 2px 8px 0px rgba(0, 0, 0, 0.24);
+  border-radius: 8px;
+  .label {
+    color: $kGrayscale1;
+    font-size: 16px;
+    &:not(:last-child) {
+      margin-bottom: 8px;
+    }
+  }
+  .value {
+    font-weight: 700;
+  }
+}
 @media (max-width: 991px) {
   .kReport .tags .tag {
     max-width: 33%;

@@ -1165,6 +1165,7 @@
     },
     "event": {
       "attendeeProfile": "Registrants profile",
+      "attendeeTypePercent": "{{0}}% Of overall registrants",
       "breakdown": "See breakdown",
       "avgMinutes": "Avg. minutes viewed per attendee",
       "avgMinutes_tt": "Average minutes viewed per attendee across live, real-time, and VOD sessions",

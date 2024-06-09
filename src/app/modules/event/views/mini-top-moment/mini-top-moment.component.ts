@@ -8,7 +8,6 @@ import {BaseEntryGetAction, KalturaAPIException, KalturaClient, KalturaEndUserRe
 import {MiniTopMomentConfig} from "./mini-top-moment.config";
 import {ReportDataConfig} from "shared/services/storage-data-base.config";
 import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
-import * as moment from "moment";
 
 @Component({
   selector: 'app-event-mini-top-moment',
@@ -41,7 +40,7 @@ export class MiniTopMomentComponent implements OnInit, OnDestroy {
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
   private _dataConfig: ReportDataConfig;
-  private _order = '-position';
+  private _order = '-combined_live_view_period_count';
   private _reportType = KalturaReportType.epTopMoments;
   private _pager = new KalturaFilterPager({ pageSize: 1, pageIndex: 1 });
   private _filter = new KalturaEndUserReportInputFilter({
@@ -72,7 +71,6 @@ export class MiniTopMomentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this._isBusy = true;
     this._playerConfig = {
       uiconfid: analyticsConfig.kalturaServer.previewUIConfV7,
       pid: this._authService.pid,
@@ -129,14 +127,6 @@ export class MiniTopMomentComponent implements OnInit, OnDestroy {
         }
       }
     };
-    // setTimeout(() => {
-    //   this._isBusy = false;
-    //   this._entryId = '1_e0k67kye';
-    //   this._entryName = 'Event platform registration';
-    //   this._seekFrom = 60;
-    //   this._clipTo = 120;
-    //   this._peakViewers = '4,032';
-    // }, 1000);
   }
 
   private _loadReport(sections = this._dataConfig): void {
@@ -190,10 +180,10 @@ export class MiniTopMomentComponent implements OnInit, OnDestroy {
                 // calculate start point of the video
                 let recordingStartTime = recording.createdAt;
                 const eventStartTime = Math.round(this.eventActualStartDate.getTime() / 1000);
-                // for simulive, the recording is a predefined entry with older creation date so we set its start time to the session start time
-                // if (recordingStartTime < eventStartTime) {
-                //   recordingStartTime = eventStartTime;
-                // }
+                // for simulive, the recording is a predefined entry with older creation date so we set its start time to the session start time if the difference in more than 2 hours
+                if (eventStartTime - recordingStartTime > 7200) {
+                  recordingStartTime = eventStartTime;
+                }
                 const recordingOffset = eventStartTime - recordingStartTime;
                 const liveOffsetFromStart = this._liveEntryPosition - (this.eventActualStartDate.getTime() / 1000);
                 let recordingPosition = liveOffsetFromStart + recordingOffset;

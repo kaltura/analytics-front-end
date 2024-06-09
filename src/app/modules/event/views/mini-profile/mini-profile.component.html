@@ -1,5 +1,5 @@
 <div data-aid="report-event-mini-profile" class="kReport kMini kOverrideFAIcons">
-  <k-area-blocker [showLoader]="_isBusy">
+  <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
     <div class="kReportContent">
       <div class="kFilters">
         <span class="kTitle">{{'app.event.attendeeProfile' | translate}}</span>
@@ -15,5 +15,8 @@
 </div>
 
 <p-overlayPanel [showTransitionOptions]="'0ms'" [hideTransitionOptions]="'0ms'" #overlay appendTo="body">
-  <span>{{_currentProfile?.label}}</span>
+  <div class="overlay">
+    <span class="label">{{_currentProfile?.label}}</span>
+    <span class="label value">{{'app.event.attendeeTypePercent' | translate: {'0': _currentProfile?.percent} }}</span>
+  </div>
 </p-overlayPanel>

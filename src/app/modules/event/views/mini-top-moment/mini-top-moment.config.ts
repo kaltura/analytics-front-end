@@ -10,7 +10,7 @@ export class MiniTopMomentConfig extends ReportDataBaseConfig {
   }
   public getConfig(): ReportDataConfig {
     return {
-      [ReportDataSection.table]: {
+      [ReportDataSection.totals]: {
         fields: {
           'entry_id': {
             format: value => value,

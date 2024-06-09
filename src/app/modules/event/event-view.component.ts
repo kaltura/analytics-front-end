@@ -36,7 +36,7 @@ export class EventViewComponent implements OnInit, OnDestroy {
   public _viewConfig: ViewConfig =  analyticsConfig.viewsConfig.event;
   public _dateRange = DateRanges.SinceCreation;
   public _virtualEventDateLabel = '';
-  public _creationDate: moment.Moment = null;
+  public _creationDate: Date = null;
   public _updateDate = '';
   public _loadingVirtualEvent = false;
   public _loadingAppGuid = false;
@@ -150,7 +150,7 @@ export class EventViewComponent implements OnInit, OnDestroy {
           this._virtualEvent = virtualEvent;
           const dateFormat = analyticsConfig.dateFormat === 'month-day-year' ? 'MM/DD/YYYY' : 'DD/MM/YYYY';
           this._virtualEventDateLabel = DateFilterUtils.getMomentDate(virtualEvent.createdAt).format(dateFormat);
-          this._creationDate = DateFilterUtils.getMomentDate(virtualEvent.createdAt);
+          this._creationDate = new Date(virtualEvent.createdAt * 1000);
           this._updateDate = DateFilterUtils.getMomentDate(virtualEvent.updatedAt).format(dateFormat);
           const loadScheduledEvent = new ScheduleEventGetAction({scheduleEventId: virtualEvent.agendaScheduleEventId});
           this._kalturaClient
@@ -159,7 +159,7 @@ export class EventViewComponent implements OnInit, OnDestroy {
             .subscribe(
               event => {
                 this._actualEventStartDate = new Date(event.startDate * 1000); // save actual start date before calculating round down start date
-                this._eventStartDate = new Date(this._actualEventStartDate.getTime()); // copy the actual start dat object
+                this._eventStartDate = new Date(this._actualEventStartDate.getTime()); // copy the actual start date object
                 // need to round down to the last half hour because this is our data aggregation interval
                 const minutes = this._actualEventStartDate.getMinutes();
                 if (minutes !== 0 && minutes !== 30) {

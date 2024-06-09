@@ -31,7 +31,11 @@
                     </div>
                     <div class="separator"></div>
                     <div *ngIf="_viewConfig.miniProfile" class="kMiniReportContainer">
-                        <app-event-mini-profile [eventIn]="_virtualEventId"></app-event-mini-profile>
+                        <app-event-mini-profile [eventIn]="_virtualEventId"
+                                                [virtualEventLoaded]="_virtualEventLoaded"
+                                                [eventStartDate]="_creationDate"
+                                                [eventEndDate]="_eventEndDate"
+                        ></app-event-mini-profile>
                     </div>
 
                 </div>
