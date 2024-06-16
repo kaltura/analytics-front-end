@@ -11,7 +11,7 @@
                         [kTooltip]="_virtualEvent?.name" [showOnEllipsis]="true"
                         [placement]="'bottom'">{{ _virtualEvent?.name }}</h1>
                     <h1 *ngIf="_exporting"
-                        class="kTitle kTruncateTitle">{{ 'app.ve.reportTitle' | translate: {'0': _virtualEvent.name} }}</h1>
+                        class="kTitle kTruncateTitle">{{ 'app.event.reportTitle' | translate: {'0': _virtualEvent.name} }}</h1>
                     <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title" [class.exporting]="_exporting">
                         <app-pdf-export *ngIf="_viewConfig.download"
                                         [elementToExport]="reportToExport" [filename]="exportFilename"
@@ -34,6 +34,7 @@
                         <app-event-mini-profile [eventIn]="_virtualEventId"
                                                 [virtualEventLoaded]="_virtualEventLoaded"
                                                 [eventStartDate]="_creationDate"
+                                                [exporting]="_exporting"
                                                 [eventEndDate]="_eventEndDate"
                         ></app-event-mini-profile>
                     </div>

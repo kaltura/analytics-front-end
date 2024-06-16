@@ -3,7 +3,7 @@
     <div class="kReportContent">
       <div class="kFilters">
         <span class="kTitle">{{'app.event.attendeeProfile' | translate}}</span>
-        <a class="kLink" (click)="breakdown()">{{'app.event.breakdown' | translate}}</a>
+        <a class="kLink"  *ngIf="!exporting" (click)="breakdown()">{{'app.event.breakdown' | translate}}</a>
       </div>
       <div class="noData" *ngIf="!_isBusy && _profiles.length === 0">
         <span>{{'app.event.noData' | translate}}</span>

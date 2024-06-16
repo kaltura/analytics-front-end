@@ -55,7 +55,7 @@ export class EventViewComponent implements OnInit, OnDestroy {
   public _disableMiniViews = false;
 
   public _appGuid = '';
-  public exportFilename = 'Summary_registration_report.pdf';
+  public exportFilename = 'Summary_event_report.pdf';
   private updateTitle = this._viewConfig.title === null; // need to temporarily display the title for the export
   private updateDetails = this._viewConfig.details === null; // need to temporarily display the details for the export
 

@@ -49,6 +49,7 @@ export class MiniProfileComponent implements OnInit, OnDestroy {
   @Input() eventStartDate: Date;
   @Input() eventEndDate: Date;
   @Input() eventIn = '';
+  @Input() exporting = false;
   @Input() set virtualEventLoaded(value: boolean) {
     if (value === true) {
       // use timeout to allow data binding to finish

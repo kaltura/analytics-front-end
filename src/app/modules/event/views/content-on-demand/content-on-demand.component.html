@@ -25,7 +25,7 @@
           <tr>
             <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
               <div class="row" [ngStyle]="{'width': col === 'object_id' ? '110px' : '100%'}">
-                <thumb-loader *ngIf="col === 'object_id'" [thumbnailUrl]="data.thumbnailUrl" (onClick)="_drillDown(data)"></thumb-loader>
+                <thumb-loader *ngIf="col === 'object_id'" [useBase64]="true" [thumbnailUrl]="data.thumbnailUrl" (onClick)="_drillDown(data)"></thumb-loader>
                 <div class="tableCell">
                   <span *ngIf="col !== 'entry_name' && col !== 'object_id'">{{data[col]}}</span>
                   <app-bullet *ngIf="col === 'count_plays'" [value]="data['playRate']" [formatter]="null" [showValue]="false" [kTooltip]="data['playRate'] + '%'"></app-bullet>

@@ -542,7 +542,7 @@
       }
     },
     "entryEp": {
-      "exportTitle": "Event summary report: {{0}}",
+      "exportTitle": "Session summary report: {{0}}",
       "highlights": {
         "viewers": "Unique viewers",
         "live": "Live",
@@ -1197,7 +1197,9 @@
       "attendees": "Attendees",
       "minutes": "Minutes viewed",
       "allDays": "All days",
-      "sessions": "Sessions"
+      "sessions": "Sessions",
+      "reportTitle": "Event summary report: {{0}}",
+      "noData_tt": "Data is not available for events starting before June 2, 2024"
     },
     "ve": {
       "all": "Registrants",
@@ -1249,7 +1251,7 @@
       "industries_tt": "The industry a person listed in their registration form",
       "details": "Registration details",
       "people": "It’s all about the people",
-      "reportTitle": "Summary Registration Report: {{0}}",
+      "reportTitle": "Registration summary report: {{0}}",
       "exporting": "Generating your report...",
       "footer": "Remarkable events, insightful data",
       "disclaimer": "Please note that the data above is filtered based on the filter applied in the report",

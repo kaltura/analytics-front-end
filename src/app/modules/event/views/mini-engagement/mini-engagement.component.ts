@@ -62,7 +62,7 @@ export class EventMiniEngagementComponent implements OnInit {
   public _pollsRate = 0;
   public _chatRate = 0;
 
-  private NEW_METRICS_RELEASE_DATE = new Date(2024, 3, 10);
+  private NEW_METRICS_RELEASE_DATE = new Date(2024, 6, 2);
   public _displayNewMetrics = true;
 
   constructor(private _reportService: ReportService,
@@ -80,7 +80,7 @@ export class EventMiniEngagementComponent implements OnInit {
     this._blockerMessage = null;
     console.log(this.startDate.getTime());
     console.log(this.NEW_METRICS_RELEASE_DATE.getTime());
-    this._displayNewMetrics = false;//this.startDate.getTime() > this.NEW_METRICS_RELEASE_DATE.getTime();
+    this._displayNewMetrics = this.startDate.getTime() > this.NEW_METRICS_RELEASE_DATE.getTime();
     this._filter.virtualEventIdIn = this.eventIn;
     this._filter.timeZoneOffset = DateFilterUtils.getTimeZoneOffset();
     this._filter.fromDate = Math.floor(this.startDate.getTime() / 1000);

@@ -10,7 +10,7 @@
         <kInputHelper *ngIf="!exporting">
           <span>{{'app.ve.turnout_tt' | translate}}</span>
         </kInputHelper>
-        <a class="kLink" (click)="seeMore()">{{'app.entryEp.highlights.seeMore' | translate}}</a>
+        <a class="kLink" *ngIf="!exporting" (click)="seeMore()">{{'app.entryEp.highlights.seeMore' | translate}}</a>
       </div>
 
 <!--      <div *ngIf="!disabled" class="kTurnout unregistered">-->
