@@ -5,7 +5,10 @@
         <span class="kTitle">{{'app.event.attendeeProfile' | translate}}</span>
         <a class="kLink" (click)="breakdown()">{{'app.event.breakdown' | translate}}</a>
       </div>
-      <div class="tags">
+      <div class="noData" *ngIf="!_isBusy && _profiles.length === 0">
+        <span>{{'app.event.noData' | translate}}</span>
+      </div>
+      <div class="tags" *ngIf="!_isBusy && _profiles.length > 0">
         <div *ngFor="let profile of _profiles" class="tag" [kTooltip]="profile.label" [showOnEllipsis]="true">
           <span (mouseleave)="_hideOverlay()" (mouseenter)="_showOverlay($event, profile)">{{profile?.label}}</span>
         </div>

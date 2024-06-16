@@ -24,6 +24,7 @@ import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
 import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
 
 export type Profile = {
+  id: number;
   metric: string; // 'company' | 'role' | 'industry' | 'country';
   label: string;
   percent: number;
@@ -145,8 +146,9 @@ export class MiniProfileComponent implements OnInit, OnDestroy {
                 if (data.length > 3) {
                   data.length = 0;
                 }
-                data.forEach(data => {
+                data.forEach((data, index) => {
                   this._profiles.push({
+                    id: index,
                     metric,
                     label: data[metric],
                     rate: -1,

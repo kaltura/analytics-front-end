@@ -58,6 +58,7 @@
                    <div class="kMiniReportContainer kMiniTopReportContainer">
                        <app-event-mini-messages *ngIf="_virtualEventLoaded && _viewConfig.miniMessages"
                                                  [isBusy]="engagement._isBusy"
+                                                 [displayNewMetrics]="engagement._displayNewMetrics"
                                                  [messagesRate]="engagement._messagesRate"
                                                  [messagesCount]="engagement._messagesCount">
                        </app-event-mini-messages>

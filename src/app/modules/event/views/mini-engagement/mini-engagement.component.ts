@@ -62,6 +62,9 @@ export class EventMiniEngagementComponent implements OnInit {
   public _pollsRate = 0;
   public _chatRate = 0;
 
+  private NEW_METRICS_RELEASE_DATE = new Date(2024, 3, 10);
+  public _displayNewMetrics = true;
+
   constructor(private _reportService: ReportService,
               private _errorsManager: ErrorsManagerService,
               _dataConfigService: MiniEngagementConfig) {
@@ -75,6 +78,9 @@ export class EventMiniEngagementComponent implements OnInit {
   private _loadReport(sections = this._dataConfig, cncSections = this._cncDataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
+    console.log(this.startDate.getTime());
+    console.log(this.NEW_METRICS_RELEASE_DATE.getTime());
+    this._displayNewMetrics = false;//this.startDate.getTime() > this.NEW_METRICS_RELEASE_DATE.getTime();
     this._filter.virtualEventIdIn = this.eventIn;
     this._filter.timeZoneOffset = DateFilterUtils.getTimeZoneOffset();
     this._filter.fromDate = Math.floor(this.startDate.getTime() / 1000);

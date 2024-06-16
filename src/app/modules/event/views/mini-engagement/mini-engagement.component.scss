@@ -61,6 +61,13 @@
     line-height: 18px;
     color: black;
   }
+  .na {
+    font-size: 24px;
+    font-weight: 700;
+    color: $kGrayscale1;
+    margin-right: 4px;
+    align-self: flex-start;
+  }
 }
 @media (max-width: 991px) {
   .reportContent {

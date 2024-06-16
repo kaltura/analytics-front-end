@@ -8,7 +8,8 @@
       </div>
 
       <div class="dataContainer">
-        <span class="value">{{messagesRate || 0}}%</span>
+        <span *ngIf="displayNewMetrics"class="value">{{messagesRate || 0}}%</span>
+        <span *ngIf="!displayNewMetrics" class="value">{{'app.common.na' | translate}}%</span>
         <span class="title">{{'app.event.messages' | translate: {'0': messagesCount} }}</span>
       </div>
 

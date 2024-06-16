@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
   selector: 'app-event-mini-messages',
@@ -12,5 +12,5 @@ export class EventMiniMessagesComponent {
   @Input() isBusy = true;
   @Input() messagesRate = 0;
   @Input() messagesCount = '0';
-
+  @Input() displayNewMetrics = true;
 }
