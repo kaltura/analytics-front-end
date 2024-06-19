@@ -1166,7 +1166,8 @@
     "event": {
       "attendeeProfile": "Registrants profile",
       "attendeeTypePercent": "{{0}}% Of overall registrants",
-      "attendanceRate": "{{0}}% Attendance rate",
+      "attendanceRate": "{{0}} Attendance rate",
+      "attendanceRateLoading": "Attendance rate",
       "noData": "No data found",
       "breakdown": "See breakdown",
       "avgMinutes": "Avg. minutes viewed per attendee",

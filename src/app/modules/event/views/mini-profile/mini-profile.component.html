@@ -21,5 +21,10 @@
   <div class="overlay">
     <span class="label">{{_currentProfile?.label}}</span>
     <span class="label value">{{'app.event.attendeeTypePercent' | translate: {'0': _currentProfile?.percent} }}</span>
+    <div class="loader" *ngIf="_currentProfile?.rate === 'notLoaded'">
+      <div class="k-spinner-animation kSpinnerAnim"></div>
+      <span class="label value">{{'app.event.attendanceRateLoading' | translate}}</span>
+    </div>
+    <span *ngIf="_currentProfile?.rate !== 'notLoaded'" class="label value">{{'app.event.attendanceRate' | translate: {'0': _currentProfile?.rate} }}</span>
   </div>
 </p-overlayPanel>

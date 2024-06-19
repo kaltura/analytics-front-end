@@ -10,7 +10,7 @@
       <div class="dataContainer">
         <span *ngIf="displayNewMetrics"class="value">{{messagesRate || 0}}%</span>
         <span *ngIf="!displayNewMetrics" class="value"[kTooltip]="'app.event.noData_tt' | translate" [placement]="'bottom'">{{'app.common.na' | translate}}</span>
-        <span class="title">{{'app.event.messages' | translate: {'0': messagesCount} }}</span>
+        <span class="title">{{'app.event.messages' | translate: {'0': displayNewMetrics ? messagesCount: ('app.common.na' | translate)} }}</span>
       </div>
 
     </div>

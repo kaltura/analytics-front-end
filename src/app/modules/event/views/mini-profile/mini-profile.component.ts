@@ -5,30 +5,20 @@ import {FrameEventManagerService, FrameEvents} from "shared/modules/frame-event-
 import {Router} from "@angular/router";
 import {OverlayPanel} from "primeng/overlaypanel";
 import {ErrorsManagerService, ReportConfig, ReportHelper, ReportService} from "shared/services";
-import {
-  KalturaAPIException,
-  KalturaClient,
-  KalturaEndUserReportInputFilter,
-  KalturaFilterPager,
-  KalturaMultiResponse,
-  KalturaReportInterval,
-  KalturaReportResponseOptions, KalturaReportTable,
-  KalturaReportType,
-  ReportGetTableAction,
-  ReportGetTotalAction
-} from "kaltura-ngx-client";
+import {KalturaAPIException, KalturaClient, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaMultiResponse, KalturaReportInterval, KalturaReportResponseOptions, KalturaReportTable, KalturaReportType, ReportGetTableAction, ReportGetTotalAction} from "kaltura-ngx-client";
 import {MiniProfileConfig} from "./mini-profile.config";
-import {ReportDataConfig, ReportDataItemConfig} from "shared/services/storage-data-base.config";
+import {ReportDataItemConfig} from "shared/services/storage-data-base.config";
 import {AreaBlockerMessage} from "@kaltura-ng/kaltura-ui";
 import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
 import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
+import {TranslateService} from "@ngx-translate/core";
 
 export type Profile = {
   id: number;
   metric: string; // 'company' | 'role' | 'industry' | 'country';
   label: string;
   percent: number;
-  rate: number;
+  rate: string;
 };
 
 @Component({
@@ -76,6 +66,7 @@ export class MiniProfileComponent implements OnInit, OnDestroy {
 
   constructor(private _frameEventManager: FrameEventManagerService,
               private _router: Router,
+              private _translate: TranslateService,
               private _reportService: ReportService,
               private _kalturaClient: KalturaClient,
               private _errorsManager: ErrorsManagerService,
@@ -125,6 +116,7 @@ export class MiniProfileComponent implements OnInit, OnDestroy {
       responseOptions
     });
 
+    let counter = 0;
     this._kalturaClient
       .multiRequest([totalsReportRequest, countriesReportRequest, rolesReportRequest, industriesReportRequest])
       .pipe(cancelOnDestroy(this))
@@ -149,12 +141,13 @@ export class MiniProfileComponent implements OnInit, OnDestroy {
                 }
                 data.forEach((data, index) => {
                   this._profiles.push({
-                    id: index,
+                    id: counter,
                     metric,
                     label: data[metric],
-                    rate: -1,
+                    rate: 'notLoaded',
                     percent: ReportHelper.precisionRound(parseInt(data.registered_unique_users) / this._totalRegistered * 100, 1)
                   });
+                  counter++;
                 });
               }
             };
@@ -173,6 +166,7 @@ export class MiniProfileComponent implements OnInit, OnDestroy {
           }
 
           this._isBusy = false;
+          this._profiles = this.shuffle(this._profiles);
         },
         error => {
           this._isBusy = false;
@@ -201,10 +195,56 @@ export class MiniProfileComponent implements OnInit, OnDestroy {
     return array;
   }
 
+  private loadAttendanceRate(profile: Profile): void {
+    const filter = new KalturaEndUserReportInputFilter({
+      searchInTags: true,
+      searchInAdminTags: false,
+      virtualEventIdIn: this.eventIn,
+      timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
+      fromDate: Math.floor(this.eventStartDate.getTime() / 1000),
+      toDate: Math.floor(this.eventEndDate.getTime() / 1000),
+      interval: KalturaReportInterval.days
+    });
+
+    if (profile.metric === 'role') {
+      filter.roleIn = profile.label;
+    }
+    if (profile.metric === 'industry') {
+      filter.industryIn = profile.label;
+    }
+    if (profile.metric === 'country') {
+      filter.countryIn = profile.label;
+    }
+
+    const sections = this._dataConfigService.getAttendanceRateConfig();
+    const reportConfig: ReportConfig = { reportType: KalturaReportType.veAttendanceHighlights, filter, order: '-count_attended' };
+    this._reportService.getReport(reportConfig, sections, false).subscribe(
+      report => {
+        if (report.totals && this._totalRegistered > 0) {
+          const tabsData = this._reportService.parseTotals(report.totals, sections.totals);
+          if (tabsData.length === 2) {
+            const totalAttendees = tabsData[1].rawValue !== '' ? parseInt(tabsData[1].rawValue.toString()) : 0;
+            profile.rate = ReportHelper.precisionRound(totalAttendees / this._totalRegistered * 100, 1) + '%';
+          } else {
+            profile.rate = this._translate.instant('app.common.na');
+          }
+        } else {
+          profile.rate = this._translate.instant('app.common.na');
+        }
+      },
+      error => {
+        profile.rate = this._translate.instant('app.common.na');
+      }
+    );
+  }
+
   public _showOverlay(event: any, profile: Profile): void {
     if (this._overlay) {
       this._currentProfile = profile;
       this._overlay.show(event);
+      if (profile.rate === 'notLoaded') {
+        this.loadAttendanceRate(profile);
+      }
     }
   }
 

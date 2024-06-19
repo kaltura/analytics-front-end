@@ -64,4 +64,19 @@ export class MiniProfileConfig extends ReportDataBaseConfig {
     };
   }
 
+  public getAttendanceRateConfig(): ReportDataConfig {
+    return {
+      [ReportDataSection.totals]: {
+        fields: {
+          'count_attended': {
+            format: value => value,
+          },
+          'attended_unique_users': {
+            format: value => value,
+          }
+        }
+      }
+    };
+  }
+
 }

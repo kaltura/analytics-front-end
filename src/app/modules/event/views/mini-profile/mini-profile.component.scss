@@ -71,6 +71,15 @@
   .value {
     font-weight: 700;
   }
+  .loader {
+    display: flex;
+    align-items: center;
+    .kSpinnerAnim {
+      margin-left: 0px;
+      margin-right: 8px;
+      margin-top: 2px;
+    }
+  }
 }
 @media (max-width: 991px) {
   .kReport .tags .tag {

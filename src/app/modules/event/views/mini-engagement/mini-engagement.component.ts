@@ -78,8 +78,6 @@ export class EventMiniEngagementComponent implements OnInit {
   private _loadReport(sections = this._dataConfig, cncSections = this._cncDataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
-    console.log(this.startDate.getTime());
-    console.log(this.NEW_METRICS_RELEASE_DATE.getTime());
     this._displayNewMetrics = this.startDate.getTime() > this.NEW_METRICS_RELEASE_DATE.getTime();
     this._filter.virtualEventIdIn = this.eventIn;
     this._filter.timeZoneOffset = DateFilterUtils.getTimeZoneOffset();
