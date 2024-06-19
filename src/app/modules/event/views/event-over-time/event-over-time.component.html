@@ -1,0 +1,49 @@
+<div data-aid="report-event-mini-event-over-time" class="kReport kOverrideFAIcons">
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="reportContent">
+      <span class="title">{{'app.event.overTime' | translate}}</span>
+      <app-report-tabs [tabs]="_tabsData" [showValue]="false" (tabChange)="_onTabChange($event)"></app-report-tabs>
+      <div class="selectors">
+        <p-dropdown [style]="{'width': '180px'}"
+                    [options]="_metrics"
+                    (onChange)="_loadReport()"
+                    [(ngModel)]="_metric">
+          <ng-template let-option pTemplate="selectedItem">
+            <div class="kOptionsLabelWrapper">
+              <div class="metric" [ngClass]="option.value"></div>
+              <span>{{option.label}}</span>
+            </div>
+          </ng-template>
+          <ng-template let-option pTemplate="item">
+            <div class="kOptionsLabelWrapper">
+              <div class="metric" [ngClass]="option.value"></div>
+              <span>{{option.label}}</span>
+            </div>
+          </ng-template>
+        </p-dropdown>
+        <p-dropdown *ngIf="_multiDatesEvent && _selectedTab === 'during'" [style]="{'width': '180px', 'margin-left': '16px'}"
+                    [options]="_days"
+                    (onChange)="_loadReport()"
+                    [(ngModel)]="_selectedDay">
+        </p-dropdown>
+
+        <div class="kDimensions" *ngIf="_selectedTab === 'post'">
+          <p-selectButton [options]="_timeUnitsItems"
+                          (onChange)="_loadReport()"
+                          [(ngModel)]="_selectedTimeUnit"></p-selectButton>
+        </div>
+      </div>
+      <div class="chart">
+        <div echarts class="kChart" (chartInit)="_onChartInit($event)"
+             *ngIf="_selectedTab === 'during' && _multiDatesEvent && _selectedDay < 0 && _barChartData && _barChartData?.series && _barChartData?.series[0]?.data?.length"
+             [options]="_barChartData"></div>
+        <div echarts class="kChart" (chartInit)="_onChartInit($event)"
+             *ngIf="_selectedTab === 'post' || ((!_multiDatesEvent || _selectedDay > -1) && _lineChartData && _lineChartData?.series && _lineChartData?.series[0]?.data?.length)"
+             [options]="_lineChartData"></div>
+      </div>
+
+    </div>
+  </k-area-blocker>
+</div>

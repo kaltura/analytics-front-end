@@ -1,0 +1,120 @@
+<div #reportToExport data-aid="report-group-category" class="kMain">
+    <k-area-blocker [showLoader]="_loadingVirtualEvent" [message]="_blockerMessage">
+        <div class="kReportView">
+            <div class="kReport kContent kOverrideFAIcons">
+                <div class="kReportHeader" [class.noTitle]="!_viewConfig.title">
+                    <button tabindex="0" aria-label="Back" role="button" pButton
+                            *ngIf="_viewConfig.title && !_exporting"
+                            class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_back()"
+                            [kTooltip]="'app.entry.back' | translate" [placement]="'bottom'"></button>
+                    <h1 *ngIf="_viewConfig.title && !_exporting" class="kTitle kTruncateTitle"
+                        [kTooltip]="_virtualEvent?.name" [showOnEllipsis]="true"
+                        [placement]="'bottom'">{{ _virtualEvent?.name }}</h1>
+                    <h1 *ngIf="_exporting"
+                        class="kTitle kTruncateTitle">{{ 'app.event.reportTitle' | translate: {'0': _virtualEvent.name} }}</h1>
+                    <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title" [class.exporting]="_exporting">
+                        <app-pdf-export *ngIf="_viewConfig.download"
+                                        [elementToExport]="reportToExport" [filename]="exportFilename"
+                                        (preExport)="preExportHandler()" (postExport)="postExportHandler()"
+                                        (exporting)="onExporting($event)"></app-pdf-export>
+
+                    </div>
+                </div>
+
+                <div [class.kHidden]="!_virtualEventLoaded" class="kReportContainer">
+                    <div [class.kHidden]="!_viewConfig.miniFunnel" class="kMiniReportContainer">
+                        <app-registration-funnel [appGuid]="_appGuid" #funnel
+                                                 [virtualEventId]="_virtualEventId"
+                                                 [disabled]="_disableMiniViews"
+                                                 [exporting]="_exporting">
+                        </app-registration-funnel>
+                    </div>
+                    <div class="separator"></div>
+                    <div *ngIf="_viewConfig.miniProfile" class="kMiniReportContainer">
+                        <app-event-mini-profile [eventIn]="_virtualEventId"
+                                                [virtualEventLoaded]="_virtualEventLoaded"
+                                                [eventStartDate]="_creationDate"
+                                                [exporting]="_exporting"
+                                                [eventEndDate]="_eventEndDate"
+                        ></app-event-mini-profile>
+                    </div>
+
+                </div>
+
+                <div [class.kHidden]="!_virtualEventLoaded" class="kReportContainer">
+                    <div class="kMiniReportContainer kMiniTopReportContainer">
+                        <app-event-mini-minutes-viewed *ngIf="_virtualEventLoaded && _viewConfig.miniMinutesViewed"
+                                                       [startDate]="_eventStartDate" [endDate]="_now" [virtualEventId]="_virtualEventId">
+                        </app-event-mini-minutes-viewed>
+                    </div>
+                    <div class="separator"></div>
+                   <div class="kMiniReportContainer kMiniTopReportContainer">
+                        <app-event-mini-reactions *ngIf="_virtualEventLoaded && _viewConfig.miniReactions"
+                                                      [isBusy]="engagement._isBusy"
+                                                      [reactionsRate]="engagement._reactionsRate"
+                                                      [reactionsCount]="engagement._reactionsCount">
+                        </app-event-mini-reactions>
+                    </div>
+                    <div class="separator"></div>
+                   <div class="kMiniReportContainer kMiniTopReportContainer">
+                       <app-event-mini-messages *ngIf="_virtualEventLoaded && _viewConfig.miniMessages"
+                                                 [isBusy]="engagement._isBusy"
+                                                 [displayNewMetrics]="engagement._displayNewMetrics"
+                                                 [messagesRate]="engagement._messagesRate"
+                                                 [messagesCount]="engagement._messagesCount">
+                       </app-event-mini-messages>
+                    </div>
+                </div>
+
+                <div [class.kHidden]="!_virtualEventLoaded || !_viewConfig.miniEngagement" class="kReportContainer">
+                    <app-event-mini-engagement #engagement
+                                               [virtualEventLoaded]="_virtualEventLoaded"
+                                               [exporting]="_exporting"
+                                               [eventIn]="_virtualEventId"
+                                               [startDate]="_eventStartDate"
+                                               [endDate]="_eventEndDate">
+                    </app-event-mini-engagement>
+                    <div class="separator"></div>
+                    <app-event-mini-top-moment [virtualEventLoaded]="_virtualEventLoaded"
+                                               [eventIn]="_virtualEventId"
+                                               [eventStartDate]="_eventStartDate"
+                                               [eventEndDate]="_eventEndDate"
+                                               [eventActualStartDate]="_actualEventStartDate">
+                    </app-event-mini-top-moment>
+                </div>
+
+                <div *ngIf="_viewConfig.eventOverTime" class="kReportContainer">
+                  <app-event-over-time [virtualEventLoaded]="_virtualEventLoaded"
+                                               [exporting]="_exporting"
+                                               [eventIn]="_virtualEventId"
+                                               [endDate]="_eventEndDate"
+                                               [startDate]="_eventStartDate">
+                  </app-event-over-time>
+                </div>
+
+<!--                <div *ngIf="_viewConfig.sessions" class="kReportContainer">-->
+<!--                  <app-event-sessions [virtualEventLoaded]="_virtualEventLoaded"-->
+<!--                                               [exporting]="_exporting"-->
+<!--                                               [eventIn]="_virtualEventId"-->
+<!--                                               [startDate]="_eventStartDate">-->
+<!--                  </app-event-sessions>-->
+<!--                </div>-->
+
+                <div *ngIf="_viewConfig.contentOnDemand" class="kReportContainer">
+                  <app-event-content-on-demand [virtualEventLoaded]="_virtualEventLoaded"
+                                               [exporting]="_exporting"
+                                               [eventIn]="_virtualEventId"
+                                               [startDate]="_eventStartDate">
+                  </app-event-content-on-demand>
+                </div>
+
+            </div>
+
+            <div *ngIf="_exporting" class="footer">
+                <i></i>
+                <span>{{ 'app.ve.footer' | translate }}</span>
+            </div>
+        </div>
+
+    </k-area-blocker>
+</div>

@@ -1,0 +1,30 @@
+<div data-aid="report-event-mini-profile" class="kReport kMini kOverrideFAIcons">
+  <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
+    <div class="kReportContent">
+      <div class="kFilters">
+        <span class="kTitle">{{'app.event.attendeeProfile' | translate}}</span>
+        <a class="kLink"  *ngIf="!exporting" (click)="breakdown()">{{'app.event.breakdown' | translate}}</a>
+      </div>
+      <div class="noData" *ngIf="!_isBusy && _profiles.length === 0">
+        <span>{{'app.event.noData' | translate}}</span>
+      </div>
+      <div class="tags" *ngIf="!_isBusy && _profiles.length > 0">
+        <div *ngFor="let profile of _profiles" class="tag" [kTooltip]="profile.label" [showOnEllipsis]="true">
+          <span (mouseleave)="_hideOverlay()" (mouseenter)="_showOverlay($event, profile)">{{profile?.label}}</span>
+        </div>
+      </div>
+    </div>
+  </k-area-blocker>
+</div>
+
+<p-overlayPanel [showTransitionOptions]="'0ms'" [hideTransitionOptions]="'0ms'" #overlay appendTo="body">
+  <div class="overlay">
+    <span class="label">{{_currentProfile?.label}}</span>
+    <span class="label value">{{'app.event.attendeeTypePercent' | translate: {'0': _currentProfile?.percent} }}</span>
+    <div class="loader" *ngIf="_currentProfile?.rate === 'notLoaded'">
+      <div class="k-spinner-animation kSpinnerAnim"></div>
+      <span class="label value">{{'app.event.attendanceRateLoading' | translate}}</span>
+    </div>
+    <span *ngIf="_currentProfile?.rate !== 'notLoaded'" class="label value">{{'app.event.attendanceRate' | translate: {'0': _currentProfile?.rate} }}</span>
+  </div>
+</p-overlayPanel>

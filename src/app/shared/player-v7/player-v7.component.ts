@@ -26,6 +26,12 @@ export class KalturaPlayerV7Component implements AfterViewInit, OnDestroy {
 	uiconfid: number;
 
 	@Input()
+	seekFrom: number;
+
+	@Input()
+	clipTo: number;
+
+	@Input()
 	entryid: string;
 
 	@Input()
@@ -42,6 +48,9 @@ export class KalturaPlayerV7Component implements AfterViewInit, OnDestroy {
 
 	@Input()
 	preload = false;
+
+	@Input()
+	plugins: any = null;
 
 	@Input()
 	id = "";
@@ -115,6 +124,19 @@ export class KalturaPlayerV7Component implements AfterViewInit, OnDestroy {
           preload: this.preload
         }
       };
+      if (this.seekFrom || this.clipTo) {
+        const sources: any = {};
+        if (this.seekFrom) {
+          sources.seekFrom = this.seekFrom;
+        }
+        if (this.clipTo) {
+          sources.clipTo = this.clipTo;
+        }
+        playerConfig['sources'] = sources;
+      }
+      if (this.plugins) {
+        playerConfig.plugins = Object.assign(playerConfig.plugins, this.plugins);
+      }
       if (this.loadThumbnailWithKs && this.poster.length) {
         playerConfig = Object.assign(playerConfig, {sources: {poster: `${this.poster}/ks/${this.ks}`}});
       }

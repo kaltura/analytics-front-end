@@ -1,0 +1,20 @@
+<div data-aid="report-event-mini-messages" class="kReport kOverrideFAIcons" [kTooltip]="'app.event.messages_tt' | translate">
+
+  <k-area-blocker [showLoader]="isBusy">
+
+    <div class="reportContent">
+      <div class="icons">
+        <div class="kMiniIcon"><i class="icon-captions"></i></div>
+      </div>
+
+      <div class="dataContainer">
+        <span *ngIf="displayNewMetrics"class="value">{{messagesRate || 0}}%</span>
+        <span *ngIf="!displayNewMetrics" class="value"[kTooltip]="'app.event.noData_tt' | translate" [placement]="'bottom'">{{'app.common.na' | translate}}</span>
+        <span class="title">{{'app.event.messages' | translate: {'0': displayNewMetrics ? messagesCount: ('app.common.na' | translate)} }}</span>
+      </div>
+
+    </div>
+
+  </k-area-blocker>
+</div>
+

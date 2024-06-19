@@ -6,11 +6,10 @@ import {
   KalturaClient,
   KalturaEntryScheduleEventFilter,
   KalturaLiveEntry,
-  KalturaMediaEntry,
   KalturaMeetingScheduleEvent,
   KalturaMultiRequest,
   KalturaMultiResponse,
-  KalturaReportInterval,
+  KalturaReportInterval, KalturaRoomEntry,
   KalturaScheduleEventListResponse,
   ScheduleEventListAction
 } from 'kaltura-ngx-client';
@@ -38,7 +37,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
   public _viewConfig = analyticsConfig.viewsConfig.entryEP;
   public _loadingEntry = false;
   public _blockerMessage: AreaBlockerMessage = null;
-  public _entry: KalturaLiveEntry | KalturaMediaEntry;
+  public _entry: KalturaLiveEntry | KalturaRoomEntry;
   public _entryId = '';
   public _exportConfig: ExportItem[] = [];
   public _exporting = false;
@@ -123,7 +122,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
         return [
           responses[0].result,
           responses[1].result
-        ] as [KalturaMediaEntry | KalturaLiveEntry, KalturaScheduleEventListResponse];
+        ] as [KalturaRoomEntry | KalturaLiveEntry, KalturaScheduleEventListResponse];
       }))
       .subscribe(
         ([entry, eventList]) => {
@@ -159,7 +158,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
               .request(new BaseEntryGetAction({ entryId: entry.referenceId }))
               .pipe(cancelOnDestroy(this))
               .subscribe(
-                (referenceEntry: KalturaMediaEntry) => {
+                (referenceEntry: KalturaRoomEntry) => {
                   if (referenceEntry.redirectEntryId) {
                     this._vodEntryIds = this._vodEntryIds.length ? `${this._vodEntryIds}${analyticsConfig.valueSeparator}${referenceEntry.redirectEntryId}` : referenceEntry.redirectEntryId;
                     this._allEntryIds += `${analyticsConfig.valueSeparator}${referenceEntry.redirectEntryId}`;

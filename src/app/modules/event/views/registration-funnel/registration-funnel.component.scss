@@ -1,0 +1,125 @@
+@import '../../../../../styles/variables';
+
+:host {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+.kReport.kFunnel {
+  height: 100%;
+}
+.kCharts {
+  display: flex;
+  .kChart {
+    height: 172px !important;
+    width: 100%;
+    margin-top: 8px;
+  }
+}
+.kTurnout {
+  height: 62px;
+  display: flex;
+  align-items: flex-end;
+  width: calc(100% - 48px);
+  margin-left: 24px;
+  margin-right: 24px;
+  margin-top: 2px;
+  padding-bottom: 16px;
+  box-sizing: border-box;
+  //border-bottom: 1px solid $kGrayscale6;
+  .kValue{
+    font-size: 24px;
+    color: $kGrayscale1;
+    font-weight: 700;
+  }
+  .kLabel{
+    font-size: 16px;
+    color: $kGrayscale1;
+    margin-left: 8px;
+    padding-bottom: 2px;
+  }
+  &.unregistered {
+    height: auto;
+    margin-top: 0px;
+  }
+  .kMiniIcon{
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    margin-right: 12px;
+    background-color: rgba(72,122,223,0.2);
+    color: #487ADF;
+  }
+  a {
+    margin-left: auto;
+  }
+}
+.kData {
+  width: 63%;
+  position: absolute;
+  margin-top: 80px;
+  height: 170px;
+  display: flex;
+  flex-direction: column;
+  padding-left: 24px;
+  .kDataContainer{
+    width: 100%;
+    height: 100%;
+    border-top: 1px solid $kGrayscale6;
+    display: flex;
+    flex-direction: column;
+    .data {
+      display: flex;
+      align-items: flex-end;
+      margin-top: 8px;
+      .kValue{
+        font-size: 15px;
+        color: $kGrayscale1;
+        font-weight: 700;
+        margin-right: 4px;
+        &.noBold {
+          font-weight: 400;
+        }
+      }
+      .kLabel{
+        font-size: 15px;
+        color: $kGrayscale1;
+        &.noBold {
+          font-weight: 400;
+        }
+      }
+    }
+  }
+}
+.kPlaythrough{
+  margin-left: 24px;
+  position: absolute;
+  top: 288px;
+}
+.old {
+  font-size: 20px;
+  font-weight: 700;
+  color: #888888;
+  width: 100%;
+  text-align: center;
+  margin-top: 80px;
+  padding: 24px;
+  box-sizing: border-box;
+}
+:host ::ng-deep p-dropdown{
+  .p-dropdown {
+    margin-left: 8px;
+    margin-right: 8px;
+    width: 84px !important;
+    min-width: 84px !important;
+  }
+
+  .p-state-focus {
+    // margin-top: 4px;
+    outline: 5px auto rgba(0, 150, 255, 1) !important;
+  }
+}

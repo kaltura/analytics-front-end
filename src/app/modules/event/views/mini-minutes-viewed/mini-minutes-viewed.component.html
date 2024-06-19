@@ -1,0 +1,19 @@
+<div data-aid="report-event-mini-minutes" class="kReport kOverrideFAIcons" [kTooltip]="'app.event.avgMinutes_tt' | translate">
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="reportContent">
+      <div class="icons">
+        <div class="kMiniIcon"><i class="icon-small-time"></i></div>
+      </div>
+
+      <div class="dataContainer">
+        <span class="value">{{_tabsData[0]?.value || 0}}</span>
+        <span class="title">{{'app.event.avgMinutes' | translate}}</span>
+      </div>
+
+    </div>
+
+  </k-area-blocker>
+</div>
+

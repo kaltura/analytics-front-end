@@ -51,6 +51,14 @@ const routes: Routes = [
         loadChildren: () => import('../modules/virtual-event/virtual-event.module').then(m => m.VirtualEventModule)
       },
       {
+        path: 'event/:id',
+        loadChildren: () => import('../modules/event/event.module').then(m => m.EventModule)
+      },
+      {
+        path: 'event',
+        loadChildren: () => import('../modules/event/event.module').then(m => m.EventModule)
+      },
+      {
         path: 'user/:id',
         loadChildren: () => import('../modules/user/user.module').then(m => m.UserModule)
       },

@@ -55,6 +55,10 @@ export class DateFilterUtils {
     return num > 9 ? num.toString() : ( '0' + num.toString());
   }
 
+  static formatHoursString(value: string): string {
+    return value.substring(value.length - 2 ) + ':00';
+  }
+
   // March 2019
   static formatMonthString(value: string | number | Date, locale = analyticsConfig.locale): string {
     let result = '';

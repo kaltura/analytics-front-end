@@ -201,6 +201,19 @@ export const viewsConfig = {
       userFilter: {}
     },
   },
+  event: {
+    title: {},
+    download: {},
+    miniFunnel: {},
+    miniProfile: {},
+    miniMinutesViewed: {},
+    miniReactions: {},
+    miniMessages: {},
+    miniEngagement: {},
+    eventOverTime: {},
+    sessions: {},
+    contentOnDemand: {}
+  },
   virtualEvent: {
     title: {},
     download: {},

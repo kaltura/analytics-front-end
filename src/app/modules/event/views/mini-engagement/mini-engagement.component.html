@@ -1,0 +1,47 @@
+<div data-aid="report-event-mini-engagement" class="kReport kOverrideFAIcons">
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="reportContent">
+
+      <span class="title">{{'app.event.interactivity' | translate}}</span>
+
+      <div class="metric" [kTooltip]="'app.event.polls_tt' | translate">
+        <div class="icons">
+          <div class="kMiniIcon blue"><i class="icon-ic_poll"></i></div>
+        </div>
+        <span *ngIf="!_displayNewMetrics" class="na" [kTooltip]="'app.event.noData_tt' | translate" [placement]="'bottom'">{{'app.common.na' | translate}}</span>
+        <span *ngIf="!_displayNewMetrics" class="label">{{'app.event.polls_na' | translate}}</span>
+        <span *ngIf="_displayNewMetrics" class="label" [innerHTML]="'app.event.polls' | translate: {'0': _pollsRate}"></span>
+      </div>
+
+      <div class="metric" [kTooltip]="'app.event.questions_tt' | translate">
+        <div class="icons">
+          <div class="kMiniIcon blue"><i class="icon-ic_questions"></i></div>
+        </div>
+        <span *ngIf="!_displayNewMetrics" class="na" [kTooltip]="'app.event.noData_tt' | translate" [placement]="'bottom'">{{'app.common.na' | translate}}</span>
+        <span *ngIf="!_displayNewMetrics" class="label">{{'app.event.questions_na' | translate}}</span>
+        <span *ngIf="_displayNewMetrics" class="label" [innerHTML]="'app.event.questions' | translate: {'0': _questionsRate, '1': _questionsCount}"></span>
+      </div>
+
+      <div class="metric" [kTooltip]="'app.event.download_tt' | translate">
+        <div class="icons">
+          <div class="kMiniIcon blue"><i class="icon-download"></i></div>
+        </div>
+        <span class="label" [innerHTML]="'app.event.download' | translate: {'0': _downloadRate, '1': _downloadCount}"></span>
+      </div>
+
+      <div class="metric" [kTooltip]="'app.event.chat_tt' | translate">
+        <div class="icons">
+          <div class="kMiniIcon blue"><i class="icon-captions"></i></div>
+        </div>
+        <span *ngIf="!_displayNewMetrics" class="na" [kTooltip]="'app.event.noData_tt' | translate" [placement]="'bottom'">{{'app.common.na' | translate}}</span>
+        <span *ngIf="!_displayNewMetrics" class="label">{{'app.event.chat_na' | translate}}</span>
+        <span *ngIf="_displayNewMetrics" class="label" [innerHTML]="'app.event.chat' | translate: {'0': _chatRate}"></span>
+      </div>
+
+    </div>
+
+  </k-area-blocker>
+</div>
+

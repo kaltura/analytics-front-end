@@ -5,6 +5,9 @@
     padding-left: 3.1em;
     white-space: nowrap;
   }
+  ::ng-deep  .p-button-label {
+    white-space: nowrap;
+  }
   ::ng-deep .p-button-icon-left {
     font-size: 24px;
   }

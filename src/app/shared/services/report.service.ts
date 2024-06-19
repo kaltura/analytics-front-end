@@ -301,7 +301,6 @@ export class ReportService implements OnDestroy {
       'Parse graph data',
       () => ({ period, reportInterval, graphIds: graphs.map(({ id }) => id).join(', ') })
     );
-
     let lineChartData = {};
     let barChartData = {};
     graphs.forEach((graph: KalturaReportGraph) => {
@@ -320,13 +319,14 @@ export class ReportService implements OnDestroy {
           if (!config.fields[graph.id].nonDateGraphLabel) {
             name = reportInterval === KalturaReportInterval.months
               ? DateFilterUtils.formatMonthString(label, analyticsConfig.locale)
-              : (reportInterval === KalturaReportInterval.hours || reportInterval === KalturaReportInterval.years)
+              : reportInterval === KalturaReportInterval.hours
+              ? DateFilterUtils.formatHoursString(label)
+              : reportInterval === KalturaReportInterval.years
               ? label
               : DateFilterUtils.formatFullDateString(label);
           } else {
             this._logger.debug('Graph label is not a date, skip label formatting according to time interval');
           }
-
           let val: string | number = value.split(analyticsConfig.valueSeparator)[1];
 
           if (config.fields[graph.id] && config.fields[graph.id].parse) {
