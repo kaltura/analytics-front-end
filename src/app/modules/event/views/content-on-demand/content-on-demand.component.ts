@@ -4,7 +4,7 @@ import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import {AuthService, ErrorsManagerService, NavigationDrillDownService, ReportConfig, ReportHelper, ReportService} from 'shared/services';
+import { AuthService, ErrorsManagerService, NavigationDrillDownService, ReportConfig, ReportService } from 'shared/services';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { SortEvent } from 'primeng/api';
 import { ContentOnDemandConfig } from './content-on-demand.config';
@@ -131,6 +131,7 @@ export class ContentOnDemandComponent implements OnDestroy {
       const order = event.order === 1 ? '+' + event.field : '-' + event.field;
       if (order !== this._order) {
         this._order = order;
+        this._pager.pageIndex = 1;
         this._loadReport();
       }
     }

@@ -1200,7 +1200,13 @@
       "allDays": "All days",
       "sessions": "Sessions",
       "reportTitle": "Event summary report: {{0}}",
-      "noData_tt": "Data is not available for events starting before June 2, 2024"
+      "noData_tt": "Data is not available for events starting before June 2, 2024",
+      "name": "Name",
+      "unique_combined_live_viewers": "Live unique viewer",
+      "combined_live_engaged_users_ratio": "Live avg. engagement rate",
+      "unique_vod_viewers": "VOD Unique viewers",
+      "avg_vod_completion_rate": "VOD avg. completion rate",
+      "noSessions": "Data collected prior March 10, 2024, is unavailable"
     },
     "ve": {
       "all": "Registrants",

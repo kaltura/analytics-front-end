@@ -1,10 +1,10 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import {KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType} from 'kaltura-ngx-client';
+import { KalturaFilterPager, KalturaPager, KalturaReportInputFilter, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType} from 'kaltura-ngx-client';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import {AuthService, ErrorsManagerService, NavigationDrillDownService, ReportConfig, ReportHelper, ReportService} from 'shared/services';
+import { AuthService, ErrorsManagerService, NavigationDrillDownService, ReportConfig, ReportService } from 'shared/services';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { SortEvent } from 'primeng/api';
 import { SessionsConfig } from './sessions.config';
@@ -24,25 +24,26 @@ export class SessionsComponent implements OnDestroy {
     if (value === true) {
       // use timeout to allow data binding to finish
       setTimeout(() => {
-        // this._loadReport();
+        this._loadReport();
       }, 0);
     }
   }
   @Input() exporting = false;
   @Input() startDate: Date;
 
-  private _reportType = reportTypeMap(KalturaReportType.topContentCreator);
+  private _reportType = reportTypeMap(KalturaReportType.epTopSessions);
   private _dataConfig: ReportDataConfig;
-  private _order = '-count_plays';
-  private _totalPlays = 0;
+  private _order = '-name';
+
   public _tableData: TableRow[] = [];
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http') ? analyticsConfig.kalturaServer.uri : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
   private _partnerId = this._authService.pid;
+  private _totalUniqueLiveViewers = 0;
   public _columns: string[] = [];
   public totalCount = 0;
   public firstTimeLoading = true;
   public _pager = new KalturaFilterPager({ pageIndex: 1, pageSize: 5 });
-  private _filter = new KalturaEndUserReportInputFilter({
+  private _filter = new KalturaReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false
   });
@@ -69,9 +70,6 @@ export class SessionsComponent implements OnDestroy {
     this._filter.fromDate = Math.floor(this.startDate.getTime() / 1000);
     this._filter.toDate = Math.floor(new Date().getTime() / 1000);
     this._filter.interval = KalturaReportInterval.days;
-    if (analyticsConfig.customData?.eventContentCategoryId) {
-      this._filter.categoriesIdsIn = analyticsConfig.customData.eventContentCategoryId;
-    }
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order, pager: this._pager };
     this._reportService.getReport(reportConfig, this._dataConfig, false)
       .pipe(cancelOnDestroy(this))
@@ -103,7 +101,7 @@ export class SessionsComponent implements OnDestroy {
 
   private _handleTotals(totals: KalturaReportTotal): void {
     const tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
-    this._totalPlays = tabsData[0].rawValue !== '' ? parseInt(tabsData[0].rawValue.toString()) : 0;
+    this._totalUniqueLiveViewers = tabsData[0].rawValue !== '' ? parseInt(tabsData[0].rawValue.toString()) : 0;
   }
 
   private _handleTable(table: KalturaReportTable): void {
@@ -114,8 +112,8 @@ export class SessionsComponent implements OnDestroy {
   }
 
   private _extendTableRow (item: TableRow<string>, index: number, pager: KalturaPager): TableRow<string> {
-    item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/256/height/144`;
-    item['playRate'] = (parseInt(item['count_plays']) / this._totalPlays * 100).toFixed(1);
+    item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['event_session_context_id']}/width/256/height/144`;
+    item['liveViewersRate'] = (parseInt(item['unique_combined_live_viewers']) / this._totalUniqueLiveViewers * 100).toFixed(1);
     return item;
   }
 
@@ -131,13 +129,14 @@ export class SessionsComponent implements OnDestroy {
       const order = event.order === 1 ? '+' + event.field : '-' + event.field;
       if (order !== this._order) {
         this._order = order;
+        this._pager.pageIndex = 1;
         this._loadReport();
       }
     }
   }
 
   public _drillDown(row: TableRow): void {
-    this._navigationDrillDownService.drilldown('entry', row['object_id'], true, row['partner_id']);
+    this._navigationDrillDownService.drilldown('entry-ep', row['event_session_context_id'], true, this._partnerId);
   }
 }
 

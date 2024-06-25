@@ -28,7 +28,16 @@ k-area-blocker {
       align-items: center;
       span {
         margin-right: 8px;
+        min-width: 28px;
+        flex: 0 0 auto;
       }
+    }
+    .kEntryLink {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      white-space: normal;
     }
   }
 }

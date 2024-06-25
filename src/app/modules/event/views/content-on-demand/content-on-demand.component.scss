@@ -22,6 +22,8 @@ k-area-blocker {
       align-items: center;
       span {
         margin-right: 8px;
+        min-width: 28px;
+        flex: 0 0 auto;
       }
     }
   }

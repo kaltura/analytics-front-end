@@ -13,48 +13,38 @@ export class SessionsConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.table]: {
         fields: {
-          'partner_id': {
-            format: value => value,
-            nonComparable: true,
-            hidden: true,
-          },
-          'object_id': {
+          'event_session_context_id': {
             format: value => value,
             nonComparable: true,
             sortOrder: 1,
           },
-          'entry_name': {
+          'name': {
             format: value => value,
             nonComparable: true,
             sortOrder: 2,
           },
-          'count_loads': {
+          'unique_combined_live_viewers': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 3,
           },
-          'count_plays': {
-            format: value => ReportHelper.numberOrZero(value),
+          'combined_live_engaged_users_ratio': {
+            format: value => ReportHelper.percents(value, false, true),
             sortOrder: 4,
           },
-          'unique_viewers': {
+          'unique_vod_viewers': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 5,
           },
-          'sum_time_viewed': {
-            format: value => ReportHelper.numberOrZero(value),
-            sortOrder: 6,
-          },
-          'avg_completion_rate': {
+          'avg_vod_completion_rate': {
             format: value => ReportHelper.percents(value / 100, true, true),
-            sortOrder: 7,
+            sortOrder: 6,
           },
         }
       },
       [ReportDataSection.totals]: {
         fields: {
-          'count_plays': {
-            format: value => ReportHelper.numberOrZero(value),
-            sortOrder: 1,
+          'unique_combined_live_viewers': {
+            format: value => ReportHelper.numberOrZero(value)
           }
         }
       }
