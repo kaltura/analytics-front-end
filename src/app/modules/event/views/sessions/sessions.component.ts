@@ -33,7 +33,7 @@ export class SessionsComponent implements OnDestroy {
 
   private _reportType = reportTypeMap(KalturaReportType.epTopSessions);
   private _dataConfig: ReportDataConfig;
-  private _order = '-name';
+  private _order = '-unique_combined_live_viewers';
 
   public _tableData: TableRow[] = [];
   private _apiUrl = analyticsConfig.kalturaServer.uri.startsWith('http') ? analyticsConfig.kalturaServer.uri : `${location.protocol}//${analyticsConfig.kalturaServer.uri}`;
@@ -50,6 +50,10 @@ export class SessionsComponent implements OnDestroy {
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
 
+  private SESSION_ID_RELEASE_DATE = new Date(2024, 6, 25);
+  public _session_id_release_date = DateFilterUtils.formatMonthDayString(this.SESSION_ID_RELEASE_DATE, analyticsConfig.locale, 'long');
+  public _displaySessions = true;
+
   constructor(private _reportService: ReportService,
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
@@ -62,41 +66,44 @@ export class SessionsComponent implements OnDestroy {
   }
 
   private _loadReport(): void {
-    this._isBusy = true;
-    this._blockerMessage = null;
-    this.totalCount = 0;
-    this._filter.virtualEventIdIn = this.eventIn;
-    this._filter.timeZoneOffset = DateFilterUtils.getTimeZoneOffset();
-    this._filter.fromDate = Math.floor(this.startDate.getTime() / 1000);
-    this._filter.toDate = Math.floor(new Date().getTime() / 1000);
-    this._filter.interval = KalturaReportInterval.days;
-    const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order, pager: this._pager };
-    this._reportService.getReport(reportConfig, this._dataConfig, false)
-      .pipe(cancelOnDestroy(this))
-      .subscribe((report) => {
-          this._tableData = [];
-          this.firstTimeLoading = false;
-          if (report.totals && report.totals.data && report.totals.header) {
-            this._handleTotals(report.totals); // handle totals
-          }
-          if (report.table && report.table.data && report.table.header) {
-            this._handleTable(report.table); // handle table
-          }
-          this._isBusy = false;
-          this._blockerMessage = null;
-        },
-        error => {
-          this._isBusy = false;
-          const actions = {
-            'close': () => {
-              this._blockerMessage = null;
-            },
-            'retry': () => {
-              this._loadReport();
-            },
-          };
-          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
-        });
+    this._displaySessions = this.startDate.getTime() > this.SESSION_ID_RELEASE_DATE.getTime();
+    if (this._displaySessions) {
+      this._isBusy = true;
+      this._blockerMessage = null;
+      this.totalCount = 0;
+      this._filter.virtualEventIdIn = this.eventIn;
+      this._filter.timeZoneOffset = DateFilterUtils.getTimeZoneOffset();
+      this._filter.fromDate = Math.floor(this.startDate.getTime() / 1000);
+      this._filter.toDate = Math.floor(new Date().getTime() / 1000);
+      this._filter.interval = KalturaReportInterval.days;
+      const reportConfig: ReportConfig = {reportType: this._reportType, filter: this._filter, order: this._order, pager: this._pager};
+      this._reportService.getReport(reportConfig, this._dataConfig, false)
+        .pipe(cancelOnDestroy(this))
+        .subscribe((report) => {
+            this._tableData = [];
+            this.firstTimeLoading = false;
+            if (report.totals && report.totals.data && report.totals.header) {
+              this._handleTotals(report.totals); // handle totals
+            }
+            if (report.table && report.table.data && report.table.header) {
+              this._handleTable(report.table); // handle table
+            }
+            this._isBusy = false;
+            this._blockerMessage = null;
+          },
+          error => {
+            this._isBusy = false;
+            const actions = {
+              'close': () => {
+                this._blockerMessage = null;
+              },
+              'retry': () => {
+                this._loadReport();
+              },
+            };
+            this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
+          });
+    }
   }
 
   private _handleTotals(totals: KalturaReportTotal): void {

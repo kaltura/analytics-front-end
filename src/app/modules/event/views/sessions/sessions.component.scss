@@ -40,4 +40,14 @@ k-area-blocker {
       white-space: normal;
     }
   }
+  .noSessions {
+    width: 100%;
+    display: block;
+    text-align: center;
+    font-size: 20px;
+    line-height: 380px;
+    padding-bottom: 24px;
+    font-weight: 700;
+    color: $kGrayscale3;
+  }
 }

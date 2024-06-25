@@ -1206,7 +1206,7 @@
       "combined_live_engaged_users_ratio": "Live avg. engagement rate",
       "unique_vod_viewers": "VOD Unique viewers",
       "avg_vod_completion_rate": "VOD avg. completion rate",
-      "noSessions": "Data collected prior March 10, 2024, is unavailable"
+      "noSessions": "Data collected prior {{0}}, is unavailable"
     },
     "ve": {
       "all": "Registrants",
