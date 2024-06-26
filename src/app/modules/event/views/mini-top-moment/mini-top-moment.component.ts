@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
 import {analyticsConfig, getKalturaServerUri} from "configuration/analytics-config";
-import {AuthService, ErrorsManagerService, ReportConfig, ReportService} from "shared/services";
+import {AppAnalytics, AuthService, ButtonType, ErrorsManagerService, ReportConfig, ReportService} from "shared/services";
 import {AreaBlockerMessage} from "@kaltura-ng/kaltura-ui";
 import {BaseEntryGetAction, KalturaAPIException, KalturaClient, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaLiveEntry, KalturaMediaEntry, KalturaReportInterval, KalturaReportTable, KalturaReportType, KalturaRoomEntry} from "kaltura-ngx-client";
 import {MiniTopMomentConfig} from "./mini-top-moment.config";
@@ -63,6 +63,7 @@ export class MiniTopMomentComponent implements OnInit, OnDestroy {
   public _playing = false;
 
   constructor(private _authService: AuthService,
+              private _analytics: AppAnalytics,
               private _reportService: ReportService,
               private _kalturaClient: KalturaClient,
               private _errorsManager: ErrorsManagerService,
@@ -224,7 +225,20 @@ export class MiniTopMomentComponent implements OnInit, OnDestroy {
   public _onPlayerReady(player): void {
     this._playerInstance = player;
     this._playerInstance.addEventListener(this._playerInstance.Event.PLAY, event => {
+      this._analytics.trackButtonClickEvent(ButtonType.Launch, 'Events_event_top_moment_play', null, 'Event_dashboard');
       this._playing = true;
+    });
+    this._playerInstance.addEventListener(this._playerInstance.Event.PAUSE, event => {
+      this._analytics.trackButtonClickEvent(ButtonType.Close, 'Events_event_top_moment_pause', null, 'Event_dashboard');
+    });
+    this._playerInstance.addEventListener(this._playerInstance.Event.MUTE_CHANGE, event => {
+      if (this._playing) { // prevent reporting initial unmute event send by the player on load
+        const name = event.payload?.mute ? 'Events_event_top_moment_mute' : 'Events_event_top_moment_unmute';
+        this._analytics.trackButtonClickEvent(ButtonType.Choose, name, null, 'Event_dashboard');
+      }
+    });
+    this._playerInstance.addEventListener('download_item_clicked', event => {
+      this._analytics.trackButtonClickEvent(ButtonType.Download, 'Events_event_top_moment_dowonload', null, 'Event_dashboard');
     });
   }
 
@@ -232,3 +246,4 @@ export class MiniTopMomentComponent implements OnInit, OnDestroy {
   }
 
 }
+
