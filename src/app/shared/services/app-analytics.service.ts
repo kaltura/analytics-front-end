@@ -149,6 +149,9 @@ export class AppAnalytics {
                     case route.startsWith('/entry-ep/'):
                         this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_events_session');
                         break;
+                    case route.startsWith('/event/'):
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_events_event', null, 'Event_dashboard');
+                        break;
                 }
             });
     }
@@ -170,11 +173,11 @@ export class AppAnalytics {
         }
     }
 
-  public trackButtonClickEvent(type: ButtonType, name: string, value: string = null): void {
-    this.trackEvent(EventType.ButtonClicked, type, name, value);
+  public trackButtonClickEvent(type: ButtonType, name: string, value: string = null, feature: string = null): void {
+    this.trackEvent(EventType.ButtonClicked, type, name, value, feature);
   }
 
-    private trackEvent(eventType: EventType, eventVar1: ButtonType | PageType, eventVar2: string, eventVar3: string = null): void {
+    private trackEvent(eventType: EventType, eventVar1: ButtonType | PageType, eventVar2: string, eventVar3: string = null, feature: string = null): void {
         if (!this._enabled || eventVar2 === this._lastTrackedEventName) {
             return;
         }
@@ -225,6 +228,9 @@ export class AppAnalytics {
         }
         if (analyticsConfig.hostAppVersion) {
           payload['applicationVer'] = analyticsConfig.hostAppVersion;
+        }
+        if (feature) {
+          Object.assign(payload, { feature });
         }
         if (pid) {
           Object.assign(payload, { partnerId: pid });

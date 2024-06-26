@@ -3,7 +3,7 @@ import {KalturaEndUserReportInputFilter, KalturaReportGraph, KalturaReportInterv
 import {ReportDataConfig, ReportDataSection} from 'shared/services/storage-data-base.config';
 import {analyticsConfig} from 'configuration/analytics-config';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {AuthService, ErrorsManagerService, ReportConfig, ReportHelper, ReportService} from 'shared/services';
+import {AppAnalytics, AuthService, ButtonType, ErrorsManagerService, ReportConfig, ReportHelper, ReportService} from 'shared/services';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {SelectItem} from 'primeng/api';
 import {EventOverTimeConfig} from './event-over-time.config';
@@ -78,6 +78,7 @@ export class EventOverTimeComponent implements OnDestroy {
   constructor(private _reportService: ReportService,
               private _errorsManager: ErrorsManagerService,
               private _translate: TranslateService,
+              private _analytics: AppAnalytics,
               private _authService: AuthService,
               private _dataConfigService: EventOverTimeConfig) {
     this._dataConfig = this._dataConfigService.getConfig();
@@ -100,6 +101,24 @@ export class EventOverTimeComponent implements OnDestroy {
         this._days.push({label: moment(this.startDate).add(i, 'days').format(dateFormat), value: i});
       }
     }
+  }
+
+  public onTimeUnitChange(event): void {
+    const name = event.value === 'months' ? 'Events_event_event_over_time_post_monthly' : 'Events_event_event_over_time_post_daily';
+    this._analytics.trackButtonClickEvent(ButtonType.Choose, name, null, 'Event_dashboard');
+    this._loadReport();
+  }
+
+  public onMetricChange(event): void {
+    const name = event.value === 'minutes' ? 'Events_event_event_over_time_minutes_viewed' : 'Events_event_event_over_time_attendees';
+    this._analytics.trackButtonClickEvent(ButtonType.Filter, name, null, 'Event_dashboard');
+    this._loadReport();
+  }
+
+  public onDaysChange(event): void {
+    const name = event.value === -1 ? 'Events_event_event_over_time_select_all_days' : 'Events_event_event_over_time_select_day';
+    this._analytics.trackButtonClickEvent(ButtonType.Filter, name, null, 'Event_dashboard');
+    this._loadReport();
   }
 
   public _loadReport(): void {
@@ -213,6 +232,8 @@ export class EventOverTimeComponent implements OnDestroy {
     this._tabsData.forEach(tab => tab.selected = false);
     tab.selected = true;
     this._selectedTab = tab.value;
+    const name = tab.value === 'during' ? 'Events_event_event_over_time_during' : 'Events_event_event_over_time_post_event';
+    this._analytics.trackButtonClickEvent(ButtonType.Choose, name, null, 'Event_dashboard');
     this._loadReport();
   }
 

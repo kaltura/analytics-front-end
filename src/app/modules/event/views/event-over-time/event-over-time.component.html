@@ -8,7 +8,7 @@
       <div class="selectors">
         <p-dropdown [style]="{'width': '180px'}"
                     [options]="_metrics"
-                    (onChange)="_loadReport()"
+                    (onChange)="onMetricChange($event)"
                     [(ngModel)]="_metric">
           <ng-template let-option pTemplate="selectedItem">
             <div class="kOptionsLabelWrapper">
@@ -25,13 +25,13 @@
         </p-dropdown>
         <p-dropdown *ngIf="_multiDatesEvent && _selectedTab === 'during'" [style]="{'width': '180px', 'margin-left': '16px'}"
                     [options]="_days"
-                    (onChange)="_loadReport()"
+                    (onChange)="onDaysChange($event)"
                     [(ngModel)]="_selectedDay">
         </p-dropdown>
 
         <div class="kDimensions" *ngIf="_selectedTab === 'post'">
           <p-selectButton [options]="_timeUnitsItems"
-                          (onChange)="_loadReport()"
+                          (onChange)="onTimeUnitChange($event)"
                           [(ngModel)]="_selectedTimeUnit"></p-selectButton>
         </div>
       </div>

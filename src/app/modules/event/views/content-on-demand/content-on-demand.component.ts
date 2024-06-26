@@ -4,7 +4,7 @@ import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorsManagerService, NavigationDrillDownService, ReportConfig, ReportService } from 'shared/services';
+import {AppAnalytics, AuthService, ButtonType, ErrorsManagerService, NavigationDrillDownService, ReportConfig, ReportService} from 'shared/services';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { SortEvent } from 'primeng/api';
 import { ContentOnDemandConfig } from './content-on-demand.config';
@@ -52,6 +52,7 @@ export class ContentOnDemandComponent implements OnDestroy {
   constructor(private _reportService: ReportService,
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
+              private _analytics: AppAnalytics,
               _dataConfigService: ContentOnDemandConfig,
               private _navigationDrillDownService: NavigationDrillDownService) {
     this._dataConfig = _dataConfigService.getConfig();
@@ -122,6 +123,7 @@ export class ContentOnDemandComponent implements OnDestroy {
   public _onPaginationChanged(event: { page: number }): void {
     if (event.page !== (this._pager.pageIndex - 1)) {
       this._pager.pageIndex = event.page + 1;
+      this._analytics.trackButtonClickEvent(ButtonType.Filter, 'Events_event_content_paginate', this._pager.pageIndex.toString(), 'Event_dashboard');
       this._loadReport();
     }
   }
@@ -130,6 +132,7 @@ export class ContentOnDemandComponent implements OnDestroy {
     if (event.data.length && event.field && event.order) {
       const order = event.order === 1 ? '+' + event.field : '-' + event.field;
       if (order !== this._order) {
+        this._analytics.trackButtonClickEvent(ButtonType.Filter, 'Events_event_content_sort', event.field, 'Event_dashboard');
         this._order = order;
         this._pager.pageIndex = 1;
         this._loadReport();
@@ -138,6 +141,7 @@ export class ContentOnDemandComponent implements OnDestroy {
   }
 
   public _drillDown(row: TableRow): void {
+    this._analytics.trackButtonClickEvent(ButtonType.Load, 'Events_event_content_content_click', row['object_id'], 'Event_dashboard');
     this._navigationDrillDownService.drilldown('entry', row['object_id'], true, row['partner_id']);
   }
 }
