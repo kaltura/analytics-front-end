@@ -246,23 +246,4 @@ export class MiniTopMomentComponent implements OnInit, OnDestroy {
   }
 
 }
-/*
-  public _onPlayerReady(player): void {
-    this._playerInstance = player;
 
-    // event registration
-    this._playerInstance.addEventListener(this._playerInstance.Event.CHANGE_SOURCE_STARTED, event => {
-      this._duration = this._playerInstance.sources.duration * 1000;
-    });
-    this._playerInstance.addEventListener(this._playerInstance.Event.MEDIA_LOADED, event => {
-      this._playerPlayed = true;
-    });
-    this._playerInstance.addEventListener(this._playerInstance.Event.TIME_UPDATE, event => {
-      this._playProgress = this._playerInstance.currentTime / this._duration * 1000 *100;
-      this._currentTime = this._playerInstance.currentTime * 1000;
-    });
-    this._playerInstance.addEventListener(this._playerInstance.Event.ENDED, event => {
-      this._playProgress = 100;
-    });
-  }
- */
