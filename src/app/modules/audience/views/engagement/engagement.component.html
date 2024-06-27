@@ -4,6 +4,8 @@
       <div class="kReportHeader" [class.exporting]="_exporting">
         <span *ngIf="_engagementViewConfig.title" class="kTitle">{{ (_exporting ? 'app.engagement.exportTitle' : 'app.engagement.title') | translate}}</span>
         <app-pdf-export *ngIf="_engagementViewConfig.download" [elementToExport]="reportToExport" class="pdfExport"
+                        [eventName]="'Engagement_pdf_download'"
+                        [feature]="'Engagement'"
                         [filename]="'Summary_engagement_report.pdf'" (preExport)="preExportHandler()" [disabled]="_refineFilterOpened"
                         (postExport)="postExportHandler()" (exporting)="onExporting($event)"></app-pdf-export>
         <app-export-csv *ngIf="_engagementViewConfig.export"

@@ -14,6 +14,8 @@
                         class="kTitle kTruncateTitle">{{ 'app.event.reportTitle' | translate: {'0': _virtualEvent.name} }}</h1>
                     <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title" [class.exporting]="_exporting">
                         <app-pdf-export *ngIf="_viewConfig.download"
+                                        [eventName]="'Events_event_pdf_download'"
+                                        [feature]="'Event'"
                                         [elementToExport]="reportToExport" [filename]="exportFilename"
                                         (preExport)="preExportHandler()" (postExport)="postExportHandler()"
                                         (exporting)="onExporting($event)"></app-pdf-export>

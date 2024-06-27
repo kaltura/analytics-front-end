@@ -25,7 +25,12 @@
                 <i *ngIf="_refineFilterOpened" class="kIcondropdown_arrow_top"></i>
               </div>
             </div>
-            <app-pdf-export *ngIf="_viewConfig.download" [disabled]="_refineFilterOpened" [elementToExport]="reportToExport" [filename]="exportFilename" (preExport)="preExportHandler()" (postExport)="postExportHandler()" (exporting)="onExporting($event)"></app-pdf-export>
+            <app-pdf-export *ngIf="_viewConfig.download"
+                            [eventName]="'Registration_pdf_download'"
+                            [feature]="'Registration'"
+                            [disabled]="_refineFilterOpened" [elementToExport]="reportToExport"
+                            [filename]="exportFilename" (preExport)="preExportHandler()" (postExport)="postExportHandler()"
+                            (exporting)="onExporting($event)"></app-pdf-export>
 
           </div>
         </div>

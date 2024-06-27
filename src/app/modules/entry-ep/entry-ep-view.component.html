@@ -13,6 +13,8 @@
                             (onExport)="onExport()"
                             [dateFilter]="_exportDateFilter"></app-export-csv>
             <app-pdf-export *ngIf="_viewConfig.download" [elementToExport]="reportToExport"
+                            [eventName]="'Events_session_pdf_download'"
+                            [feature]="'Session'"
                             [filename]="_entry.name + '_summary_report.pdf'" (preExport)="preExportHandler()"
                             (postExport)="postExportHandler()" (exporting)="onExporting($event)"></app-pdf-export>
           </div>

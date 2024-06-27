@@ -8,6 +8,8 @@
           <h1 *ngIf="_viewConfig.title" class="kTitle kTruncateTitle" [kTooltip]="_entry?.name" [showOnEllipsis]="true" [placement]="'bottom'">{{_exporting ? ('app.entryWebcast.exportTitle' | translate: {'0': _entry?.name}) : _entry?.name}}</h1>
           <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title">
             <app-pdf-export *ngIf="_viewConfig.download" [elementToExport]="reportToExport" class="pdfExport"
+                            [eventName]="'Webcast_pdf_download'"
+                            [feature]="'Webcast'"
                             [filename]="'Summary_webcast_report.pdf'" (preExport)="preExportHandler()" [disabled]="_refineFilterOpened"
                             (postExport)="postExportHandler()" (exporting)="onExporting($event)"></app-pdf-export>
             <app-export-csv aria-label="Export"

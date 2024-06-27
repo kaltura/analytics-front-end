@@ -1,6 +1,6 @@
-import {Component, Input, Output, EventEmitter, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import * as html2pdf from "html2pdf.js";
-import {AppAnalytics} from "shared/services";
+import {AppAnalytics, ButtonType} from "shared/services";
 
 @Component({
     selector: 'app-pdf-export',
@@ -17,6 +17,12 @@ export class PdfExportComponent {
 
 	@Input()
   filename: string;
+
+	@Input()
+  eventName = '';
+
+	@Input()
+  feature: string = null;
 
 	@Output()
 	exporting = new EventEmitter<boolean>();
@@ -37,7 +43,7 @@ export class PdfExportComponent {
     if (this.disabled) {
       return;
     }
-    this._analytics.trackClickEvent('Download_PDF_report');
+    this._analytics.trackButtonClickEvent(ButtonType.Download, this.eventName.length ? this.eventName : 'Download_PDF_report', null, this.feature);
     this._showExportingLoader = true;
     this._fadeAnimation = true;
     setTimeout(() => {
