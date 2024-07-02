@@ -51,6 +51,7 @@ export class NavigationDrillDownService implements OnDestroy {
 
   private _doDrillDown(route: string, id: string, includeQueryParams: boolean): void {
     if (analyticsConfig.isHosted) {
+      window.scrollTo(0, 0); // scroll to top
       const params = includeQueryParams ? this._browserService.getCurrentQueryParams('string', { id }) : `id=${id}`;
       this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/${route}?${params}`);
     } else {
