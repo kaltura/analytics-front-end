@@ -62,7 +62,7 @@ export class EventMiniEngagementComponent implements OnInit {
   public _pollsRate = 0;
   public _chatRate = 0;
 
-  private NEW_METRICS_RELEASE_DATE = new Date(2024, 6, 2);
+  private NEW_METRICS_RELEASE_DATE = new Date(2024, 5, 2);
   public _displayNewMetrics = true;
 
   constructor(private _reportService: ReportService,
