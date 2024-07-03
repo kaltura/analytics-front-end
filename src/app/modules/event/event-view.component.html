@@ -44,13 +44,13 @@
                 </div>
 
                 <div [class.kHidden]="!_virtualEventLoaded" class="kReportContainer">
-                    <div class="kMiniReportContainer kMiniTopReportContainer">
+                    <div class="kMiniReportContainer kMiniTopReportContainer kSocialHighlights">
                         <app-event-mini-minutes-viewed *ngIf="_virtualEventLoaded && _viewConfig.miniMinutesViewed"
                                                        [startDate]="_eventStartDate" [endDate]="_now" [virtualEventId]="_virtualEventId">
                         </app-event-mini-minutes-viewed>
                     </div>
                     <div class="separator"></div>
-                   <div class="kMiniReportContainer kMiniTopReportContainer">
+                   <div class="kMiniReportContainer kMiniTopReportContainer kSocialHighlights">
                         <app-event-mini-reactions *ngIf="_virtualEventLoaded && _viewConfig.miniReactions"
                                                       [isBusy]="engagement._isBusy"
                                                       [reactionsRate]="engagement._reactionsRate"
@@ -58,7 +58,7 @@
                         </app-event-mini-reactions>
                     </div>
                     <div class="separator"></div>
-                   <div class="kMiniReportContainer kMiniTopReportContainer">
+                   <div class="kMiniReportContainer kMiniTopReportContainer kSocialHighlights">
                        <app-event-mini-messages *ngIf="_virtualEventLoaded && _viewConfig.miniMessages"
                                                  [isBusy]="engagement._isBusy"
                                                  [displayNewMetrics]="engagement._displayNewMetrics"
