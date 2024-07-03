@@ -37,6 +37,7 @@ export class EpSessionComponent implements OnInit, OnDestroy {
   @Input() startDate: Date; // session start date rounded down the the last half hour
   @Input() endDate: Date;
   @Input() exporting = false;
+  @Input() isVirtualClassroom: boolean;
 
   private _order = '-date_id';
   private _reportType = KalturaReportType.epWebcastEngagementTimeline;

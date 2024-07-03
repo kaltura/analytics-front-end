@@ -5,7 +5,7 @@
         <span class="kTitle">{{'app.entryEp.session.title' | translate}}</span>
       </div>
 
-      <div class="noRecording" *ngIf="!exporting">
+      <div class="noRecording" *ngIf="!exporting && !isVirtualClassroom">
 
         <app-k-player-v7 [cdnUrl]="serverUri" [pid]="_playerConfig.pid" [preload]="true" [fillWidth]="true" [fillHeight]="true"
                          [uiconfid]="_playerConfig.uiconfid" [entryid]="recordingEntryId" [ks]="_playerConfig.ks"

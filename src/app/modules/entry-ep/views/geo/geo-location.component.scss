@@ -15,7 +15,9 @@
   width: 24px;
   height: 24px;
 }
-
+.index {
+  display: block;
+}
 .kFlagColumn {
   padding-left: 18px !important;
 }
@@ -110,5 +112,11 @@ a.exporting {
       right: 8px;
       top: 9px;
     }
+  }
+}
+
+:host ::ng-deep  p-table{
+  .p-datatable .p-datatable-tbody > tr > td {
+    padding-right: 24px;
   }
 }

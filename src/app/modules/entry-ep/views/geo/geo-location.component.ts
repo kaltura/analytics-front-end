@@ -44,6 +44,7 @@ export class EpGeoComponent implements OnInit, OnDestroy {
   @Input() startDate: Date;
   @Input() endDate: Date;
   @Input() exporting = false;
+  @Input() isVirtualClassroom: boolean;
 
   protected _componentId = 'ep-geo';
   private _dataConfig: ReportDataConfig;

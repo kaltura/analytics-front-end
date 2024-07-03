@@ -36,6 +36,7 @@ export class EpMiniMinutesViewedComponent implements OnInit {
   @Input() entryIdIn = '';
   @Input() startDate: Date;
   @Input() endDate: Date;
+  @Input() isVirtualClassroom: boolean;
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;

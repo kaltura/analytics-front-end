@@ -83,7 +83,7 @@
                     </span>
                   </div>
                 </th>
-                <th>
+                <th *ngIf="!isVirtualClassroom">
                   <div class="kColumnHeader">
                     <span [kTooltip]="'app.entryEp.devices.unique_vod_viewers' | translate" [showOnEllipsis]="true">
                       {{'app.entryEp.devices.unique_vod_viewers' | translate}}
@@ -108,7 +108,7 @@
                     </div>
                   </div>
                 </th>
-                <th>
+                <th *ngIf="!isVirtualClassroom">
                   <span>{{_tabsData[1].value}}</span>
                 </th>
               </tr>
@@ -117,7 +117,7 @@
             <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
               <tr>
                 <td>
-                  <span>{{rowIndex + 1}}</span>
+                  <span class="index">{{rowIndex + 1}}</span>
                 </td>
                 <td class="kFlagColumn" *ngIf="_currentTableLevel === _tableModes.countries">
                   <i class="kFlag" [ngClass]="'kFlag-' + data['object_id']"></i>
@@ -137,7 +137,7 @@
                     </div>
                   </div>
                 </td>
-                <td>
+                <td *ngIf="!isVirtualClassroom">
                   <span>{{data['unique_vod_viewers']}}</span>
                 </td>
               </tr>

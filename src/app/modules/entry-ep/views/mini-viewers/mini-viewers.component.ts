@@ -33,6 +33,7 @@ export class EpMiniViewersComponent implements OnInit, OnDestroy {
   @Input() exporting = false;
   @Input() startDate: Date;
   @Input() endDate: Date;
+  @Input() isVirtualClassroom: boolean;
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;

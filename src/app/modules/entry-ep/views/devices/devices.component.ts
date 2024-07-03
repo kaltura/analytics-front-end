@@ -28,6 +28,7 @@ export class EpDevicesComponent implements OnInit, OnDestroy {
   @Input() startDate: Date;
   @Input() endDate: Date;
   @Input() exporting = false;
+  @Input() isVirtualClassroom: boolean;
 
   private _dataConfig: ReportDataConfig;
   public _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 5, pageIndex: 1 });

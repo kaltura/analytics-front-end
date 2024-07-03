@@ -83,3 +83,9 @@ td span {
 .hidePaginator {
   display: none;
 }
+
+:host ::ng-deep  p-table{
+  .p-datatable .p-datatable-tbody > tr > td {
+    padding-right: 24px;
+  }
+}

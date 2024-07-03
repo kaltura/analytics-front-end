@@ -1,9 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {
-  BaseEntryGetAction,
+  BaseEntryGetAction, CuePointListAction,
   KalturaAPIException,
-  KalturaClient,
+  KalturaClient, KalturaCuePointFilter, KalturaCuePointListResponse,
   KalturaEntryScheduleEventFilter,
   KalturaLiveEntry,
   KalturaMeetingScheduleEvent,
@@ -11,7 +11,9 @@ import {
   KalturaMultiResponse,
   KalturaReportInterval, KalturaRoomEntry,
   KalturaScheduleEventListResponse,
-  ScheduleEventListAction
+  ScheduleEventListAction,
+  KalturaCuePointType,
+  KalturaCuePoint
 } from 'kaltura-ngx-client';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {FrameEventManagerService, FrameEvents} from 'shared/modules/frame-event-manager/frame-event-manager.service';
@@ -25,6 +27,7 @@ import {PageScrollConfig, PageScrollInstance, PageScrollService} from "ngx-page-
 import {KalturaLogger} from "@kaltura-ng/kaltura-logger";
 import {map} from 'rxjs/operators';
 import {ExportConfig} from "./export.config";
+import {KalturaSessionCuePoint} from "kaltura-ngx-client/lib/api/types/KalturaSessionCuePoint";
 
 @Component({
   selector: 'app-ep-webcast',
@@ -59,6 +62,10 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
   public _allEntryIds = '';
 
   private _saveTitleConfig = this._viewConfig.title;
+
+  private _cuePoints: KalturaSessionCuePoint[] = [];
+  public _selectedCuePoint: KalturaSessionCuePoint = null;
+  public _isVirtualClassroom = true;
 
   constructor(private _router: Router,
               private _analytics: AppAnalytics,
@@ -98,7 +105,8 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
 
     const request = new KalturaMultiRequest(
         new BaseEntryGetAction({ entryId: this._entryId }),
-        new ScheduleEventListAction({filter: new KalturaEntryScheduleEventFilter({templateEntryIdEqual: this._entryId})})
+        new ScheduleEventListAction({filter: new KalturaEntryScheduleEventFilter({templateEntryIdEqual: this._entryId})}),
+        new CuePointListAction({filter: new KalturaCuePointFilter({cuePointTypeEqual: KalturaCuePointType.session, entryIdEqual: this._entryId})})
       );
 
     this._kalturaClient
@@ -121,20 +129,19 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
         }
         return [
           responses[0].result,
-          responses[1].result
-        ] as [KalturaRoomEntry | KalturaLiveEntry, KalturaScheduleEventListResponse];
+          responses[1].result,
+          responses[2].result
+        ] as [KalturaRoomEntry | KalturaLiveEntry, KalturaScheduleEventListResponse, KalturaCuePointListResponse];
       }))
       .subscribe(
-        ([entry, eventList]) => {
+        ([entry, eventList, cuePoints]) => {
           if (!entry) {
             return;
           }
-          // set start and edit date
-          if (eventList?.objects?.length > 0) {
-            const event: KalturaMeetingScheduleEvent = eventList.objects[0] as KalturaMeetingScheduleEvent;
-
-            this._actualEventStartDate = new Date(event.startDate * 1000); // save actual start date before calculating round down start date
-            this._eventStartDate = new Date(this._actualEventStartDate.getTime()); // copy the actual start dat object
+          // set start and end date
+          const setStartEndDates = (startDate: number, endDate: number) => {
+            this._actualEventStartDate = new Date(startDate * 1000); // save actual start date before calculating round down start date
+            this._eventStartDate = new Date(this._actualEventStartDate.getTime()); // copy the actual start date object
             // need to round down to the last half hour because this is our data aggregation interval
             const minutes = this._actualEventStartDate.getMinutes();
             if (minutes !== 0 && minutes !== 30) {
@@ -142,7 +149,20 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
               this._eventStartDate.setMinutes(roundDownMinutes); // round down minutes
               this._eventStartDate.setSeconds(0); // round down seconds
             }
-            this._eventEndDate = new Date(event.endDate * 1000);
+            this._eventEndDate = new Date(endDate * 1000);
+          };
+
+          if (eventList?.objects?.length > 0) {
+            this._isVirtualClassroom = false;
+            const event: KalturaMeetingScheduleEvent = eventList.objects[0] as KalturaMeetingScheduleEvent;
+            setStartEndDates(event.startDate, event.endDate);
+          } else {
+            if (cuePoints?.objects?.length > 0) {
+              this._isVirtualClassroom = true;
+              this._cuePoints = cuePoints.objects;
+              this._selectedCuePoint = this._cuePoints[0];
+              setStartEndDates(this._selectedCuePoint.startTime, this._selectedCuePoint.endTime);
+            }
           }
           // set live and vod entry IDs string
           this._entry = entry;
