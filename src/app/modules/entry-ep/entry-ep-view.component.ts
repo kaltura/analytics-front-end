@@ -256,7 +256,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
   }
 
   public preExportHandler(): void {
-    this._viewConfig.devices = null;
+    this._viewConfig.devices = this._isVirtualClassroom ? {} : null;
     this._viewConfig.title = {}; // force show title for export
     this._analytics.trackButtonClickEvent(ButtonType.Export, 'Events_session_PDF');
   }

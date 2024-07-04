@@ -14,7 +14,7 @@
             </p-dropdown>
           </div>
           <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title">
-            <app-export-csv name="Viewers Engagement"
+            <app-export-csv name="Viewers Engagement" *ngIf="!_exporting"
                             [entryId]="_liveEntryIds"
                             [reports]="_exportConfig"
                             (onExport)="onExport()"
