@@ -14,6 +14,10 @@
 .kMain.exporting {
   background-color: $appBkgColor;
 }
+.kReports {
+  display: flex;
+  flex-wrap: wrap;
+}
 .kReport {
   background-color: $appBkgColor;
   &.exporting {
@@ -134,6 +138,7 @@
 }
 
 .kReportContainer{
+  width: 100%;
   padding-bottom: 24px;
   background-color: $appBkgColor;
   display: flex;
@@ -203,6 +208,38 @@
     }
     &.narrow {
       width: 22%;
+    }
+  }
+}
+.vc .kReportContainer {
+  flex-direction: column;
+  padding-bottom: 0px;
+  width: 40%;
+  &:last-child {
+    width: 60%;
+  }
+}
+.vc .kReportContainer .kMiniReportContainer {
+  width: calc(100% - 24px);
+  &.kHigh {
+    width: 100%;
+  }
+}
+.vc ::ng-deep app-ep-mini-engagement .reportContent {
+  height: 434px;
+  .metric {
+    margin-bottom: 24px;
+  }
+}
+.vc ::ng-deep app-ep-mini-viewers, .vc ::ng-deep app-ep-mini-minutes-viewed {
+  .reportContent {
+    flex-direction: column;
+    .dataContainer {
+      flex-direction: column-reverse;
+      .value {
+        margin-bottom: 8px !important;
+        margin-top: 8px !important;
+      }
     }
   }
 }

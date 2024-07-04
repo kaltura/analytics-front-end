@@ -13,7 +13,7 @@ import {
   KalturaScheduleEventListResponse,
   ScheduleEventListAction,
   KalturaCuePointType,
-  KalturaCuePoint
+  KalturaSessionCuePoint
 } from 'kaltura-ngx-client';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {FrameEventManagerService, FrameEvents} from 'shared/modules/frame-event-manager/frame-event-manager.service';
@@ -27,7 +27,7 @@ import {PageScrollConfig, PageScrollInstance, PageScrollService} from "ngx-page-
 import {KalturaLogger} from "@kaltura-ng/kaltura-logger";
 import {map} from 'rxjs/operators';
 import {ExportConfig} from "./export.config";
-import {KalturaSessionCuePoint} from "kaltura-ngx-client/lib/api/types/KalturaSessionCuePoint";
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-ep-webcast',
@@ -65,6 +65,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
 
   private _cuePoints: KalturaSessionCuePoint[] = [];
   public _selectedCuePoint: KalturaSessionCuePoint = null;
+  public _cuepointOptions = [];
   public _isVirtualClassroom = true;
 
   constructor(private _router: Router,
@@ -98,6 +99,20 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
   public _onDateFilterChange(event: DateChangeEvent): void {
     this._dateFilter = event;
   }
+
+  // set start and end date
+  private setStartEndDates(startDate: number, endDate: number) {
+    this._actualEventStartDate = new Date(startDate * 1000); // save actual start date before calculating round down start date
+    this._eventStartDate = new Date(this._actualEventStartDate.getTime()); // copy the actual start date object
+    // need to round down to the last half hour because this is our data aggregation interval
+    const minutes = this._actualEventStartDate.getMinutes();
+    if (minutes !== 0 && minutes !== 30) {
+      const roundDownMinutes = minutes > 30 ? 30 : 0;
+      this._eventStartDate.setMinutes(roundDownMinutes); // round down minutes
+      this._eventStartDate.setSeconds(0); // round down seconds
+    }
+    this._eventEndDate = new Date(endDate * 1000);
+  };
 
   private _loadEventDetails(): void {
     this._loadingEntry = true;
@@ -138,30 +153,27 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
           if (!entry) {
             return;
           }
-          // set start and end date
-          const setStartEndDates = (startDate: number, endDate: number) => {
-            this._actualEventStartDate = new Date(startDate * 1000); // save actual start date before calculating round down start date
-            this._eventStartDate = new Date(this._actualEventStartDate.getTime()); // copy the actual start date object
-            // need to round down to the last half hour because this is our data aggregation interval
-            const minutes = this._actualEventStartDate.getMinutes();
-            if (minutes !== 0 && minutes !== 30) {
-              const roundDownMinutes = minutes > 30 ? 30 : 0;
-              this._eventStartDate.setMinutes(roundDownMinutes); // round down minutes
-              this._eventStartDate.setSeconds(0); // round down seconds
-            }
-            this._eventEndDate = new Date(endDate * 1000);
-          };
 
           if (eventList?.objects?.length > 0) {
             this._isVirtualClassroom = false;
             const event: KalturaMeetingScheduleEvent = eventList.objects[0] as KalturaMeetingScheduleEvent;
-            setStartEndDates(event.startDate, event.endDate);
+            this.setStartEndDates(event.startDate, event.endDate);
           } else {
             if (cuePoints?.objects?.length > 0) {
+              // no schedule event means this is a virtual classroom. Sessions should be taken for the entry session cuepoints
               this._isVirtualClassroom = true;
               this._cuePoints = cuePoints.objects;
               this._selectedCuePoint = this._cuePoints[0];
-              setStartEndDates(this._selectedCuePoint.startTime, this._selectedCuePoint.endTime);
+              this._cuepointOptions = [];
+              this._cuePoints.forEach(cuepoint => {
+                const duration = moment.duration(cuepoint.duration, 'seconds');
+                const format = cuepoint.duration > 3599 ? 'hh:mm:ss' : 'mm:ss';
+                this._cuepointOptions.push({
+                  label: `${moment(cuepoint.startTime * 1000).format('MMMM DD, YYYY')}\u00A0\u00A0\u00A0${moment(cuepoint.startTime * 1000).format('hh:mm')} - ${moment(cuepoint.endTime * 1000).format('hh:mm')}\u00A0\u00A0\u00A0(${moment.utc(duration.as('milliseconds')).format(format)})`,
+                  value: cuepoint
+                });
+              });
+              this.setStartEndDates(this._selectedCuePoint.startTime, this._selectedCuePoint.endTime);
             }
           }
           // set live and vod entry IDs string
@@ -224,6 +236,10 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
           };
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
+  }
+
+  public onCuepointChange(): void {
+    this.setStartEndDates(this._selectedCuePoint.startTime, this._selectedCuePoint.endTime);
   }
 
   private scrollTo(target: string): void {

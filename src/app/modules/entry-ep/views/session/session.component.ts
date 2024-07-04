@@ -34,7 +34,10 @@ export class EpSessionComponent implements OnInit, OnDestroy {
   @Input() recordingEntryId = '';
   @Input() entryIdIn = '';
   @Input() actualStartDate: Date; // session actual start date
-  @Input() startDate: Date; // session start date rounded down the the last half hour
+  @Input() set startDate(value: Date) { // session start date rounded down the last half hour
+    this._startDate = value;
+    setTimeout(() => this._loadReport(), 0);
+  }
   @Input() endDate: Date;
   @Input() exporting = false;
   @Input() isVirtualClassroom: boolean;
@@ -42,6 +45,7 @@ export class EpSessionComponent implements OnInit, OnDestroy {
   private _order = '-date_id';
   private _reportType = KalturaReportType.epWebcastEngagementTimeline;
   private _dataConfig: ReportDataConfig;
+  public _startDate: Date;
 
   public _reportTabs = ViewerTabs;
   public _currentTab = ViewerTabs.viewer;
@@ -78,11 +82,10 @@ export class EpSessionComponent implements OnInit, OnDestroy {
   constructor(private _translate: TranslateService,
               private _reportService: ReportService,
               private _errorsManager: ErrorsManagerService,
-              private _dataConfigService: SessionConfig,
+              _dataConfigService: SessionConfig,
               private _analytics: AppAnalytics,
               private _kalturaClient: KalturaClient,
-              private _authService: AuthService,
-              private _logger: KalturaLogger) {
+              private _authService: AuthService) {
     this._dataConfig = _dataConfigService.getConfig();
   }
 
@@ -97,8 +100,6 @@ export class EpSessionComponent implements OnInit, OnDestroy {
       pid: this._authService.pid,
       ks: this._authService.ks
     };
-
-    this._loadReport();
   }
 
   private _loadReport(sections = this._dataConfig): void {
@@ -106,7 +107,7 @@ export class EpSessionComponent implements OnInit, OnDestroy {
     this._blockerMessage = null;
     this._filter.entryIdIn = this.entryIdIn;
     this._filter.timeZoneOffset = DateFilterUtils.getTimeZoneOffset(),
-    this._filter.fromDate = Math.floor(this.startDate.getTime() / 1000);
+    this._filter.fromDate = Math.floor(this._startDate.getTime() / 1000);
     this._filter.toDate = Math.floor(this.endDate.getTime() / 1000);
     this._filter.interval = KalturaReportInterval.days;
 
@@ -191,7 +192,7 @@ export class EpSessionComponent implements OnInit, OnDestroy {
         formatter: params => {
           const { value: value1, dataIndex } = params[0];
           const value2 = params[1].value;
-          const progressValue = ReportHelper.time((dataIndex / (yData1.length -1) * this._duration).toString()); // empirically found formula, closest result to expected so far
+          const progressValue = yData1.length > 1 ? ReportHelper.time((dataIndex / (yData1.length - 1) * this._duration).toString()) : '0'; // empirically found formula, closest result to expected so far
           let tooltip = `
             <div class="kEntryGraphTooltip">
               <div class="kCurrentTime">${progressValue}</div>

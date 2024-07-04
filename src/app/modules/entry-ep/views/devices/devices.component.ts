@@ -25,12 +25,16 @@ import { reportTypeMap } from 'shared/utils/report-type-map';
 export class EpDevicesComponent implements OnInit, OnDestroy {
 
   @Input() entryIdIn = '';
-  @Input() startDate: Date;
+  @Input() set startDate(value: Date) {
+    this._startDate = value;
+    setTimeout(() => this._loadReport(), 0);
+  }
   @Input() endDate: Date;
   @Input() exporting = false;
   @Input() isVirtualClassroom: boolean;
 
   private _dataConfig: ReportDataConfig;
+  private _startDate: Date;
   public _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 5, pageIndex: 1 });
   private _filter = new KalturaEndUserReportInputFilter({ searchInTags: true, searchInAdminTags: false });
   private _reportType: KalturaReportType = reportTypeMap(KalturaReportType.epWebcastTopPlatforms);
@@ -95,7 +99,7 @@ export class EpDevicesComponent implements OnInit, OnDestroy {
     this._blockerMessage = null;
     this._filter.entryIdIn = this.entryIdIn;
     this._filter.timeZoneOffset = DateFilterUtils.getTimeZoneOffset(),
-    this._filter.fromDate = Math.floor(this.startDate.getTime() / 1000);
+    this._filter.fromDate = Math.floor(this._startDate.getTime() / 1000);
     this._filter.toDate = Math.floor(this.endDate.getTime() / 1000);
     this._filter.interval = KalturaReportInterval.days;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this.order };
