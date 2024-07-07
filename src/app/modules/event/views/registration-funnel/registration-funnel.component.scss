@@ -12,8 +12,10 @@
   display: flex;
   .kChart {
     height: 172px !important;
-    width: 100%;
+    width: 75%;
     margin-top: 8px;
+    margin-left: auto;
+    margin-right: 4px;
   }
 }
 .kTurnout {
@@ -24,7 +26,7 @@
   margin-left: 24px;
   margin-right: 24px;
   margin-top: 2px;
-  padding-bottom: 16px;
+  padding-bottom: 8px;
   box-sizing: border-box;
   //border-bottom: 1px solid $kGrayscale6;
   .kValue{
@@ -56,6 +58,8 @@
   }
   a {
     margin-left: auto;
+    padding-bottom: 2px;
+    white-space: nowrap;
   }
 }
 .kData {

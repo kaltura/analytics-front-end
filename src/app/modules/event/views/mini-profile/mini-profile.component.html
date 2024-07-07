@@ -1,6 +1,6 @@
 <div data-aid="report-event-mini-profile" class="kReport kMini kOverrideFAIcons">
   <k-area-blocker [showLoader]="_isBusy" [message]="_blockerMessage">
-    <div class="kReportContent">
+    <div class="kReportContent kNoTitle">
       <div class="kFilters">
         <span class="kTitle">{{'app.event.attendeeProfile' | translate}}</span>
         <a class="kLink"  *ngIf="!exporting" (click)="breakdown()">{{'app.event.breakdown' | translate}}</a>

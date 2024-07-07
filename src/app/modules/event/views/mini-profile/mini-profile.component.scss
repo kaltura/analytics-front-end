@@ -6,6 +6,9 @@
 }
 .kReport {
   height: 274px;
+  .kFilters {
+    border: none !important;
+  }
   .kReportContent {
     display: flex;
     flex-direction: column;
