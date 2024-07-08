@@ -4,7 +4,7 @@ import {analyticsConfig} from "configuration/analytics-config";
 import {FrameEventManagerService, FrameEvents} from "shared/modules/frame-event-manager/frame-event-manager.service";
 import {Router} from "@angular/router";
 import {OverlayPanel} from "primeng/overlaypanel";
-import {AppAnalytics, ButtonType, ErrorsManagerService, ReportConfig, ReportHelper, ReportService} from "shared/services";
+import {AppAnalytics, ButtonType, ErrorsManagerService, NavigationDrillDownService, ReportConfig, ReportHelper, ReportService} from "shared/services";
 import {KalturaAPIException, KalturaClient, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaMultiResponse, KalturaReportInterval, KalturaReportResponseOptions, KalturaReportTable, KalturaReportType, ReportGetTableAction, ReportGetTotalAction} from "kaltura-ngx-client";
 import {MiniProfileConfig} from "./mini-profile.config";
 import {ReportDataItemConfig} from "shared/services/storage-data-base.config";
@@ -64,13 +64,13 @@ export class MiniProfileComponent implements OnInit, OnDestroy {
 
   private _totalRegistered = 0;
 
-  constructor(private _frameEventManager: FrameEventManagerService,
-              private _router: Router,
+  constructor(private _router: Router,
               private _analytics: AppAnalytics,
               private _translate: TranslateService,
               private _reportService: ReportService,
               private _kalturaClient: KalturaClient,
               private _errorsManager: ErrorsManagerService,
+              private _navigationDrillDownService: NavigationDrillDownService,
               private _dataConfigService: MiniProfileConfig) {
   }
 
@@ -260,7 +260,7 @@ export class MiniProfileComponent implements OnInit, OnDestroy {
   public breakdown(): void {
     this._analytics.trackButtonClickEvent(ButtonType.Browse, 'Events_event_registrants_profile_see_breakdown', null, 'Event_dashboard');
     if (analyticsConfig.isHosted) {
-      this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/virtual-event/${this.eventIn}`);
+      this._navigationDrillDownService.drilldown('virtual-event', this.eventIn, true);
     } else {
       this._router.navigate([`/virtual-event/${this.eventIn}`]);
     }
