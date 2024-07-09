@@ -4,10 +4,25 @@ import { cancelOnDestroy } from "@kaltura-ng/kaltura-common";
 import {analyticsConfig, getKalturaServerUri} from "configuration/analytics-config";
 import {AppAnalytics, AuthService, ButtonType, ErrorsManagerService, ReportConfig, ReportService} from "shared/services";
 import {AreaBlockerMessage} from "@kaltura-ng/kaltura-ui";
-import {BaseEntryGetAction, KalturaAPIException, KalturaClient, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaLiveEntry, KalturaMediaEntry, KalturaReportInterval, KalturaReportTable, KalturaReportType, KalturaRoomEntry} from "kaltura-ngx-client";
+import {
+  BaseEntryGetAction,
+  KalturaAPIException,
+  KalturaClient,
+  KalturaEndUserReportInputFilter, KalturaEntryScheduleEventFilter,
+  KalturaFilterPager,
+  KalturaLiveEntry,
+  KalturaMediaEntry, KalturaMeetingScheduleEvent,
+  KalturaMultiRequest, KalturaMultiResponse,
+  KalturaReportInterval,
+  KalturaReportTable,
+  KalturaReportType,
+  KalturaRoomEntry, KalturaScheduleEventListResponse,
+  ScheduleEventListAction
+} from "kaltura-ngx-client";
 import {MiniTopMomentConfig} from "./mini-top-moment.config";
 import {ReportDataConfig} from "shared/services/storage-data-base.config";
 import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'app-event-mini-top-moment',
@@ -172,27 +187,48 @@ export class MiniTopMomentComponent implements OnInit, OnDestroy {
       .pipe(cancelOnDestroy(this)).subscribe(
       (entry: KalturaLiveEntry | KalturaRoomEntry) => {
           if ((entry as KalturaLiveEntry).recordedEntryId || entry.redirectEntryId) {
-            // need to load the recording entry to get its creation date
+            // need to load the recording entry to get its creation date and the session scheduled event to get the session start time
             const vod = (entry as KalturaLiveEntry).recordedEntryId || entry.redirectEntryId;
+            const request = new KalturaMultiRequest(
+              new BaseEntryGetAction({ entryId: vod }),
+              new ScheduleEventListAction({filter: new KalturaEntryScheduleEventFilter({templateEntryIdEqual: liveEntryId})})
+            );
             this._kalturaClient
-              .request(new BaseEntryGetAction({ entryId: vod }))
-              .pipe(cancelOnDestroy(this)).subscribe(
-              (recording: KalturaMediaEntry) => {
-                // calculate start point of the video
-                let recordingStartTime = recording.createdAt;
-                const eventStartTime = Math.round(this.eventActualStartDate.getTime() / 1000);
-                // for simulive, the recording is a predefined entry with older creation date so we set its start time to the session start time if the difference in more than 2 hours
-                if (eventStartTime - recordingStartTime > 7200) {
-                  recordingStartTime = eventStartTime;
+              .multiRequest(request)
+              .pipe(cancelOnDestroy(this),
+              map((responses: KalturaMultiResponse) => {
+              if (responses.hasErrors()) {
+                const error: KalturaAPIException = responses.getFirstError();
+                this.displayServerError(error, () => this.loadRecordingEntry(liveEntryId));
+                return [];
+              }
+              return [
+                responses[0].result,
+                responses[1].result
+              ] as [KalturaMediaEntry, KalturaScheduleEventListResponse];
+              }))
+              .subscribe(
+              ([recording, eventList]) => {
+                if (eventList?.objects?.length > 0) {
+                  // calculate start point of the video
+                  const event: KalturaMeetingScheduleEvent = eventList.objects[0] as KalturaMeetingScheduleEvent;
+                  const liveOffsetFromStart = this._liveEntryPosition - event.startDate;
+                  const recordingOffset = event.startDate - recording.createdAt;
+                  let recordingPosition = liveOffsetFromStart + recordingOffset;
+                  recordingPosition = recordingPosition < 0 ? 0 : recordingPosition; // protect from negative values (should not happen)
+
+                  // for simulive, the recording is a predefined entry with older creation date so we set its start time to the session start time if the difference in more than 15 minutes
+                  if (recordingOffset > 900) {
+                    recordingPosition = liveOffsetFromStart;
+                  }
+
+                  this._seekFrom = recordingPosition;
+                  this._clipTo = recordingPosition + 60; // play 1 minute from start position
+                  this._entryId = vod;
+                  this._isBusy = false;
+                } else {
+                  this._noData = true;
                 }
-                const recordingOffset = eventStartTime - recordingStartTime;
-                const liveOffsetFromStart = this._liveEntryPosition - (this.eventActualStartDate.getTime() / 1000);
-                let recordingPosition = liveOffsetFromStart + recordingOffset;
-                recordingPosition = recordingPosition < 0 ? 0 : recordingPosition; // protect from negative values (should not happen)
-                this._seekFrom = recordingPosition;
-                this._clipTo = recordingPosition + 60; // play 1 minute from start position
-                this._entryId = vod;
-                this._isBusy = false;
               },
               error => {
                 this.displayServerError(error, () => this.loadRecordingEntry(liveEntryId));
