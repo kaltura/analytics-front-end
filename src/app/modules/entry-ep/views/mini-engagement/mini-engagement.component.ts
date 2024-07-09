@@ -36,7 +36,7 @@ export class EpMiniEngagementComponent implements OnInit {
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
 
-  private NEW_METRICS_RELEASE_DATE = new Date(2024, 6, 2);
+  private NEW_METRICS_RELEASE_DATE = new Date(2024, 5, 2);
   public _displayNewMetrics = false;
 
   private _order = '-date_id';

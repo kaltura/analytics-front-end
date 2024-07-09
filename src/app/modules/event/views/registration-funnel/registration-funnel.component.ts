@@ -1,7 +1,7 @@
 import { Component, Input, Output, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, BrowserService, ErrorsManagerService, ReportService } from 'shared/services';
+import {AuthService, BrowserService, ErrorsManagerService, NavigationDrillDownService, ReportService} from 'shared/services';
 import { RegistrationFunnelDataConfig } from './registration-funnel-data.config';
 import { TranslateService } from '@ngx-translate/core';
 import { EChartOption } from 'echarts';
@@ -81,7 +81,7 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
               private _http: HttpClient,
               private _authService: AuthService,
               private _translate: TranslateService,
-              private _frameEventManager: FrameEventManagerService,
+              private _navigationDrillDownService: NavigationDrillDownService,
               private _dataConfigService: RegistrationFunnelDataConfig,
               private _browserService: BrowserService,
               private _router: Router) {
@@ -260,7 +260,7 @@ export class RegistrationFunnelComponent implements OnInit, OnDestroy {
 
   public seeMore(): void {
     if (analyticsConfig.isHosted) {
-      this._frameEventManager.publish(FrameEvents.NavigateTo, `/analytics/virtual-event/${this.virtualEventId}`);
+      this._navigationDrillDownService.drilldown('virtual-event', this.virtualEventId, true);
     } else {
       this._router.navigate([`/virtual-event/${this.virtualEventId}`]);
     }

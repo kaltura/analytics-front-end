@@ -183,7 +183,7 @@ export class EventOverTimeComponent implements OnDestroy {
     if (this._metric === 'attendees') {
       this._totalAttendees = tabsData[0].rawValue !== '' ? parseInt(tabsData[0].rawValue.toString()) : 0;
     } else {
-      this._totalMinutesViewed = tabsData[0].rawValue !== '' ? parseInt(tabsData[0].rawValue.toString()) : 0;
+      this._totalMinutesViewed = tabsData[0].rawValue !== '' ? parseFloat(tabsData[0].rawValue.toString()) : 0;
     }
   }
 

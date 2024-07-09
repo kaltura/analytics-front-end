@@ -39,6 +39,7 @@
   <sapn onclick="handleClick(event, 'entry-ep')">Webinar</sapn>
   <sapn onclick="handleClick(event, 'user')">User</sapn>
   <sapn onclick="handleClick(event, 've')">Virtual Event</sapn>
+  <sapn onclick="handleClick(event, 'event')">Event</sapn>
 </div>
 <iframe id="analytics" src="http://localhost:4200"></iframe>
 <script>
@@ -71,6 +72,10 @@
           break;
          case 've':
           sendMessage({ messageType: 'navigate', payload: { url: '/virtual-event/1127402' } });
+           sendMessage({messageType: 'updateFilters', payload: {queryParams: {dateBy: 'sinceCreation'}}});
+          break;
+        case 'event':
+          sendMessage({ messageType: 'navigate', payload: { url: '/event/1391352' } });
            sendMessage({messageType: 'updateFilters', payload: {queryParams: {dateBy: 'sinceCreation'}}});
           break;
          case 'user':
@@ -142,13 +147,12 @@
                 width: 100% !important;
             }
             .ep .kReportView .kContent:first-child {
-                padding-left: 20px !important;
-                padding-right: 20px !important;
                 box-sizing: border-box;
             }
             /* Borders */
             .ep .kTotalContainer, .ep .kSocialHighlights, .ep .kLiveUsers, .ep .kUsersBandwidth, .ep app-live-stream-health, .ep .kEntryWidgets .kTopCountries, .ep .kEntryWidgets .kDevices, .ep .kDiscovery, .ep .kUserMiniHighlights, .ep .kUserMiniTopContent {
                 border: 1px solid #cccccc !important;
+                border-radius: 3px;
             }
             .ep .kTotalContainer:first-child {
                 border-top-left-radius: 3px;
@@ -219,6 +223,9 @@
             switch (postMessageData.messageType) {
                 case 'analyticsInit':
                   let viewsConfig = postMessageData.payload.viewsConfig;
+
+                  // Event config
+                  viewsConfig.event.title = null;
 
                   // Engagement config
                   viewsConfig.audience.engagement.title = null;
