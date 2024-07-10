@@ -15,7 +15,7 @@
         <ng-template pTemplate="header">
           <tr>
             <th *ngFor="let col of _columns" [pSortableColumn]="col === 'event_session_context_id' ? null : col" [class.nonSortable]="col === 'event_session_context_id'" [ngStyle]="{'width': col === 'event_session_context_id' ? '110px' : '100%'}">
-              <span *ngIf="col !== 'event_session_context_id'">{{'app.event.' + col | translate}}</span>
+              <span class="tableHeader" *ngIf="col !== 'event_session_context_id'">{{'app.event.' + col | translate}}</span>
               <p-sortIcon [field]="col" *ngIf="col !== 'event_session_context_id'"></p-sortIcon>
             </th>
 

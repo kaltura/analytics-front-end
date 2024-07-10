@@ -1105,6 +1105,7 @@
       "count_plays": "Plays",
       "plays_distribution": "Plays Distribution",
       "sum_time_viewed": "Minutes Viewed",
+      "sum_view_period": "Minutes Viewed",
       "sum_vod_view_period": "Minutes Viewed",
       "unique_viewers": "Unique Viewers",
       "unique_videos": "Played Entries",
@@ -1204,8 +1205,8 @@
       "name": "Name",
       "unique_combined_live_viewers": "Live unique viewer",
       "combined_live_engaged_users_ratio": "Live avg. engagement rate",
-      "unique_vod_viewers": "VOD Unique viewers",
-      "avg_vod_completion_rate": "VOD avg. completion rate",
+      "unique_vod_viewers": "Recording Unique viewers",
+      "avg_vod_completion_rate": "Recording avg. completion rate",
       "noSessions": "Data collected prior {{0}}, is unavailable"
     },
     "ve": {
