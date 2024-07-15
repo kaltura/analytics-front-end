@@ -8,18 +8,18 @@
       </div>
 
       <div class="dataContainer">
-        <span class="title">{{'app.entryEp.highlights.avgMinutes' | translate}}</span>
+        <span class="title" [kTooltip]="'app.entryEp.session.minutes_viewed_tt' | translate">{{'app.entryEp.highlights.avgMinutes' | translate}}</span>
         <span class="value">{{_tabsData[2]?.value}}</span>
 
-        <span class="label">{{_tabsData[0]?.title}}</span>
-        <div class="kBulletContainer">
+        <span class="label" *ngIf="!isVirtualClassroom">{{_tabsData[0]?.title}}</span>
+        <div class="kBulletContainer" *ngIf="!isVirtualClassroom">
           <div class="bulletContainer">
             <div class="kBullet" [style.width]="_livePercent + '%'"></div>
           </div>
           <span class="graphValue">{{_tabsData[0]?.value}}</span>
         </div>
-        <span class="label">{{_tabsData[1]?.title}}</span>
-        <div class="kBulletContainer">
+        <span class="label" *ngIf="!isVirtualClassroom">{{_tabsData[1]?.title}}</span>
+        <div class="kBulletContainer" *ngIf="!isVirtualClassroom">
           <div class="bulletContainer">
             <div class="kBullet"[style.width]="_recordingPercent + '%'"></div>
           </div>

@@ -6,8 +6,15 @@
           <button tabindex="0" aria-label="Back" role="button" pButton *ngIf="_viewConfig.title && !_exporting" class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_back()"
                   [kTooltip]="'app.entry.back' | translate" [placement]="'bottom'"></button>
           <h1 *ngIf="_viewConfig.title" class="kTitle kTruncateTitle" [kTooltip]="_entry?.name" [showOnEllipsis]="true" [placement]="'bottom'">{{_exporting ? ('app.entryEp.exportTitle' | translate: {'0': _entry?.name}) : _entry?.name}}</h1>
+          <div class="sessionSelector" *ngIf="_isVirtualClassroom">
+            <p-dropdown [style]="{'width': '300px'}"
+                        [options]="_cuepointOptions"
+                        (onChange)="onCuepointChange()"
+                        [(ngModel)]="_selectedCuePoint">
+            </p-dropdown>
+          </div>
           <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title">
-            <app-export-csv name="Viewers Engagement"
+            <app-export-csv name="Viewers Engagement" *ngIf="!_exporting"
                             [entryId]="_liveEntryIds"
                             [reports]="_exportConfig"
                             (onExport)="onExport()"
@@ -20,38 +27,42 @@
           </div>
         </div>
 
-        <div class="kReportContainer" *ngIf="!_loadingEntry">
-          <div [class.kHidden]="!_viewConfig.miniViewers" class="kMiniReportContainer kSocialHighlights">
-            <app-ep-mini-viewers [exporting]="_exporting" [entryIdIn]="_allEntryIds" [startDate]="_eventStartDate" [endDate]="_now"></app-ep-mini-viewers>
+        <div class="kReports" [class.vc]="_isVirtualClassroom">
+          <div class="kReportContainer" *ngIf="!_loadingEntry">
+            <div [class.kHidden]="!_viewConfig.miniViewers" class="kMiniReportContainer kSocialHighlights">
+              <app-ep-mini-viewers [isVirtualClassroom]="_isVirtualClassroom" [exporting]="_exporting" [entryIdIn]="_allEntryIds" [startDate]="_eventStartDate" [endDate]="_now"></app-ep-mini-viewers>
+            </div>
+            <div [class.kHidden]="!_viewConfig.miniMinutesViewed" class="kMiniReportContainer kSocialHighlights">
+              <app-ep-mini-minutes-viewed [isVirtualClassroom]="_isVirtualClassroom" [entryIdIn]="_allEntryIds" [startDate]="_eventStartDate" [endDate]="_now"></app-ep-mini-minutes-viewed>
+            </div>
           </div>
-          <div [class.kHidden]="!_viewConfig.miniMinutesViewed" class="kMiniReportContainer kSocialHighlights">
-            <app-ep-mini-minutes-viewed [entryIdIn]="_allEntryIds" [startDate]="_eventStartDate" [endDate]="_now"></app-ep-mini-minutes-viewed>
+
+          <div class="kReportContainer" *ngIf="!_loadingEntry">
+            <div [class.kHidden]="!_viewConfig.miniEngagement" class="kMiniReportContainer kSocialHighlights kHigh">
+              <app-ep-mini-engagement [exporting]="_exporting"  [entryIdIn]="_liveEntryIds" [startDate]="_eventStartDate" [endDate]="_eventEndDate"></app-ep-mini-engagement>
+            </div>
+            <div *ngIf="!_isVirtualClassroom" [class.kHidden]="!_viewConfig.miniPlays" class="kMiniReportContainer kSocialHighlights kHigh">
+              <app-ep-mini-plays [entryIdIn]="_vodEntryIds" [startDate]="_eventStartDate" [endDate]="_now"></app-ep-mini-plays>
+            </div>
           </div>
         </div>
 
-        <div class="kReportContainer" *ngIf="!_loadingEntry">
-          <div [class.kHidden]="!_viewConfig.miniEngagement" class="kMiniReportContainer kSocialHighlights kHigh">
-            <app-ep-mini-engagement [exporting]="_exporting"  [entryIdIn]="_liveEntryIds" [startDate]="_eventStartDate" [endDate]="_eventEndDate"></app-ep-mini-engagement>
-          </div>
-          <div [class.kHidden]="!_viewConfig.miniPlays" class="kMiniReportContainer kSocialHighlights kHigh">
-            <app-ep-mini-plays [entryIdIn]="_vodEntryIds" [startDate]="_eventStartDate" [endDate]="_now"></app-ep-mini-plays>
-          </div>
-        </div>
+
 
         <div *ngIf="!_loadingEntry" [class.kHidden]="!_viewConfig.session" [class.exporting]="_exporting" class="kReportContainer">
-          <app-ep-session [exporting]="_exporting" [entryIdIn]="_liveEntryIds" [actualStartDate]="_actualEventStartDate" [startDate]="_eventStartDate" [endDate]="_eventEndDate" [recordingEntryId]="_recordingEntryId"></app-ep-session>
+          <app-ep-session [isVirtualClassroom]="_isVirtualClassroom" [exporting]="_exporting" [entryIdIn]="_liveEntryIds" [actualStartDate]="_actualEventStartDate" [startDate]="_eventStartDate" [endDate]="_eventEndDate" [recordingEntryId]="_recordingEntryId"></app-ep-session>
         </div>
 
-        <div *ngIf="!_loadingEntry" [class.kHidden]="!_viewConfig.recordings" [class.exporting]="_exporting" id="recordings" class="kReportContainer">
+        <div *ngIf="!_loadingEntry && !_isVirtualClassroom" [class.kHidden]="!_viewConfig.recordings" [class.exporting]="_exporting" id="recordings" class="kReportContainer">
           <app-ep-recordings [entryIdIn]="_vodEntryIds" [startDate]="_eventStartDate" [endDate]="_now" [exporting]="_exporting"></app-ep-recordings>
         </div>
 
         <div *ngIf="!_loadingEntry" [class.kHidden]="!_viewConfig.geo" [class.exporting]="_exporting" class="kReportContainer">
-          <app-ep-geo [entryIdIn]="_allEntryIds" [startDate]="_eventStartDate" [endDate]="_now" [exporting]="_exporting"></app-ep-geo>
+          <app-ep-geo [isVirtualClassroom]="_isVirtualClassroom" [entryIdIn]="_allEntryIds" [startDate]="_eventStartDate" [endDate]="_now" [exporting]="_exporting"></app-ep-geo>
         </div>
 
         <div *ngIf="!_loadingEntry" [class.kHidden]="!_viewConfig.devices" [class.exporting]="_exporting" class="kReportContainer">
-          <app-ep-devices [entryIdIn]="_allEntryIds" [startDate]="_eventStartDate" [endDate]="_now" [exporting]="_exporting"></app-ep-devices>
+          <app-ep-devices [isVirtualClassroom]="_isVirtualClassroom" [entryIdIn]="_allEntryIds" [startDate]="_eventStartDate" [endDate]="_now" [exporting]="_exporting"></app-ep-devices>
         </div>
 
         <div class="disclaimers" *ngIf="_exporting">

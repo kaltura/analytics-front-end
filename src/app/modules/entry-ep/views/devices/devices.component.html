@@ -18,7 +18,7 @@
                  sortField="unique_combined_live_viewers" [sortOrder]="-1" [defaultSortOrder]="-1">
           <ng-template pTemplate="header">
             <tr>
-              <th *ngFor="let col of _columns"
+              <th *ngFor="let col of _columns" [class.kHidden]="isVirtualClassroom && col === 'unique_vod_viewers'"
                   [pSortableColumn]="col === 'unique_combined_live_viewers'  || col === 'unique_vod_viewers' ? col : null"
                   [class.nonSortable]="col === 'device'"
                  >
@@ -42,7 +42,7 @@
                   </div>
                 </div>
               </th>
-              <th [ngStyle]="{'width': 'auto'}">
+              <th [ngStyle]="{'width': 'auto'}" *ngIf="!isVirtualClassroom">
                 <span>{{_tabsData[1].value}}</span>
               </th>
             </tr>
@@ -51,7 +51,7 @@
             <tr>
               <td *ngFor="let col of _columns; let i = index"
                   [class.kHighlight]="i===0">
-                <ng-container>
+                <ng-container *ngIf="!isVirtualClassroom || (isVirtualClassroom && col !== 'unique_vod_viewers')">
                   <div class="tableCell">
                     <i *ngIf="col === 'device'" class="kIcon" [ngClass]="data[col] | appDeviceIcon"></i>
                     <span class="bulletValue">{{data[col]}}</span>

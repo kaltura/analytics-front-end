@@ -41,11 +41,16 @@ export enum GeoTableModes {
 export class EpGeoComponent implements OnInit, OnDestroy {
   @ViewChild('table') _table: Table;
   @Input() entryIdIn = '';
-  @Input() startDate: Date;
+  @Input() set startDate(value: Date) {
+    this._startDate = value;
+    setTimeout(() => this._loadReport(), 0);
+  }
   @Input() endDate: Date;
   @Input() exporting = false;
+  @Input() isVirtualClassroom: boolean;
 
   protected _componentId = 'ep-geo';
+  private _startDate: Date;
   private _dataConfig: ReportDataConfig;
   private _pager: KalturaFilterPager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
   private _echartsIntance: any; // echart instance
@@ -249,7 +254,7 @@ export class EpGeoComponent implements OnInit, OnDestroy {
     this._blockerMessage = null;
     this._filter.entryIdIn = this.entryIdIn;
     this._filter.timeZoneOffset = DateFilterUtils.getTimeZoneOffset(),
-    this._filter.fromDate = Math.floor(this.startDate.getTime() / 1000);
+    this._filter.fromDate = Math.floor(this._startDate.getTime() / 1000);
     this._filter.toDate = Math.floor(this.endDate.getTime() / 1000);
     this._filter.interval = KalturaReportInterval.days;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this.order };

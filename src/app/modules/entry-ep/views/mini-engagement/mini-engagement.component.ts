@@ -27,7 +27,10 @@ export class EpMiniEngagementComponent implements OnInit {
 
   @Input() entryIdIn = '';
   @Input() exporting = false;
-  @Input() startDate: Date;
+  @Input() set startDate(value: Date) {
+    this._startDate = value;
+    setTimeout(() => this._loadReport(), 0);
+  }
   @Input() endDate: Date;
 
   public _isBusy: boolean;
@@ -37,6 +40,7 @@ export class EpMiniEngagementComponent implements OnInit {
   public _displayNewMetrics = false;
 
   private _order = '-date_id';
+  private _startDate: Date;
   private _reportType = KalturaReportType.epWebcastEngagement;
   private _cncReportType = KalturaReportType.cncParticipation;
   public _reportInterval = KalturaReportInterval.days;
@@ -69,7 +73,7 @@ export class EpMiniEngagementComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._displayNewMetrics = this.startDate.getTime() > this.NEW_METRICS_RELEASE_DATE.getTime();
+    this._displayNewMetrics = this._startDate.getTime() > this.NEW_METRICS_RELEASE_DATE.getTime();
     this._loadReport();
   }
 
@@ -78,13 +82,13 @@ export class EpMiniEngagementComponent implements OnInit {
     this._blockerMessage = null;
     this._filter.entryIdIn = this.entryIdIn;
     this._filter.timeZoneOffset = DateFilterUtils.getTimeZoneOffset(),
-    this._filter.fromDate = Math.floor(this.startDate.getTime() / 1000);
+    this._filter.fromDate = Math.floor(this._startDate.getTime() / 1000);
     this._filter.toDate = Math.floor(this.endDate.getTime() / 1000);
     this._filter.interval = KalturaReportInterval.days;
 
     this._cncFilter.contextIdIn = this.entryIdIn;
     this._cncFilter.timeZoneOffset = DateFilterUtils.getTimeZoneOffset(),
-    this._cncFilter.fromDate = Math.floor(this.startDate.getTime() / 1000);
+    this._cncFilter.fromDate = Math.floor(this._startDate.getTime() / 1000);
     this._cncFilter.toDate = Math.floor(this.endDate.getTime() / 1000);
     this._cncFilter.interval = KalturaReportInterval.days;
 

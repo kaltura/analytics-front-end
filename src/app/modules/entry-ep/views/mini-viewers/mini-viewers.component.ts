@@ -31,13 +31,18 @@ export class EpMiniViewersComponent implements OnInit, OnDestroy {
 
   @Input() entryIdIn = '';
   @Input() exporting = false;
-  @Input() startDate: Date;
+  @Input() set startDate(value: Date) {
+    this._startDate = value;
+    setTimeout(() => this._loadReport(), 0);
+  }
   @Input() endDate: Date;
+  @Input() isVirtualClassroom: boolean;
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
   private _order = '-date_id';
+  private _startDate: Date;
   private _reportType = KalturaReportType.epWebcastUniqueUsers;
   public _reportInterval = KalturaReportInterval.days;
   public _pager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
@@ -55,8 +60,7 @@ export class EpMiniViewersComponent implements OnInit, OnDestroy {
               private _browserService: BrowserService,
               private _analytics: AppAnalytics,
               private _errorsManager: ErrorsManagerService,
-              private _authService: AuthService,
-              private _dataConfigService: MiniViewersConfig,
+              _dataConfigService: MiniViewersConfig,
               private _kalturaClient: KalturaClient,
               private _logger: KalturaLogger) {
 
@@ -64,7 +68,6 @@ export class EpMiniViewersComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this._loadReport();
   }
 
   private _loadReport(sections = this._dataConfig): void {
@@ -72,7 +75,7 @@ export class EpMiniViewersComponent implements OnInit, OnDestroy {
     this._blockerMessage = null;
     this._filter.entryIdIn = this.entryIdIn;
     this._filter.timeZoneOffset = DateFilterUtils.getTimeZoneOffset(),
-    this._filter.fromDate = Math.floor(this.startDate.getTime() / 1000);
+    this._filter.fromDate = Math.floor(this._startDate.getTime() / 1000);
     this._filter.toDate = Math.floor(this.endDate.getTime() / 1000);
     this._filter.interval = KalturaReportInterval.days;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order };

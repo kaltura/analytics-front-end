@@ -571,6 +571,8 @@
       },
       "session": {
         "title": "Scheduled session",
+        "title_vc": "Engagement breakdown",
+        "minutes_viewed_tt": "Average number of minutes viewed per viewer",
         "viewers": "Live unique viewers",
         "engagement": "Live engagement rate",
         "noRecording": "No recording",

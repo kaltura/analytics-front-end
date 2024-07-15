@@ -34,8 +34,12 @@ export class EpMiniMinutesViewedComponent implements OnInit {
   protected _componentId = 'ep-mini-minutes-viewed';
 
   @Input() entryIdIn = '';
-  @Input() startDate: Date;
+  @Input() set startDate(value: Date) {
+    this._startDate = value;
+    setTimeout(() => this._loadReport(), 0);
+  }
   @Input() endDate: Date;
+  @Input() isVirtualClassroom: boolean;
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -51,20 +55,16 @@ export class EpMiniMinutesViewedComponent implements OnInit {
 
   public _livePercent = 0;
   public _recordingPercent = 0;
+  private _startDate: Date;
 
-  constructor(private _translate: TranslateService,
-              private _reportService: ReportService,
-              private _browserService: BrowserService,
+  constructor(private _reportService: ReportService,
               private _errorsManager: ErrorsManagerService,
-              private _authService: AuthService,
-              private _dataConfigService: MiniMinutesViewedConfig,
-              private _logger: KalturaLogger) {
+              _dataConfigService: MiniMinutesViewedConfig) {
 
     this._dataConfig = _dataConfigService.getConfig();
   }
 
   ngOnInit(): void {
-    this._loadReport();
   }
 
   private _loadReport(sections = this._dataConfig): void {
@@ -72,7 +72,7 @@ export class EpMiniMinutesViewedComponent implements OnInit {
     this._blockerMessage = null;
     this._filter.entryIdIn = this.entryIdIn;
     this._filter.timeZoneOffset = DateFilterUtils.getTimeZoneOffset(),
-    this._filter.fromDate = Math.floor(this.startDate.getTime() / 1000);
+    this._filter.fromDate = Math.floor(this._startDate.getTime() / 1000);
     this._filter.toDate = Math.floor(this.endDate.getTime() / 1000);
     this._filter.interval = KalturaReportInterval.days;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order };
