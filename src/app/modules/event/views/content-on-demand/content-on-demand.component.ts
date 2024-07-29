@@ -1,15 +1,30 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import {KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType} from 'kaltura-ngx-client';
-import { ReportDataConfig } from 'shared/services/storage-data-base.config';
-import { TableRow } from 'shared/utils/table-local-sort-handler';
-import { analyticsConfig } from 'configuration/analytics-config';
-import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
+import {Component, Input, OnDestroy} from '@angular/core';
+import {
+  BaseEntryListAction,
+  KalturaBaseEntryFilter,
+  KalturaClient,
+  KalturaDetachedResponseProfile,
+  KalturaEndUserReportInputFilter,
+  KalturaEntryStatus,
+  KalturaFilterPager,
+  KalturaPager,
+  KalturaReportInterval,
+  KalturaReportTable,
+  KalturaReportTotal,
+  KalturaReportType,
+  KalturaResponseProfileType,
+  KalturaBaseEntryListResponse
+} from 'kaltura-ngx-client';
+import {ReportDataConfig} from 'shared/services/storage-data-base.config';
+import {TableRow} from 'shared/utils/table-local-sort-handler';
+import {analyticsConfig} from 'configuration/analytics-config';
+import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
 import {AppAnalytics, AuthService, ButtonType, ErrorsManagerService, NavigationDrillDownService, ReportConfig, ReportService} from 'shared/services';
-import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { SortEvent } from 'primeng/api';
-import { ContentOnDemandConfig } from './content-on-demand.config';
-import { reportTypeMap } from 'shared/utils/report-type-map';
-import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils";
+import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
+import {SortEvent} from 'primeng/api';
+import {ContentOnDemandConfig} from './content-on-demand.config';
+import {reportTypeMap} from 'shared/utils/report-type-map';
+import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
 
 @Component({
   selector: 'app-event-content-on-demand',
@@ -53,6 +68,7 @@ export class ContentOnDemandComponent implements OnDestroy {
               private _errorsManager: ErrorsManagerService,
               private _authService: AuthService,
               private _analytics: AppAnalytics,
+              private _kalturaClient: KalturaClient,
               _dataConfigService: ContentOnDemandConfig,
               private _navigationDrillDownService: NavigationDrillDownService) {
     this._dataConfig = _dataConfigService.getConfig();
@@ -112,12 +128,47 @@ export class ContentOnDemandComponent implements OnDestroy {
     this.totalCount = table.totalCount;
     this._columns = columns;
     this._tableData = tableData.map((item, index) => this._extendTableRow(item, index, this._pager));
+    this.loadEntriesData();
   }
 
   private _extendTableRow (item: TableRow<string>, index: number, pager: KalturaPager): TableRow<string> {
     item['thumbnailUrl'] = `${this._apiUrl}/p/${this._partnerId}/sp/${this._partnerId}00/thumbnail/entry_id/${item['object_id']}/width/256/height/144`;
     item['playRate'] = (parseInt(item['count_plays']) / this._totalPlays * 100).toFixed(1);
     return item;
+  }
+
+  private loadEntriesData(): void {
+    // load the entries to check if we have deleted entries
+    const entryIds = this._tableData.map(item => item.object_id).join(",");
+    const request = new BaseEntryListAction({ pager: this._pager, filter: new KalturaBaseEntryFilter({idIn: entryIds, statusIn: '0,1,2,3,4,5,6,7'}) })
+      .setRequestOptions({
+        responseProfile: new KalturaDetachedResponseProfile({
+          type: KalturaResponseProfileType.includeFields,
+          fields: 'id,status'
+        })
+      });
+
+    this._kalturaClient
+      .request(request)
+      .pipe(cancelOnDestroy(this))
+      .subscribe((response: KalturaBaseEntryListResponse) => {
+        if (response.objects.length) {
+          response.objects.forEach(entry => {
+            const item = this._tableData.find(item => item.object_id === entry.id);
+            if (item) {
+              item['deleted'] = entry.status === KalturaEntryStatus.deleted;
+            }
+          });
+        }
+      },
+      error => {
+        const actions = {
+          'close': () => {
+            this._blockerMessage = null;
+          }
+        };
+        this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
+      });
   }
 
   public _onPaginationChanged(event: { page: number }): void {
@@ -141,8 +192,10 @@ export class ContentOnDemandComponent implements OnDestroy {
   }
 
   public _drillDown(row: TableRow): void {
-    this._analytics.trackButtonClickEvent(ButtonType.Load, 'Events_event_content_content_click', row['object_id'], 'Event_dashboard');
-    this._navigationDrillDownService.drilldown('entry', row['object_id'], true, row['partner_id']);
+    if (!row['deleted']) {
+      this._analytics.trackButtonClickEvent(ButtonType.Load, 'Events_event_content_content_click', row['object_id'], 'Event_dashboard');
+      this._navigationDrillDownService.drilldown('entry', row['object_id'], true, row['partner_id']);
+    }
   }
 }
 

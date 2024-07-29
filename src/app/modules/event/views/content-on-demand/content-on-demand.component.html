@@ -31,10 +31,15 @@
                   <app-bullet *ngIf="col === 'count_plays'" [value]="data['playRate']" [formatter]="null" [showValue]="false" [kTooltip]="data['playRate'] + '%'"></app-bullet>
                 </div>
                 <a class="kEntryLink kTableColumn"
-                      *ngIf="col === 'entry_name'"
+                      *ngIf="col === 'entry_name' && !data['deleted']"
                       [kTooltip]="data[col]"
                       [showOnEllipsis]="true"
                       (click)="_drillDown(data)">{{data[col]}}</a>
+                <span class="kTableColumn kName"
+                   *ngIf="col === 'entry_name' && data['deleted']"
+                   [kTooltip]="data[col]"
+                   [showOnEllipsis]="true">{{data[col]}}</span>
+                <span class="deleted" *ngIf="col === 'entry_name' && data['deleted']">{{'app.engagement.topVideosReport.entryStatus.deleted' | translate}}</span>
               </div>
             </td>
           </tr>
