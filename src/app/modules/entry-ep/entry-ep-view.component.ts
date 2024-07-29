@@ -183,11 +183,12 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
             this._vodEntryIds = entry.redirectEntryId;
           }
           this._allEntryIds = entry.redirectEntryId ? `${this._liveEntryIds}${analyticsConfig.valueSeparator}${this._vodEntryIds}` : this._liveEntryIds;
-          if (entry.referenceId) { // DIY Live Broadcast
-            this._liveEntryIds += `${analyticsConfig.valueSeparator}${entry.referenceId}`;
-            this._allEntryIds += `${analyticsConfig.valueSeparator}${entry.referenceId}`;
+          if (entry.broadcastEntryId || entry.referenceId) { // DIY Live Broadcast
+            const liveEntryId = entry.broadcastEntryId ? entry.broadcastEntryId : entry.referenceId; // prefer broadcastEntryId
+            this._liveEntryIds += `${analyticsConfig.valueSeparator}${liveEntryId}`;
+            this._allEntryIds += `${analyticsConfig.valueSeparator}${liveEntryId}`;
             this._kalturaClient
-              .request(new BaseEntryGetAction({ entryId: entry.referenceId }))
+              .request(new BaseEntryGetAction({ entryId: liveEntryId }))
               .pipe(cancelOnDestroy(this))
               .subscribe(
                 (referenceEntry: KalturaRoomEntry) => {
