@@ -50,7 +50,7 @@
 
 
         <div *ngIf="!_loadingEntry" [class.kHidden]="!_viewConfig.session" [class.exporting]="_exporting" class="kReportContainer">
-          <app-ep-session [isVirtualClassroom]="_isVirtualClassroom" [exporting]="_exporting" [entryIdIn]="_liveEntryIds" [actualStartDate]="_actualEventStartDate" [startDate]="_eventStartDate" [endDate]="_eventEndDate" [recordingEntryId]="_recordingEntryId"></app-ep-session>
+          <app-ep-session [isVirtualClassroom]="_isVirtualClassroom" [exporting]="_exporting" [entryIdIn]="_liveEntryIds" [actualStartDate]="_actualEventStartDate" [startDate]="_eventStartDate" [endDate]="_eventEndDate" [recordingEntryId]="_recordingEntryId" [isSimulive]="_isSimulive"></app-ep-session>
         </div>
 
         <div *ngIf="!_loadingEntry && !_isVirtualClassroom" [class.kHidden]="!_viewConfig.recordings" [class.exporting]="_exporting" id="recordings" class="kReportContainer">

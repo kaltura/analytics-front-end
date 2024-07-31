@@ -155,15 +155,21 @@ export class MiniProfileComponent implements OnInit, OnDestroy {
 
             const countries = responses[1]?.result || null;
             const countriesConfig = this._dataConfigService.getCountriesConfig().table;
-            addToProfiles(countries, countriesConfig, 'country');
+            if (countries?.header?.length) {
+              addToProfiles(countries, countriesConfig, 'country');
+            }
 
             const roles = responses[2]?.result || null;
             const rolesConfig = this._dataConfigService.getRolesConfig().table;
-            addToProfiles(roles, rolesConfig, 'role');
+            if (roles?.header?.length) {
+              addToProfiles(roles, rolesConfig, 'role');
+            }
 
             const industries = responses[3]?.result || null;
             const industriesConfig = this._dataConfigService.getIndustriesConfig().table;
-            addToProfiles(industries, industriesConfig, 'industry');
+            if (industries?.header?.length) {
+              addToProfiles(industries, industriesConfig, 'industry');
+            }
           }
 
           this._isBusy = false;

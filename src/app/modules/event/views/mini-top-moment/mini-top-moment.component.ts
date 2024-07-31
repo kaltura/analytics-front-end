@@ -10,7 +10,7 @@ import {
   KalturaClient,
   KalturaEndUserReportInputFilter, KalturaEntryScheduleEventFilter,
   KalturaFilterPager,
-  KalturaLiveEntry,
+  KalturaLiveEntry, KalturaLiveStreamScheduleEvent,
   KalturaMediaEntry, KalturaMeetingScheduleEvent,
   KalturaMultiRequest, KalturaMultiResponse,
   KalturaReportInterval,
@@ -211,20 +211,19 @@ export class MiniTopMomentComponent implements OnInit, OnDestroy {
               ([recording, eventList]) => {
                 if (eventList?.objects?.length > 0) {
                   // calculate start point of the video
-                  const event: KalturaMeetingScheduleEvent = eventList.objects[0] as KalturaMeetingScheduleEvent;
+                  const event: KalturaLiveStreamScheduleEvent = eventList.objects[eventList.objects.length - 1] as KalturaLiveStreamScheduleEvent; // take the last event
                   const liveOffsetFromStart = this._liveEntryPosition - event.startDate;
                   const recordingOffset = event.startDate - recording.createdAt;
                   let recordingPosition = liveOffsetFromStart + recordingOffset;
                   recordingPosition = recordingPosition < 0 ? 0 : recordingPosition; // protect from negative values (should not happen)
 
                   // for simulive, the recording is a predefined entry with older creation date so we set its start time to the session start time if the difference in more than 15 minutes
-                  if (recordingOffset > 900) {
+                  if (event.sourceEntryId) {
                     recordingPosition = liveOffsetFromStart;
                   }
-
                   this._seekFrom = recordingPosition;
                   this._clipTo = recordingPosition + 60; // play 1 minute from start position
-                  this._entryId = vod;
+                  this._entryId = event.sourceEntryId ? event.sourceEntryId : vod; // for simulive take the event source entry ID, otherwise take the live entry recordedEntryId or redirectEntryId
                   this._isBusy = false;
                 } else {
                   this._noData = true;

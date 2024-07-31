@@ -13,7 +13,7 @@ import {
   KalturaScheduleEventListResponse,
   ScheduleEventListAction,
   KalturaCuePointType,
-  KalturaSessionCuePoint
+  KalturaSessionCuePoint, KalturaLiveStreamScheduleEvent
 } from 'kaltura-ngx-client';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {FrameEventManagerService, FrameEvents} from 'shared/modules/frame-event-manager/frame-event-manager.service';
@@ -59,6 +59,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
   public _liveEntryIds = '';
   public _vodEntryIds = '';
   public _recordingEntryId = '';
+  public _isSimulive = false;
   public _allEntryIds = '';
 
   private _saveTitleConfig = this._viewConfig.title;
@@ -156,8 +157,12 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
 
           if (eventList?.objects?.length > 0) {
             this._isVirtualClassroom = false;
-            const event: KalturaMeetingScheduleEvent = eventList.objects[0] as KalturaMeetingScheduleEvent;
+            const event: KalturaLiveStreamScheduleEvent = eventList.objects[eventList.objects.length - 1] as KalturaLiveStreamScheduleEvent; // take the last event
             this.setStartEndDates(event.startDate, event.endDate);
+            if (event.sourceEntryId) {
+              this._isSimulive = true;
+              this._vodEntryIds = event.sourceEntryId;
+            }
           } else {
             if (cuePoints?.objects?.length > 0) {
               // no schedule event means this is a virtual classroom. Sessions should be taken for the entry session cuepoints
@@ -179,7 +184,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
           // set live and vod entry IDs string
           this._entry = entry;
           this._liveEntryIds = entry.id;
-          if (entry.redirectEntryId) {
+          if (entry.redirectEntryId && !this._isSimulive) {
             this._vodEntryIds = entry.redirectEntryId;
           }
           this._allEntryIds = entry.redirectEntryId ? `${this._liveEntryIds}${analyticsConfig.valueSeparator}${this._vodEntryIds}` : this._liveEntryIds;
