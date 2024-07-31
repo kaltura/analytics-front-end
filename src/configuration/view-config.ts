@@ -8,6 +8,7 @@ export const viewsConfig = {
   audience: {
     engagement: {
       title: {},
+      backBtn: {},
       download: {},
       export: {},
       refineFilter: {
@@ -119,6 +120,7 @@ export const viewsConfig = {
   },
   entry: {
     title: {},
+    backBtn: {},
     export: {},
     refineFilter: {
       geo: {},
@@ -148,6 +150,7 @@ export const viewsConfig = {
   },
   category: {
     title: {},
+    backBtn: {},
     export: {},
     refineFilter: {
       mediaType: {},
@@ -186,6 +189,7 @@ export const viewsConfig = {
   },
   entryLive: {
     title: {},
+    backBtn: {},
     owner: {},
     export: {},
     toggleLive: {},
@@ -216,6 +220,7 @@ export const viewsConfig = {
   },
   virtualEvent: {
     title: {},
+    backBtn: {},
     download: {},
     details: {},
     refineFilter: {
@@ -233,6 +238,7 @@ export const viewsConfig = {
   entryWebcast: {
     export: {},
     title: {},
+    backBtn: {},
     download: {},
     linkToLive: {},
     details: {},
@@ -272,6 +278,7 @@ export const viewsConfig = {
   entryEP: {
     download: {},
     title: {},
+    backBtn: {},
     miniViewers: {},
     miniMinutesViewed: {},
     miniEngagement: {},
@@ -283,6 +290,7 @@ export const viewsConfig = {
   },
   playlist: {
     title: {},
+    backBtn: {},
     export: {},
     videos: {},
     refineFilter: {
@@ -321,6 +329,7 @@ export const viewsConfig = {
   },
   user: {
     title: {},
+    backBtn: {},
     avatar: {},
     details: {},
     export: {},

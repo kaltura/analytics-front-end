@@ -3,7 +3,7 @@
     <div class="kReportView">
       <div *ngIf="_user" class="kReport kContent kOverrideFAIcons">
         <div class="kReportHeader">
-          <button pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_back()"
+          <button *ngIf="_userViewConfig.backBtn" pButton class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="_back()"
                   [kTooltip]="'app.entry.back' | translate"></button>
           <div class="kAvatar" *ngIf="_userViewConfig.avatar">
             <div *ngIf="_user?.thumbnailUrl" class="kUserThumbnailHolder">

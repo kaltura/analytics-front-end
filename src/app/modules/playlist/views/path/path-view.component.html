@@ -1,7 +1,7 @@
 <div class="kReportView kVideoMedia">
   <div *ngIf="_creationDate" class="kReport kContent kOverrideFAIcons">
     <div class="kReportHeader" [class.noTitle]="!_viewConfig.title">
-      <button tabindex="0" aria-label="Back" role="button" pButton *ngIf="_viewConfig.title" class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="back.emit()"
+      <button tabindex="0" aria-label="Back" role="button" pButton *ngIf="_viewConfig.title && _viewConfig.backBtn" class="kButtonDefault kBackBtn small" icon="kIconarrow_backward" (click)="back.emit()"
               [kTooltip]="'app.entry.back' | translate" [placement]="'bottom'"></button>
       <h1 *ngIf="_viewConfig.title" class="kTitle">{{_playlistName}}</h1>
       <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title">
