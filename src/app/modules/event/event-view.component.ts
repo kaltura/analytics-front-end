@@ -151,6 +151,13 @@ export class EventViewComponent implements OnInit, OnDestroy {
           const dateFormat = analyticsConfig.dateFormat === 'month-day-year' ? 'MM/DD/YYYY' : 'DD/MM/YYYY';
           this._virtualEventDateLabel = DateFilterUtils.getMomentDate(virtualEvent.createdAt).format(dateFormat);
           this._creationDate = new Date(virtualEvent.createdAt * 1000);
+          // need to round down to the last half hour because this is our data aggregation interval
+          const minutes = this._creationDate.getMinutes();
+          if (minutes !== 0 && minutes !== 30) {
+            const roundDownMinutes = minutes > 30 ? 30 : 0;
+            this._creationDate.setMinutes(roundDownMinutes); // round down minutes
+            this._creationDate.setSeconds(0); // round down seconds
+          }
           this._updateDate = DateFilterUtils.getMomentDate(virtualEvent.updatedAt).format(dateFormat);
           const loadScheduledEvent = new ScheduleEventGetAction({scheduleEventId: virtualEvent.agendaScheduleEventId});
           this._kalturaClient
