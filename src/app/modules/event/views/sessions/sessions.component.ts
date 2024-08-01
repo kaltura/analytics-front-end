@@ -50,7 +50,7 @@ export class SessionsComponent implements OnDestroy {
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
 
-  private SESSION_ID_RELEASE_DATE = new Date(2024, 5, 25);
+  private SESSION_ID_RELEASE_DATE = new Date(2024, 6, 31);
   public _session_id_release_date = DateFilterUtils.formatMonthDayString(this.SESSION_ID_RELEASE_DATE, analyticsConfig.locale, 'long');
   public _displaySessions = true;
 
