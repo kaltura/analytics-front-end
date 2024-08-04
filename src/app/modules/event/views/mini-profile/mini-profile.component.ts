@@ -116,10 +116,17 @@ export class MiniProfileComponent implements OnInit, OnDestroy {
       pager: this._pager,
       responseOptions
     });
+    const companiesReportRequest = new ReportGetTableAction({
+      reportType: KalturaReportType.veRegisteredCompanies,
+      reportInputFilter: this._filter,
+      order: '-registered_unique_users',
+      pager: this._pager,
+      responseOptions
+    });
 
     let counter = 0;
     this._kalturaClient
-      .multiRequest([totalsReportRequest, countriesReportRequest, rolesReportRequest, industriesReportRequest])
+      .multiRequest([totalsReportRequest, countriesReportRequest, rolesReportRequest, industriesReportRequest, companiesReportRequest])
       .pipe(cancelOnDestroy(this))
       .subscribe((responses: KalturaMultiResponse) => {
           if (responses.hasErrors()) {
@@ -137,7 +144,7 @@ export class MiniProfileComponent implements OnInit, OnDestroy {
               let data = this._reportService.parseTableData(table, config).tableData;
               if (data?.length) {
                 data = data.filter(data => data[metric] !== "Unknown");
-                if (data.length > 3) {
+                if (data.length > 4) {
                   data.length = 0;
                 }
                 data.forEach((data, index) => {
@@ -169,6 +176,12 @@ export class MiniProfileComponent implements OnInit, OnDestroy {
             const industriesConfig = this._dataConfigService.getIndustriesConfig().table;
             if (industries?.header?.length) {
               addToProfiles(industries, industriesConfig, 'industry');
+            }
+
+            const companies = responses[4]?.result || null;
+            const companiesConfig = this._dataConfigService.getCompaniesConfig().table;
+            if (companies?.header?.length) {
+              addToProfiles(companies, companiesConfig, 'company');
             }
           }
 
@@ -221,6 +234,9 @@ export class MiniProfileComponent implements OnInit, OnDestroy {
     }
     if (profile.metric === 'country') {
       filter.countryIn = profile.label;
+    }
+    if (profile.metric === 'company') {
+      filter.companyIn = profile.label;
     }
 
     const sections = this._dataConfigService.getAttendanceRateConfig();

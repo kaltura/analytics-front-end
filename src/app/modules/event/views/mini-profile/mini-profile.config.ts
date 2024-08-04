@@ -64,6 +64,21 @@ export class MiniProfileConfig extends ReportDataBaseConfig {
     };
   }
 
+  public getCompaniesConfig(): ReportDataConfig {
+    return {
+      [ReportDataSection.table]: {
+        fields: {
+          'company': {
+            format: value => value,
+          },
+          'registered_unique_users': {
+            format: value => value,
+          }
+        }
+      }
+    };
+  }
+
   public getAttendanceRateConfig(): ReportDataConfig {
     return {
       [ReportDataSection.totals]: {
