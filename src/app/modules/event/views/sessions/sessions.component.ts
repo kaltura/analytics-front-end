@@ -53,6 +53,7 @@ export class SessionsComponent implements OnDestroy {
   private SESSION_ID_RELEASE_DATE = new Date(2024, 6, 31);
   public _session_id_release_date = DateFilterUtils.formatMonthDayString(this.SESSION_ID_RELEASE_DATE, analyticsConfig.locale, 'long');
   public _displaySessions = true;
+  public _eventSessionEntries = null;
 
   constructor(private _reportService: ReportService,
               private _errorsManager: ErrorsManagerService,
@@ -67,8 +68,9 @@ export class SessionsComponent implements OnDestroy {
   }
 
   private _loadReport(): void {
+    this._eventSessionEntries = analyticsConfig.customData?.eventSessionEntries;
     this._displaySessions = this.startDate.getTime() > this.SESSION_ID_RELEASE_DATE.getTime();
-    if (this._displaySessions) {
+    if (this._displaySessions && this._eventSessionEntries !== '') {
       this._isBusy = true;
       this._blockerMessage = null;
       this.totalCount = 0;
@@ -77,6 +79,9 @@ export class SessionsComponent implements OnDestroy {
       this._filter.fromDate = Math.floor(this.startDate.getTime() / 1000);
       this._filter.toDate = Math.floor(new Date().getTime() / 1000);
       this._filter.interval = KalturaReportInterval.days;
+      if (this._eventSessionEntries) {
+        this._filter.eventSessionContextIdIn = this._eventSessionEntries.split(',').join(analyticsConfig.valueSeparator);
+      }
       const reportConfig: ReportConfig = {reportType: this._reportType, filter: this._filter, order: this._order, pager: this._pager};
       this._reportService.getReport(reportConfig, this._dataConfig, false)
         .pipe(cancelOnDestroy(this))
