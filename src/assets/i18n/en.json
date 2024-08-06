@@ -1210,7 +1210,7 @@
       "unique_vod_viewers": "Recording Unique viewers",
       "avg_vod_completion_rate": "Recording avg. completion rate",
       "noSessions": "Data collected prior {{0}}, is unavailable",
-      "noSessionsAvailable": "No sessions were found"
+      "noSessionsAvailable": "No sessions found"
     },
     "ve": {
       "all": "Registrants",
