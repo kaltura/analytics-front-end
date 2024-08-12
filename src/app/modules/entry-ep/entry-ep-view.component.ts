@@ -157,7 +157,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
 
           if (eventList?.objects?.length > 0) {
             this._isVirtualClassroom = false;
-            const event: KalturaLiveStreamScheduleEvent = eventList.objects[eventList.objects.length - 1] as KalturaLiveStreamScheduleEvent; // take the last event
+            const event: KalturaLiveStreamScheduleEvent = eventList.objects[0] as KalturaLiveStreamScheduleEvent;
             this.setStartEndDates(event.startDate, event.endDate);
             if (event.sourceEntryId) {
               this._isSimulive = true;

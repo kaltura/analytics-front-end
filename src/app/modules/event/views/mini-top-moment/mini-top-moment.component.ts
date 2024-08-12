@@ -211,7 +211,7 @@ export class MiniTopMomentComponent implements OnInit, OnDestroy {
               ([recording, eventList]) => {
                 if (eventList?.objects?.length > 0) {
                   // calculate start point of the video
-                  const event: KalturaLiveStreamScheduleEvent = eventList.objects[eventList.objects.length - 1] as KalturaLiveStreamScheduleEvent; // take the last event
+                  const event: KalturaLiveStreamScheduleEvent = eventList.objects[0] as KalturaLiveStreamScheduleEvent;
                   const liveOffsetFromStart = this._liveEntryPosition - event.startDate;
                   const recordingOffset = event.startDate - recording.createdAt;
                   let recordingPosition = liveOffsetFromStart + recordingOffset;
