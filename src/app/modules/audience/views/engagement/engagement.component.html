@@ -24,6 +24,7 @@
         </div>
         <app-date-filter #dateFilter [exporting]="_exporting"
                          name="engagement"
+                         feature="engagement"
                          [dateRange]="_dateRange"
                          [selectedTimeUnit]="_timeUnit"
                          (filterChange)="_onDateFilterChange($event)"></app-date-filter>
