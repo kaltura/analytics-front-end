@@ -3,6 +3,7 @@
     <span class="kTitle">{{'app.bandwidth.publisherStorage' | translate}}</span>
     <app-export-csv *ngIf="_publisherViewConfig.export"
                     name="Publisher Storage"
+                    feature="usage_publishers_bandwidth_storage"
                     [reports]="_exportConfig"
                     [dateFilter]="_dateFilter"></app-export-csv>
     <div *ngIf="_publisherViewConfig.refineFilter"

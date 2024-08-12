@@ -14,6 +14,7 @@
                             (postExport)="postExportHandler()" (exporting)="onExporting($event)"></app-pdf-export>
             <app-export-csv aria-label="Export"
                             role="button"
+                            feature="webcast"
                             *ngIf="_viewConfig.export" name="entry"
                             [reports]="_exportConfig"
                             [refineFilter]="_refineFilter"

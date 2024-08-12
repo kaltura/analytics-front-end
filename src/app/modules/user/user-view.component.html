@@ -16,6 +16,7 @@
           <span *ngIf="_userViewConfig.title" class="kTitle kTruncateTitle" [kTooltip]="_userName" [showOnEllipsis]="true" [placement]="'bottom'">{{_userName}}</span>
           <app-export-csv *ngIf="_userViewConfig.export"
                           name="User"
+                          feature="user"
                           [userId]="_userId"
                           [reports]="_exportConfig"
                           [refineFilter]="_refineFilter"

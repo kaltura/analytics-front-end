@@ -8,6 +8,7 @@
         <app-export-csv [class.kHidden]="!_viewConfig.export" name="Manual Playlist" #export
                         aria-label="Export"
                         role="button"
+                        feature="playlist"
                         [reports]="_exportConfig"
                         [refineFilter]="_refineFilter"
                         [dateFilter]="_dateFilter"

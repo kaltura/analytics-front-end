@@ -11,6 +11,7 @@
       <span class="kTitle">{{'app.audience.technology.title' | translate}}</span>
       <app-export-csv *ngIf="_technologyViewConfig.export"
                       name="Technology"
+                      feature="technology"
                       [width]="260"
                       [reports]="_exportConfig"
                       [dateFilter]="_filterEvent"></app-export-csv>

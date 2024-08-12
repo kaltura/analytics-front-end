@@ -19,6 +19,7 @@
             </div>
             <app-export-csv *ngIf="_entryLiveViewConfig.export"
                             name="Live Entry"
+                            feature="RT"
                             [width]="380"
                             [reports]="_exportConfig"
                             [entryId]="_entryId"></app-export-csv>

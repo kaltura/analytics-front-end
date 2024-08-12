@@ -6,6 +6,7 @@
       <h1 *ngIf="_viewConfig.title" class="kTitle">{{_playlistName}}</h1>
       <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title">
         <app-export-csv *ngIf="_viewConfig.export" name="Interactive Video"
+                        feature="path"
                         [reports]="_exportConfig"
                         [refineFilter]="_refineFilter"
                         [dateFilter]="_dateFilter"

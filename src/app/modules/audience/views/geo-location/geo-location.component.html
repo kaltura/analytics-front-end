@@ -3,6 +3,7 @@
     <span class="kTitle">{{'app.audience.geo.title' | translate}}</span>
     <app-export-csv *ngIf="_geoViewConfig.export"
                     name="Geo Location"
+                    feature="geo-location"
                     [reports]="_exportConfig"
                     [refineFilter]="_refineFilter"
                     [dateFilter]="_dateFilter"></app-export-csv>

@@ -4,6 +4,7 @@
     <div class="kControls">
       <app-export-csv *ngIf="_contentInteractionsViewConfig.export"
                       name="Content Interactions"
+                      feature="content-interaction"
                       [reports]="_exportConfig"
                       [refineFilter]="_refineFilter"
                       [dateFilter]="_dateFilter"></app-export-csv>

@@ -10,6 +10,7 @@
                         (postExport)="postExportHandler()" (exporting)="onExporting($event)"></app-pdf-export>
         <app-export-csv *ngIf="_engagementViewConfig.export"
                         name="Engagement"
+                        feature="engagement"
                         [width]="290"
                         [reports]="_exportConfig"
                         [refineFilter]="_refineFilter"

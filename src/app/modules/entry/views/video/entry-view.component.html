@@ -7,6 +7,7 @@
       <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title">
         <app-export-csv aria-label="Export"
                         role="button"
+                        feature="entry-video"
                         *ngIf="_viewConfig.export" name="Video Entry"
                         [reports]="_exportConfig"
                         [refineFilter]="_refineFilter"

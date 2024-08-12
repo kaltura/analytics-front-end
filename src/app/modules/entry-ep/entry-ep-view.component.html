@@ -15,6 +15,7 @@
           </div>
           <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title">
             <app-export-csv name="Viewers Engagement" *ngIf="!_exporting"
+                            feature="{{_isVirtualClassroom ? 'VC_session' : 'events_session'}}"
                             [entryId]="_liveEntryIds"
                             [reports]="_exportConfig"
                             (onExport)="onExport()"
