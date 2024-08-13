@@ -33,6 +33,7 @@
     <div class="kReportContainer kNoPadding">
       <app-geo-filter [viewConfig]="_technologyViewConfig.refineFilter"
                       [opened]="_refineFilterOpened"
+                      feature="technology"
                       [dateFilter]="_filterEvent"
                       [selectedFilters]="_selectedRefineFilters"
                       (closeFilters)="_refineFilterOpened = false"

@@ -26,6 +26,7 @@
   <div class="kReportContainer kNoPadding">
     <app-end-user-filter [opened]="_refineFilterOpened"
                          [dateFilter]="_dateFilter"
+                         feature="usage_end_users"
                          [selectedFilters]="_selectedRefineFilters"
                          (closeFilters)="_refineFilterOpened = false"
                          (filterChange)="_onRefineFilterChange($event)"></app-end-user-filter>

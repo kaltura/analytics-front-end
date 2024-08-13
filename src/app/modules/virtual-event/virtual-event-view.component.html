@@ -27,7 +27,7 @@
             </div>
             <app-pdf-export *ngIf="_viewConfig.download"
                             [eventName]="'Registration_pdf_download'"
-                            [feature]="'Registration'"
+                            [feature]="'registration'"
                             [disabled]="_refineFilterOpened" [elementToExport]="reportToExport"
                             [filename]="exportFilename" (preExport)="preExportHandler()" (postExport)="postExportHandler()"
                             (exporting)="onExporting($event)"></app-pdf-export>
@@ -47,7 +47,7 @@
           <span>{{_updateDate}}</span>
         </div>
 
-        <app-ve-filter class="kRefineFiltersHost"
+        <app-ve-filter class="kRefineFiltersHost" feature="registration"
                         name="virtualEvent" #virtualEvent
                         [exporting]="_exporting"
                         [virtualEvent]="_virtualEvent"

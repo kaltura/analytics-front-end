@@ -20,6 +20,7 @@
   <div class="kReportContainer kNoPadding">
     <app-storage-filter [opened]="_refineFilterOpened"
                          [dateFilter]="_dateFilter"
+                         feature="usage_overview"
                          [selectedFilters]="_selectedRefineFilters"
                          (closeFilters)="_refineFilterOpened = false"
                          (filterChange)="_onRefineFilterChange($event)"></app-storage-filter>

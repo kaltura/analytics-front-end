@@ -1,22 +1,22 @@
-import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { CategoryData } from 'shared/services/categories-search.service';
-import { animate, AnimationEvent, group, state, style, transition, trigger } from '@angular/animations';
-import { KalturaMediaEntry, KalturaPartner, KalturaUser } from 'kaltura-ngx-client';
-import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
-import { LocationsFilterService } from './location-filter/locations-filter.service';
-import { LocationsFilterValue } from './location-filter/location-filter.component';
-import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
-import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
-import { analyticsConfig } from 'configuration/analytics-config';
-import { isEqual } from 'shared/utils/is-equals';
-import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
-import { isEmptyObject } from 'shared/utils/is-empty-object';
-import { ViewConfig } from 'configuration/view-config';
-import { DomainsFilterService } from "shared/components/filter/domains-filter/domains-filter.service";
-import { DomainsFilterValue } from "shared/components/filter/domains-filter/domains-filter.component";
-import { FilterConfig } from "shared/components/filter/filter-base.service";
-import { AppAnalytics } from "shared/services";
+import {Component, EventEmitter, HostBinding, Input, Output} from '@angular/core';
+import {TranslateService} from '@ngx-translate/core';
+import {CategoryData} from 'shared/services/categories-search.service';
+import {animate, AnimationEvent, group, state, style, transition, trigger} from '@angular/animations';
+import {KalturaMediaEntry, KalturaPartner, KalturaUser} from 'kaltura-ngx-client';
+import {DateChangeEvent} from 'shared/components/date-filter/date-filter.service';
+import {LocationsFilterService} from './location-filter/locations-filter.service';
+import {LocationsFilterValue} from './location-filter/location-filter.component';
+import {FrameEventManagerService, FrameEvents} from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import {KalturaLogger} from '@kaltura-ng/kaltura-logger';
+import {analyticsConfig} from 'configuration/analytics-config';
+import {isEqual} from 'shared/utils/is-equals';
+import {DateFilterUtils} from 'shared/components/date-filter/date-filter-utils';
+import {isEmptyObject} from 'shared/utils/is-empty-object';
+import {ViewConfig} from 'configuration/view-config';
+import {DomainsFilterService} from "shared/components/filter/domains-filter/domains-filter.service";
+import {DomainsFilterValue} from "shared/components/filter/domains-filter/domains-filter.component";
+import {FilterConfig} from "shared/components/filter/filter-base.service";
+import {AppAnalytics, ButtonType} from "shared/services";
 
 export interface OptionItem {
   value: any;
@@ -68,6 +68,8 @@ export class FilterComponent {
   @HostBinding('style.padding-bottom') _bottomPadding = '0';
 
   @Input() name = 'default';
+
+  @Input() feature: string = null;
 
   @Input() locationFiltersWarning: string;
 
@@ -414,10 +416,34 @@ export class FilterComponent {
   public _apply(forceApply = false): void {
     if (forceApply || !isEqual(this._currentFilters, this._appliedFilters)) {
       this._logger.trace('User applied filters, emit update event and close filters');
-      this._analytics.trackClickEvent('Filter');
       // using spread to prevent passing by reference to avoid unwanted mutations
       this._appliedFilters = [...this._currentFilters];
       this._updateSelectedValues(this._currentFilters);
+      let filters = '';
+      if (this._appliedFilters.length) {
+        const playbackTypeFilters = this._appliedFilters.filter(filter => filter.type === 'playbackType');
+        if (playbackTypeFilters.length) {
+          const playbackTypes = playbackTypeFilters.map(filter => filter.value).join(',');
+          filters += '|playbackType:' + playbackTypes;
+        }
+        const mediaTypeFilters = this._appliedFilters.filter(filter => filter.type === 'mediaType');
+        if (mediaTypeFilters.length) {
+          const mediaTypes = mediaTypeFilters.map(filter => filter.value).join(',');
+          filters += '|mediaType:' + mediaTypes;
+        }
+        const entrySourcesFilters = this._appliedFilters.filter(filter => filter.type === 'entrySources');
+        if (entrySourcesFilters.length) {
+          const entrySources = entrySourcesFilters.map(filter => filter.value).join(',');
+          filters += '|entrySources:' + entrySources;
+        }
+        const otherFilters = this._appliedFilters.filter(filter => filter.type !== 'playbackType' && filter.type !== 'mediaType' && filter.type !== 'entrySources');
+        otherFilters.forEach(filter => {
+          filters += '|' + filter.type;
+        });
+        // remove first pipe
+        filters = filters.substring(1);
+        this._analytics.trackButtonClickEvent(ButtonType.Filter, 'Filter', filters, this.feature);
+      }
       this.filterChange.emit([...this._appliedFilters]);
       this._tags = this._prepareFilterTags();
       this._toggleDisclaimer();
