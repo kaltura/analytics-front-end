@@ -167,11 +167,10 @@ export class EventViewComponent implements OnInit, OnDestroy {
               event => {
                 this._actualEventStartDate = new Date(event.startDate * 1000); // save actual start date before calculating round down start date
                 this._eventStartDate = new Date(this._actualEventStartDate.getTime()); // copy the actual start date object
-                // need to round down to the last half hour because this is our data aggregation interval
+                // need to round down to the last hour because this is our data aggregation interval
                 const minutes = this._actualEventStartDate.getMinutes();
-                if (minutes !== 0 && minutes !== 30) {
-                  const roundDownMinutes = minutes > 30 ? 30 : 0;
-                  this._eventStartDate.setMinutes(roundDownMinutes); // round down minutes
+                if (minutes !== 0) {
+                  this._eventStartDate.setMinutes(0); // round down minutes
                   this._eventStartDate.setSeconds(0); // round down seconds
                 }
                 this._eventEndDate = new Date(event.endDate * 1000);
