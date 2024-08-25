@@ -64,7 +64,7 @@ export class TagsFilterComponent implements OnDestroy {
         new TagSearchAction({
             tagFilter: new KalturaTagFilter({
               tagStartsWith: text,
-              objectTypeEqual: KalturaTaggedObjectType.entry
+              objectTypeIn: [KalturaTaggedObjectType.entry, KalturaTaggedObjectType.livestreamentry].join(',')
             }),
             pager: new KalturaFilterPager({
               pageIndex: 0,
