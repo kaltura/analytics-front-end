@@ -221,7 +221,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
           this._recordingEntryId = this._vodEntryIds.split(analyticsConfig.valueSeparator)[0];
           this._exportDateFilter = {
             startDate: Math.floor(this._eventStartDate.getTime() / 1000),
-            endDate: Math.floor(this._eventEndDate.getTime() / 1000),
+            endDate: Math.floor((new Date()).getTime() / 1000),
             timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
             timeUnits: KalturaReportInterval.days,
             endDay: null,
