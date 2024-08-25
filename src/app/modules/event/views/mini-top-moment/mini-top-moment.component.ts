@@ -215,12 +215,12 @@ export class MiniTopMomentComponent implements OnInit, OnDestroy {
                   const liveOffsetFromStart = this._liveEntryPosition - event.startDate;
                   const recordingOffset = event.startDate - recording.createdAt;
                   let recordingPosition = liveOffsetFromStart + recordingOffset;
-                  recordingPosition = recordingPosition < 0 ? 0 : recordingPosition; // protect from negative values (should not happen)
 
                   // for simulive, the recording is a predefined entry with older creation date so we set its start time to the session start time if the difference in more than 15 minutes
                   if (event.sourceEntryId) {
                     recordingPosition = liveOffsetFromStart;
                   }
+                  recordingPosition = recordingPosition < 0 ? 0 : recordingPosition; // protect from negative values
                   this._seekFrom = recordingPosition;
                   this._clipTo = recordingPosition + 60; // play 1 minute from start position
                   this._entryId = event.sourceEntryId ? event.sourceEntryId : vod; // for simulive take the event source entry ID, otherwise take the live entry recordedEntryId or redirectEntryId
