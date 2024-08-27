@@ -156,9 +156,10 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
           }
           this.highlights$.next({ current: report, compare: compare, busy: false, error: null });
 
-          if (report.totals && (!this._tabsData.length || this._filter.userIds)) {
+          if (report.totals) {
             this._handleTotals(report.totals); // handle totals
           }
+          const tabsData = this._tabsData;
 
           if (compare) {
             this._datesTableData = { current: report, compare: compare };
@@ -166,7 +167,6 @@ export class CategoryPerformanceComponent extends CategoryBase implements OnDest
           } else {
             if (report.graphs.length) {
               this._handleGraphs(report.graphs); // handle graphs
-
               this._datesTableData = { current: report };
             }
           }
