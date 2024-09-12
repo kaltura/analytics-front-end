@@ -154,17 +154,24 @@ export class CategoryViewComponent implements OnInit, OnDestroy {
           }
         },
         error => {
-          this._loadingCategory = false;
-          this._categoryLoaded = false;
-          const actions = {
-            'close': () => {
-              this._blockerMessage = null;
-            },
-            'retry': () => {
-              this._loadCategoryDetails();
-            }
-          };
-          this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
+          if (parentCategory) {
+            // fail silently and just hide the parent category link
+            console.error(error);
+            this._loadingCategory = false;
+            this._categoryLoaded = true;
+          } else {
+            this._loadingCategory = false;
+            this._categoryLoaded = false;
+            const actions = {
+              'close': () => {
+                this._blockerMessage = null;
+              },
+              'retry': () => {
+                this._loadCategoryDetails();
+              }
+            };
+            this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
+          }
         });
   }
 
