@@ -29,7 +29,7 @@
 
         <div class="kReports" [class.vc]="_isVirtualClassroom">
           <div class="kReportContainer" *ngIf="!_loadingEntry">
-            <div [class.kHidden]="!_viewConfig.miniViewers" class="kMiniReportContainer kSocialHighlights">
+            <div [class.kHidden]="!_viewConfig.miniViewers" class="kMiniReportContainer kSocialHighlights" [class.vc]="_isVirtualClassroom">
               <app-ep-mini-viewers [isVirtualClassroom]="_isVirtualClassroom" [exporting]="_exporting" [entryIdIn]="_allEntryIds" [startDate]="_eventStartDate" [endDate]="_now"></app-ep-mini-viewers>
             </div>
             <div [class.kHidden]="!_viewConfig.miniMinutesViewed" class="kMiniReportContainer kSocialHighlights">
