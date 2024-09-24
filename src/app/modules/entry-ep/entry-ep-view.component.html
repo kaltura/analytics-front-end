@@ -7,7 +7,7 @@
                   [kTooltip]="'app.entry.back' | translate" [placement]="'bottom'"></button>
           <h1 *ngIf="_viewConfig.title" class="kTitle kTruncateTitle" [kTooltip]="_entry?.name" [showOnEllipsis]="true" [placement]="'bottom'">{{_exporting ? ('app.entryEp.exportTitle' | translate: {'0': _entry?.name}) : _entry?.name}}</h1>
           <div class="sessionSelector" *ngIf="_isVirtualClassroom">
-            <p-dropdown [style]="{'width': '300px'}"
+            <p-dropdown [style]="{'width': '360px', 'margin-right': '16px'}"
                         [options]="_cuepointOptions"
                         (onChange)="onCuepointChange()"
                         [(ngModel)]="_selectedCuePoint">

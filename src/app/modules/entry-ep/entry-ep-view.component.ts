@@ -121,7 +121,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
     const request = new KalturaMultiRequest(
         new BaseEntryGetAction({ entryId: this._entryId }),
         new ScheduleEventListAction({filter: new KalturaEntryScheduleEventFilter({templateEntryIdEqual: this._entryId})}),
-        new CuePointListAction({filter: new KalturaCuePointFilter({cuePointTypeEqual: KalturaCuePointType.session, entryIdEqual: this._entryId})})
+        new CuePointListAction({filter: new KalturaCuePointFilter({orderBy: '-startTime', cuePointTypeEqual: KalturaCuePointType.session, entryIdEqual: this._entryId})})
       );
 
     this._kalturaClient
