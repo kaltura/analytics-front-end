@@ -171,9 +171,9 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
               this._cuepointOptions = [];
               this._cuePoints.forEach(cuepoint => {
                 const duration = moment.duration(cuepoint.duration, 'seconds');
-                const format = cuepoint.duration > 3599 ? 'hh:mm:ss' : 'mm:ss';
+                const format = cuepoint.duration > 3599 ? 'HH:mm:ss' : 'mm:ss';
                 this._cuepointOptions.push({
-                  label: `${moment(cuepoint.startTime * 1000).format('MMMM DD, YYYY')}\u00A0\u00A0\u00A0${moment(cuepoint.startTime * 1000).format('hh:mm')} - ${moment(cuepoint.endTime * 1000).format('hh:mm')}\u00A0\u00A0\u00A0(${moment.utc(duration.as('milliseconds')).format(format)})`,
+                  label: `${moment(cuepoint.startTime * 1000).format('MMMM DD, YYYY')}\u00A0\u00A0\u00A0${moment(cuepoint.startTime * 1000).format('HH:mm')} - ${moment(cuepoint.endTime * 1000).format('HH:mm')}\u00A0\u00A0\u00A0(${moment.utc(duration.as('milliseconds')).format(format)})`,
                   value: cuepoint
                 });
               });
