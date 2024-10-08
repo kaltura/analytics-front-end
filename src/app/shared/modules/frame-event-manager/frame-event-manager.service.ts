@@ -73,6 +73,11 @@ export class FrameEventManagerService implements OnDestroy {
   public publish(event: FrameEvents, payload?: any): void {
     const message = { 'messageType': event };
 
+    // don't send updateLayout with 0 value
+    if (event === FrameEvents.UpdateLayout && payload?.height === 0) {
+      return;
+    }
+
     if (payload) {
       message['payload'] = payload;
     }
