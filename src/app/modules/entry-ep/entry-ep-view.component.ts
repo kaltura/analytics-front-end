@@ -244,6 +244,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
   }
 
   public onCuepointChange(): void {
+    this._analytics.trackButtonClickEvent(ButtonType.Choose, 'VC_session_select_session_dropdown', null, 'VC_session_dashboard');
     this.setStartEndDates(this._selectedCuePoint.startTime, this._selectedCuePoint.endTime);
   }
 
@@ -263,7 +264,11 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
   public preExportHandler(): void {
     this._viewConfig.devices = this._isVirtualClassroom ? {} : null;
     this._viewConfig.title = {}; // force show title for export
-    this._analytics.trackButtonClickEvent(ButtonType.Export, 'Events_session_PDF');
+    if (this._isVirtualClassroom) {
+      this._analytics.trackButtonClickEvent(ButtonType.Download, 'VC_session_pdf_download', null, 'VC_session_dashboard');
+    } else {
+      this._analytics.trackButtonClickEvent(ButtonType.Export, 'Events_session_PDF');
+    }
   }
 
   public postExportHandler(): void {
