@@ -4,6 +4,7 @@
     <div class="kControls">
       <app-export-csv *ngIf="_contentInteractionsViewConfig.export"
                       name="Content Interactions"
+                      feature="content-interaction"
                       [reports]="_exportConfig"
                       [refineFilter]="_refineFilter"
                       [dateFilter]="_dateFilter"></app-export-csv>
@@ -17,6 +18,7 @@
       </div>
       <app-date-filter #dateFilter
                        name="content-interactions"
+                       feature="content-interaction"
                        [dateRange]="_dateRange"
                        [selectedTimeUnit]="_timeUnit"
                        (filterChange)="_onDateFilterChange($event)"></app-date-filter>
@@ -25,6 +27,7 @@
 
   <div class="kReportContainer kNoPadding">
     <app-refine-filter name="refine-filter"
+                       feature="content-interaction"
                        [viewConfig]="_contentInteractionsViewConfig.refineFilter"
                        [opened]="_refineFilterOpened"
                        [dateFilter]="_dateFilter"

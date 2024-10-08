@@ -3,6 +3,7 @@
     <span class="kTitle">{{'app.bandwidth.usersStorage' | translate}}</span>
     <app-export-csv *ngIf="_endUserViewConfig.export"
                     name="End User Storage"
+                    feature="usage_end_users"
                     [reports]="_exportConfig"
                     [dateFilter]="_dateFilter"></app-export-csv>
     <div *ngIf="_endUserViewConfig.refineFilter"
@@ -15,6 +16,7 @@
     </div>
     <app-date-filter #dateFilter
                      name="end-user"
+                     feature="usage_end_users"
                      [showHours]="false"
                      [dateRange]="_dateRange"
                      [dateRangeType]="_dateRangeType"
@@ -24,6 +26,7 @@
   <div class="kReportContainer kNoPadding">
     <app-end-user-filter [opened]="_refineFilterOpened"
                          [dateFilter]="_dateFilter"
+                         feature="usage_end_users"
                          [selectedFilters]="_selectedRefineFilters"
                          (closeFilters)="_refineFilterOpened = false"
                          (filterChange)="_onRefineFilterChange($event)"></app-end-user-filter>

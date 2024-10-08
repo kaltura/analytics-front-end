@@ -11,6 +11,7 @@
       <span class="kTitle">{{'app.audience.technology.title' | translate}}</span>
       <app-export-csv *ngIf="_technologyViewConfig.export"
                       name="Technology"
+                      feature="technology"
                       [width]="260"
                       [reports]="_exportConfig"
                       [dateFilter]="_filterEvent"></app-export-csv>
@@ -24,6 +25,7 @@
       </div>
       <app-date-filter #dateFilter
                        name="technology"
+                       feature="technology"
                        [dateRange]="_dateRange"
                        [showCompare]="false"
                        (filterChange)="_onDateFilterChange($event)"></app-date-filter>
@@ -31,6 +33,7 @@
     <div class="kReportContainer kNoPadding">
       <app-geo-filter [viewConfig]="_technologyViewConfig.refineFilter"
                       [opened]="_refineFilterOpened"
+                      feature="technology"
                       [dateFilter]="_filterEvent"
                       [selectedFilters]="_selectedRefineFilters"
                       (closeFilters)="_refineFilterOpened = false"

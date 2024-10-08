@@ -3,6 +3,7 @@
     <span class="kTitle">{{'app.modules.bandwidth' | translate}}</span>
     <app-export-csv *ngIf="_storageViewConfig.export"
                     name="Storage"
+                    feature="usage_overview"
                     [reports]="_exportConfig"
                     [dateFilter]="_dateFilter"></app-export-csv>
     <div *ngIf="_storageViewConfig.refineFilter"
@@ -19,6 +20,7 @@
   <div class="kReportContainer kNoPadding">
     <app-storage-filter [opened]="_refineFilterOpened"
                          [dateFilter]="_dateFilter"
+                         feature="usage_overview"
                          [selectedFilters]="_selectedRefineFilters"
                          (closeFilters)="_refineFilterOpened = false"
                          (filterChange)="_onRefineFilterChange($event)"></app-storage-filter>

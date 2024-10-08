@@ -1,17 +1,17 @@
-import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
-import { SelectItem } from 'primeng/api';
-import { DateChangeEvent, DateFilterQueryParams, DateFilterService, DateRangeType } from './date-filter.service';
-import { DateFilterUtils, DateRanges } from './date-filter-utils';
-import { TranslateService } from '@ngx-translate/core';
-import { KalturaReportInterval } from 'kaltura-ngx-client';
+import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, Renderer2, ViewChild} from '@angular/core';
+import {SelectItem} from 'primeng/api';
+import {DateChangeEvent, DateFilterQueryParams, DateFilterService, DateRangeType} from './date-filter.service';
+import {DateFilterUtils, DateRanges} from './date-filter-utils';
+import {TranslateService} from '@ngx-translate/core';
+import {KalturaReportInterval} from 'kaltura-ngx-client';
 import * as moment from 'moment';
-import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { analyticsConfig } from 'configuration/analytics-config';
-import { filter } from 'rxjs/operators';
-import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { isEmptyObject } from 'shared/utils/is-empty-object';
-import { AppAnalytics, BrowserService } from 'shared/services';
+import {FrameEventManagerService, FrameEvents} from 'shared/modules/frame-event-manager/frame-event-manager.service';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+import {analyticsConfig} from 'configuration/analytics-config';
+import {filter} from 'rxjs/operators';
+import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
+import {isEmptyObject} from 'shared/utils/is-empty-object';
+import {AppAnalytics, BrowserService, ButtonType} from 'shared/services';
 
 @Component({
   selector: 'app-date-filter',
@@ -21,6 +21,7 @@ import { AppAnalytics, BrowserService } from 'shared/services';
 export class DateFilterComponent implements OnInit, OnDestroy {
   @Input() selectedTimeUnit = KalturaReportInterval.months;
   @Input() name = 'default';
+  @Input() feature: string = null;
   @Input() showHours = true;
   @Input() exporting = false;
   @Input() appendTo: any = null;
@@ -268,7 +269,9 @@ export class DateFilterComponent implements OnInit, OnDestroy {
   }
 
   public apply(): void {
-    this._analytics.trackClickEvent('Calendar');
+    let value = this.selectedView === 'preset' ? this.selectedDateRange : 'specific';
+    value += this.compare ? '|compare_on' : '|compare_off';
+    this._analytics.trackButtonClickEvent(ButtonType.Filter, 'Calendar', value, this.feature);
     this.updateDataRanges();
   }
 

@@ -1,19 +1,19 @@
 import {Component, EventEmitter, Input, OnDestroy, Output, ViewChild} from '@angular/core';
-import { AppAnalytics, AuthService, BrowserService } from 'shared/services';
-import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
-import { KalturaClient, KalturaEndUserReportInputFilter, KalturaObjectBaseFactory, KalturaPager, KalturaReportExportItem, KalturaReportExportParams, KalturaReportResponseOptions, ReportExportToCsvAction} from 'kaltura-ngx-client';
-import { TreeNode } from 'primeng/api';
-import { TranslateService } from '@ngx-translate/core';
-import { PopupWidgetComponent } from '@kaltura-ng/kaltura-ui';
-import { RefineFilter } from 'shared/components/filter/filter.component';
-import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
-import { analyticsConfig } from 'configuration/analytics-config';
-import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils';
-import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
-import { finalize } from 'rxjs/operators';
-import { ExportItem } from 'shared/components/export-csv/export-config-base.service';
-import { KalturaLogger } from "@kaltura-ng/kaltura-logger";
-import { isEmptyObject } from "shared/utils/is-empty-object";
+import {AppAnalytics, AuthService, BrowserService, ButtonType} from 'shared/services';
+import {DateChangeEvent} from 'shared/components/date-filter/date-filter.service';
+import {KalturaClient, KalturaEndUserReportInputFilter, KalturaObjectBaseFactory, KalturaPager, KalturaReportExportItem, KalturaReportExportParams, KalturaReportResponseOptions, ReportExportToCsvAction} from 'kaltura-ngx-client';
+import {TreeNode} from 'primeng/api';
+import {TranslateService} from '@ngx-translate/core';
+import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
+import {RefineFilter} from 'shared/components/filter/filter.component';
+import {refineFilterToServerValue} from 'shared/components/filter/filter-to-server-value.util';
+import {analyticsConfig} from 'configuration/analytics-config';
+import {DateFilterUtils} from 'shared/components/date-filter/date-filter-utils';
+import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
+import {finalize} from 'rxjs/operators';
+import {ExportItem} from 'shared/components/export-csv/export-config-base.service';
+import {KalturaLogger} from "@kaltura-ng/kaltura-logger";
+import {isEmptyObject} from "shared/utils/is-empty-object";
 
 @Component({
   selector: 'app-export-csv',
@@ -24,6 +24,7 @@ import { isEmptyObject } from "shared/utils/is-empty-object";
 export class ExportCsvComponent implements OnDestroy {
   @Output() onExport = new EventEmitter();
   @Input() name = 'default';
+  @Input() feature: string = null;
   @Input() dateFilter: DateChangeEvent = null;
   @Input() refineFilter: RefineFilter = [];
   @Input() pager: KalturaPager = null;
@@ -235,8 +236,8 @@ export class ExportCsvComponent implements OnDestroy {
       }
 
       const exportAction = new ReportExportToCsvAction({ params: new KalturaReportExportParams({ timeZoneOffset, reportsItemsGroup, reportItems, baseUrl }) });
-
-      this._analytics.trackClickEvent('Export');
+      const items = reportItems.map(item => item.reportTitle.toLowerCase().replace(' ', '_')).join(',');
+      this._analytics.trackButtonClickEvent(ButtonType.Export, 'Export', items, this.feature);
       this.onExport.emit();
       this._exportingCsv = true;
 

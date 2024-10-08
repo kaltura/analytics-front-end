@@ -3,6 +3,7 @@
     <span class="kTitle">{{'app.bandwidth.publisherStorage' | translate}}</span>
     <app-export-csv *ngIf="_publisherViewConfig.export"
                     name="Publisher Storage"
+                    feature="usage_publishers_bandwidth_storage"
                     [reports]="_exportConfig"
                     [dateFilter]="_dateFilter"></app-export-csv>
     <div *ngIf="_publisherViewConfig.refineFilter"
@@ -15,6 +16,7 @@
     </div>
     <app-date-filter #dateFilter
                      name="storage"
+                     feature="usage_publishers_bandwidth_storage"
                      [showHours]="false"
                      [dateRange]="_dateRange"
                      [dateRangeType]="_dateRangeType"
@@ -23,6 +25,7 @@
 
   <div class="kReportContainer kNoPadding">
     <app-refine-filter name="engagement"
+                       feature="usage_publishers_bandwidth_storage"
                        [locationFiltersWarning]="'app.bandwidth.locationFiltersWarning' | translate"
                        [viewConfig]="_publisherViewConfig.refineFilter"
                        [showAutocompleteGroup]="false"

@@ -6,6 +6,7 @@
       <h1 *ngIf="_viewConfig.title" class="kTitle">{{_playlistName}}</h1>
       <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title">
         <app-export-csv *ngIf="_viewConfig.export" name="Interactive Video"
+                        feature="path"
                         [reports]="_exportConfig"
                         [refineFilter]="_refineFilter"
                         [dateFilter]="_dateFilter"
@@ -24,6 +25,7 @@
 
         <app-date-filter #dateFilter
                          name="entry"
+                         feature="path"
                          [dateRange]="_dateRange"
                          [selectedTimeUnit]="_timeUnit"
                          [creationDate]="_creationDate"
@@ -39,7 +41,7 @@
       <span class="kOwner">{{owner}}</span>
     </div>
 
-    <app-playlist-filter class="kRefineFiltersHost"
+    <app-playlist-filter class="kRefineFiltersHost" feature="path"
                          [viewConfig]="_viewConfig.refineFilter"
                          [opened]="_refineFilterOpened"
                          [dateFilter]="_dateFilter"

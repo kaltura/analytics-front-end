@@ -8,6 +8,7 @@
         <app-export-csv [class.kHidden]="!_viewConfig.export" name="Manual Playlist" #export
                         aria-label="Export"
                         role="button"
+                        feature="playlist"
                         [reports]="_exportConfig"
                         [refineFilter]="_refineFilter"
                         [dateFilter]="_dateFilter"
@@ -25,6 +26,7 @@
 
         <app-date-filter #dateFilter
                          name="manual-playlist"
+                         feature="playlist"
                          [dateRange]="_dateRange"
                          [selectedTimeUnit]="_timeUnit"
                          [creationDate]="_creationDate"
@@ -54,7 +56,7 @@
       </a>
     </div>
 
-    <app-refine-filter name="engagement"
+    <app-refine-filter name="engagement" feature="playlist"
                        [viewConfig]="_viewConfig.refineFilter"
                        [opened]="_refineFilterOpened"
                        [dateFilter]="_dateFilter"

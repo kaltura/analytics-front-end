@@ -3,6 +3,7 @@
     <span class="kTitle">{{'app.audience.geo.title' | translate}}</span>
     <app-export-csv *ngIf="_geoViewConfig.export"
                     name="Geo Location"
+                    feature="geo-location"
                     [reports]="_exportConfig"
                     [refineFilter]="_refineFilter"
                     [dateFilter]="_dateFilter"></app-export-csv>
@@ -17,6 +18,7 @@
     </div>
 
     <app-date-filter name="geo"
+                     feature="geo-location"
                      [dateRange]="_dateRange"
                      [dateRangeType]="_dateRangeType"
                      [showCompare]="false"
@@ -25,6 +27,7 @@
 
   <div class="kReportContainer kNoPadding">
     <app-geo-filter [viewConfig]="_geoViewConfig.refineFilter"
+                    feature="geo-location"
                     [opened]="_refineFilterOpened"
                     [dateFilter]="_dateFilter"
                     [selectedFilters]="_selectedRefineFilters"

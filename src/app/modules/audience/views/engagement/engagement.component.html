@@ -10,6 +10,7 @@
                         (postExport)="postExportHandler()" (exporting)="onExporting($event)"></app-pdf-export>
         <app-export-csv *ngIf="_engagementViewConfig.export"
                         name="Engagement"
+                        feature="engagement"
                         [width]="290"
                         [reports]="_exportConfig"
                         [refineFilter]="_refineFilter"
@@ -23,6 +24,7 @@
         </div>
         <app-date-filter #dateFilter [exporting]="_exporting"
                          name="engagement"
+                         feature="engagement"
                          [dateRange]="_dateRange"
                          [selectedTimeUnit]="_timeUnit"
                          (filterChange)="_onDateFilterChange($event)"></app-date-filter>
@@ -30,6 +32,7 @@
 
       <div class="kReportContainer kNoPadding">
         <app-refine-filter name="engagement" #refineFilter
+                           feature="engagement"
                            [viewConfig]="_engagementViewConfig.refineFilter"
                            [exporting]="_exporting"
                            [opened]="_refineFilterOpened"

@@ -3,7 +3,7 @@ import {OverviewDateRange} from "./overview-date-range.type";
 import {DateFilterUtils} from "shared/components/date-filter/date-filter-utils";
 import {TranslateService} from "@ngx-translate/core";
 import {KalturaReportInterval} from "kaltura-ngx-client";
-import {AppAnalytics, AuthService} from "shared/services";
+import {AppAnalytics, AuthService, ButtonType} from "shared/services";
 import {SelectItem} from "primeng/api";
 import {analyticsConfig} from "configuration/analytics-config";
 
@@ -89,9 +89,9 @@ export class OverviewDateFilterComponent implements OnInit {
     }
 
     // quarterly date range logic
-    const quarterMonths = [1,4,7,10];
+    const quarterMonths = [1, 4, 7, 10];
     let quarterMonth = quarterMonths.find(month => month <= currentMonth && (currentMonth - month) < 3);
-    const quarterIndex = Math.floor((quarterMonth -1) / 3) + 1;
+    const quarterIndex = Math.floor((quarterMonth - 1) / 3) + 1;
     this.quarterlyDateRangeItems = [{
       key: 'quarter-0',
       label: this._translate.instant('app.dateFilter.currentQuarter'),
@@ -149,7 +149,7 @@ export class OverviewDateFilterComponent implements OnInit {
           key: `month-${i}`,
           label: `${monthName} ${year}`,
           startDate: DateFilterUtils.toServerDate(new Date(`${year}-${getMonthString(month)}-${dayStr}`), true),
-          endDate: DateFilterUtils.toServerDate(new Date(year,month,0), false),
+          endDate: DateFilterUtils.toServerDate(new Date(year, month, 0), false),
           interval: KalturaReportInterval.months,
           isSpecific: false
         });
@@ -158,8 +158,9 @@ export class OverviewDateFilterComponent implements OnInit {
   }
 
   public apply(): void {
-    this._analytics.trackClickEvent('Calendar');
     this.updateDataRanges();
+    let value = this.selectedView === 'preset' ? this.selectedDateRange.label + '|compare_off' : 'specific|compare_off';
+    this._analytics.trackButtonClickEvent(ButtonType.Filter, 'Calendar', value, 'usage_overview');
   }
 
   updateDataRanges() {

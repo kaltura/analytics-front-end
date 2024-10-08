@@ -3,6 +3,7 @@
     <span class="kTitle">{{'app.contributors.title' | translate}}</span>
     <app-export-csv *ngIf="_contributorsViewConfig.export"
                     name="Top Contributors"
+                    feature="contributors"
                     [reports]="_exportConfig"
                     [refineFilter]="_refineFilter"
                     [dateFilter]="_dateFilter"></app-export-csv>
@@ -16,13 +17,14 @@
     </div>
     <app-date-filter #dateFilter
                      name="contributors"
+                     feature="contributors"
                      [dateRange]="_dateRange"
                      [selectedTimeUnit]="_timeUnit"
                      (filterChange)="_onDateFilterChange($event)"></app-date-filter>
   </div>
 
   <div class="kReportContainer kNoPadding">
-    <app-contributors-filter name="contributors"
+    <app-contributors-filter name="contributors" feature="contributors"
                        [viewConfig]="_contributorsViewConfig.refineFilter"
                        [opened]="_refineFilterOpened"
                        [dateFilter]="_dateFilter"
