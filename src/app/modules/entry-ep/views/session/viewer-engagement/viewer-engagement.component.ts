@@ -37,6 +37,7 @@ export class EpViewerEngagementComponent implements OnInit {
   @Input() actualStartDate: Date; // session actual start date
   @Input() endDate: Date;
   @Input() duration = 0;
+  @Input() isVirtualClassroom: boolean;
 
   private _order = '-live_view_time';
   public _sortField = 'live_view_time';
@@ -144,7 +145,12 @@ export class EpViewerEngagementComponent implements OnInit {
   public _onPaginationChanged(event: any): void {
     if (event.page !== (this._pager.pageIndex - 1)) {
       this._pager.pageIndex = event.page + 1;
-      this._analytics.trackButtonClickEvent(ButtonType.Navigate, 'Events_session_paginate_users');
+      if (this.isVirtualClassroom) {
+        this._analytics.trackButtonClickEvent(ButtonType.Navigate, 'VC_session_paginate_users', null, 'VC_session_dashboard');
+      } else {
+        this._analytics.trackButtonClickEvent(ButtonType.Navigate, 'Events_session_paginate_users');
+      }
+
       this._loadReport({ table: this._dataConfig[ReportDataSection.table] });
     }
   }
@@ -163,7 +169,12 @@ export class EpViewerEngagementComponent implements OnInit {
           'combined_live_engaged_users_play_time_ratio': 'engagement'
 
         };
-        this._analytics.trackButtonClickEvent(ButtonType.Filter, 'Events_session_users_sort', trackEventValues[event.field]);
+        if (this.isVirtualClassroom) {
+          this._analytics.trackButtonClickEvent(ButtonType.Filter, 'Events_session_users_sort', trackEventValues[event.field], 'VC_session_dashboard');
+        } else {
+          this._analytics.trackButtonClickEvent(ButtonType.Filter, 'Events_session_users_sort', trackEventValues[event.field]);
+        }
+
         this._loadReport({ table: this._dataConfig[ReportDataSection.table] });
       }
     }
@@ -187,6 +198,10 @@ export class EpViewerEngagementComponent implements OnInit {
   }
 
   public onRowExpanded(): void {
-    this._analytics.trackButtonClickEvent(ButtonType.Expand, 'Events_session_expand_user');
+    if (this.isVirtualClassroom) {
+      this._analytics.trackButtonClickEvent(ButtonType.Expand, 'VC_session_expand_user', null, 'VC_session_dashboard');
+    } else {
+      this._analytics.trackButtonClickEvent(ButtonType.Expand, 'Events_session_expand_user');
+    }
   }
 }

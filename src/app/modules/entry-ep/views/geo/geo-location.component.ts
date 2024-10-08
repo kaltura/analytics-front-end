@@ -118,15 +118,27 @@ export class EpGeoComponent implements OnInit, OnDestroy {
     switch (mode) {
       case GeoTableModes.cities:
         reportType = reportTypeMap(KalturaReportType.epWebcastMapOverlayCity);
-        this._analytics.trackButtonClickEvent(ButtonType.Choose, 'Events_session_countries_dropdown', 'cities');
+        if (this.isVirtualClassroom) {
+          this._analytics.trackButtonClickEvent(ButtonType.Choose, 'VC_session_countries_dropdown', 'cities', 'VC_session_dashboard');
+        } else {
+          this._analytics.trackButtonClickEvent(ButtonType.Choose, 'Events_session_countries_dropdown', 'cities');
+        }
         break;
       case GeoTableModes.regions:
         reportType = reportTypeMap(KalturaReportType.epWebcastMapOverlayRegion);
-        this._analytics.trackButtonClickEvent(ButtonType.Choose, 'Events_session_countries_dropdown', 'regions');
+        if (this.isVirtualClassroom) {
+          this._analytics.trackButtonClickEvent(ButtonType.Choose, 'VC_session_countries_dropdown', 'regions', 'VC_session_dashboard');
+        } else {
+          this._analytics.trackButtonClickEvent(ButtonType.Choose, 'Events_session_countries_dropdown', 'regions');
+        }
         break;
       case GeoTableModes.countries:
         reportType = reportTypeMap(KalturaReportType.epWebcastMapOverlayCountry);
-        this._analytics.trackButtonClickEvent(ButtonType.Choose, 'Events_session_countries_dropdown', 'countries');
+        if (this.isVirtualClassroom) {
+          this._analytics.trackButtonClickEvent(ButtonType.Choose, 'VC_session_countries_dropdown', 'countries', 'VC_session_dashboard');
+        } else {
+          this._analytics.trackButtonClickEvent(ButtonType.Choose, 'Events_session_countries_dropdown', 'countries');
+        }
         break;
       default:
         reportType = null;
@@ -149,13 +161,25 @@ export class EpGeoComponent implements OnInit, OnDestroy {
   public onPaginationChanges(event): void {
     switch (this._tableMode) {
       case GeoTableModes.countries:
-        this._analytics.trackButtonClickEvent(ButtonType.Navigate, 'Events_session_countries_paginate', 'countries');
+        if (this.isVirtualClassroom) {
+          this._analytics.trackButtonClickEvent(ButtonType.Navigate, 'VC_session_countries_paginate', 'countries', 'VC_session_dashboard');
+        } else {
+          this._analytics.trackButtonClickEvent(ButtonType.Navigate, 'Events_session_countries_paginate', 'countries');
+        }
         break;
       case GeoTableModes.regions:
-        this._analytics.trackButtonClickEvent(ButtonType.Navigate, 'Events_session_countries_paginate', 'regions');
+        if (this.isVirtualClassroom) {
+          this._analytics.trackButtonClickEvent(ButtonType.Navigate, 'VC_session_countries_paginate', 'regions', 'VC_session_dashboard');
+        } else {
+          this._analytics.trackButtonClickEvent(ButtonType.Navigate, 'Events_session_countries_paginate', 'regions');
+        }
         break;
       case GeoTableModes.cities:
-        this._analytics.trackButtonClickEvent(ButtonType.Navigate, 'Events_session_countries_paginate', 'cities');
+        if (this.isVirtualClassroom) {
+          this._analytics.trackButtonClickEvent(ButtonType.Navigate, 'VC_session_countries_paginate', 'cities', 'VC_session_dashboard');
+        } else {
+          this._analytics.trackButtonClickEvent(ButtonType.Navigate, 'Events_session_countries_paginate', 'cities');
+        }
         break;
     }
   }
@@ -210,7 +234,12 @@ export class EpGeoComponent implements OnInit, OnDestroy {
           this._currentTableLevel = GeoTableModes.regions;
           this._drillDown = [getCountryName(drillDown, true)];
           this._reportType = reportTypeMap(KalturaReportType.epWebcastMapOverlayRegion);
-          this._analytics.trackButtonClickEvent(ButtonType.Browse, 'Events_session_countries_click_country');
+          if (this.isVirtualClassroom) {
+            this._analytics.trackButtonClickEvent(ButtonType.Browse, 'VC_session_countries_click_country', null, 'VC_session_dashboard');
+          } else {
+            this._analytics.trackButtonClickEvent(ButtonType.Browse, 'Events_session_countries_click_country');
+          }
+
         } else if (this._drillDown.length === 1) {
           this._currentTableLevel = GeoTableModes.cities;
           this._drillDown.push(getCountryName(drillDown, true));
