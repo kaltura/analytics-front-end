@@ -46,7 +46,9 @@
         "Webcasting": "Webcasting",
         "Kaltura Capture": "Capture",
         "Classroom Capture": "Classroom",
-        "Kaltura Webcast": "Kaltura Webcast"
+        "Kaltura Webcast": "Kaltura Webcast",
+        "Teams Entry": "Teams",
+        "Zoom": "Zoom"
       },
       "selectCategories": "Select Categories",
       "tags": "Tags",

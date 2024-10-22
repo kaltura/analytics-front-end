@@ -206,11 +206,13 @@ export class FilterComponent {
     { value: ['all'], label: 'app.filters.playbackType.all' }
   ];
 
-  public _entrySources: OptionItem[] = [ // TODO determine valid values
+  public _entrySources: OptionItem[] = [
     { value: 'Upload', label: 'app.filters.entrySources.Upload' },
     { value: 'Kaltura Webcast', label: 'app.filters.entrySources.Webcasting' },
     { value: 'Kaltura Capture', label: 'app.filters.entrySources.Kaltura Capture' },
     { value: 'Classroom Capture', label: 'app.filters.entrySources.Classroom Capture' },
+    { value: 'Teams Entry', label: 'app.filters.entrySources.Teams Entry' },
+    { value: 'Zoom', label: 'app.filters.entrySources.Zoom' }
   ];
 
   protected _clearSelectedValues(): void {
