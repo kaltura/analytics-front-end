@@ -212,7 +212,8 @@ export class FilterComponent {
     { value: 'Kaltura Capture', label: 'app.filters.entrySources.Kaltura Capture' },
     { value: 'Classroom Capture', label: 'app.filters.entrySources.Classroom Capture' },
     { value: 'Teams Entry', label: 'app.filters.entrySources.Teams Entry' },
-    { value: 'Zoom', label: 'app.filters.entrySources.Zoom' }
+    { value: 'Zoom', label: 'app.filters.entrySources.Zoom' },
+    { value: 'Kaltura Meeting', label: 'app.filters.entrySources.Kaltura Meeting' }
   ];
 
   protected _clearSelectedValues(): void {
