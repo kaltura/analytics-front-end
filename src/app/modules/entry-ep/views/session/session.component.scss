@@ -11,11 +11,13 @@
       display: none !important;
     }
     .playkit-right-controls {
+      width: 100%;
       .playkit-control-settings, .playkit-control-picture-in-picture, .playkit-control-fullscreen {
         display: none !important;
       }
       .playkit-volume-control {
         padding-bottom: 8px;
+        margin-left: auto;
       }
     }
   }
