@@ -317,6 +317,12 @@ export class AppService implements OnDestroy {
         this._router.navigateByUrl(mapRoutes(url, null, null));
       }
     };
+    const refresh = () => {
+      // refresh current route to invoke data reloading using the new multi account settings
+      this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+        this._router.navigate([decodeURI(this._location.path())]).then(() => {});
+      });
+    };
 
     if (this._permissionsService.hasPermission(AnalyticsPermissions.FEATURE_MULTI_ACCOUNT_ANALYTICS)) {
       analyticsConfig.multiAccount = showMultiAccount;
@@ -326,7 +332,7 @@ export class AppService implements OnDestroy {
 
     if (needToReload) {
       if (showMultiAccount) {
-        navigate('/analytics/engagement');
+        refresh();
       } else {
         // go to the default page when switching to parent account
         const currentUrl = this._router.routerState.snapshot.url;
@@ -335,7 +341,7 @@ export class AppService implements OnDestroy {
         } else if (currentUrl.includes('user')) {
           navigate('/analytics/contributors');
         } else {
-          navigate('/analytics/engagement');
+          refresh();
         }
       }
     }
