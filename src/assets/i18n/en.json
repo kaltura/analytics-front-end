@@ -586,6 +586,8 @@
         "count_reaction_clicked": "Reactions",
         "count_raise_hand_clicked": "Raised hands",
         "combined_live_engaged_users_play_time_ratio": "Live engagement rate",
+        "people": "People",
+        "search": "Search people",
         "heatMap": {
           "engaged": "Engaged",
           "notEngaged": "Not Engaged",
