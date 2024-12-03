@@ -319,7 +319,12 @@ export class AppService implements OnDestroy {
     };
     const refresh = () => {
       // refresh current route to invoke data reloading using the new multi account settings
-      navigate('/analytics/engagement');
+      const currentUrl = this._router.routerState.snapshot.url;
+      if (!currentUrl.includes('engagement')) {
+        navigate('/analytics/engagement');
+      } else {
+        navigate('/analytics/engagement?dateBy=last30days');
+      }
     };
 
     if (this._permissionsService.hasPermission(AnalyticsPermissions.FEATURE_MULTI_ACCOUNT_ANALYTICS)) {
