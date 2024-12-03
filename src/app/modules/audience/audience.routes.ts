@@ -9,6 +9,7 @@ import { ContentInteractionsComponent } from './views/content-interactions/conte
 export const routing: Route[] = [
   {
     path: '', component: AudienceComponent,
+    runGuardsAndResolvers: 'always',
     children: [
       { path: '', redirectTo: 'engagement', pathMatch: 'full' },
       { path: 'technology', component: TechnologyComponent },
