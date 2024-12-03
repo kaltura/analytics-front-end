@@ -319,9 +319,7 @@ export class AppService implements OnDestroy {
     };
     const refresh = () => {
       // refresh current route to invoke data reloading using the new multi account settings
-      this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-        this._router.navigate([decodeURI(this._location.path())]).then(() => {});
-      });
+      navigate('/audience');
     };
 
     if (this._permissionsService.hasPermission(AnalyticsPermissions.FEATURE_MULTI_ACCOUNT_ANALYTICS)) {
