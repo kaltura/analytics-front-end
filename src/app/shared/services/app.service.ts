@@ -319,12 +319,12 @@ export class AppService implements OnDestroy {
     };
     const refresh = () => {
       // refresh current route to invoke data reloading using the new multi account settings
-      const currentUrl = this._router.routerState.snapshot.url;
-      if (!currentUrl.includes('engagement')) {
-        navigate('/analytics/engagement');
-      } else {
-        navigate('/analytics/engagement?dateBy=last30days');
-      }
+      const url = this._router.url;
+      this._router.navigateByUrl('/',{skipLocationChange: true}).then(() => {
+        this._router.navigate([`/${url}`]).then(() => {
+          console.log(`After navigation I am on:${this._router.url}`);
+        });
+      });
     };
 
     if (this._permissionsService.hasPermission(AnalyticsPermissions.FEATURE_MULTI_ACCOUNT_ANALYTICS)) {
