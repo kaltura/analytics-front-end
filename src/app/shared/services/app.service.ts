@@ -322,7 +322,6 @@ export class AppService implements OnDestroy {
       const url = this._router.url;
       this._router.navigateByUrl('/',{skipLocationChange: true}).then(() => {
         this._router.navigate([`/${url}`]).then(() => {
-          console.log(`After navigation I am on:${this._router.url}`);
         });
       });
     };
