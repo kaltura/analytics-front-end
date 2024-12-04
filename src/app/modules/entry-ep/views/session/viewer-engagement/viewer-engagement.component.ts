@@ -1,6 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
+import {KalturaClient, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType, KalturaUserFilter, UserListAction} from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import {AppAnalytics, AuthService, ButtonType, ErrorsManagerService, NavigationDrillDownService, ReportConfig, ReportService} from 'shared/services';
 import { switchMap } from 'rxjs/operators';
@@ -19,6 +19,7 @@ import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils
 import { ExportItem } from "shared/components/export-csv/export-config-base.service";
 import { ExportConfig } from "./export.config";
 import { analyticsConfig } from "configuration/analytics-config";
+import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
 
 @Component({
   selector: 'app-ep-viewer-engagement',
@@ -31,7 +32,7 @@ import { analyticsConfig } from "configuration/analytics-config";
     ExportConfig
   ]
 })
-export class EpViewerEngagementComponent implements OnInit {
+export class EpViewerEngagementComponent implements OnInit, OnDestroy {
   @Input() entryIdIn = '';
   @Input() startDate: Date;
   @Input() actualStartDate: Date; // session actual start date
@@ -61,9 +62,12 @@ export class EpViewerEngagementComponent implements OnInit {
     searchInAdminTags: false
   });
 
+  public _peopleSearch = '';
+
   constructor(private _frameEventManager: FrameEventManagerService,
               private _reportService: ReportService,
               private _analytics: AppAnalytics,
+              private _kalturaClient: KalturaClient,
               private _errorsManager: ErrorsManagerService,
               _dataConfigService: ViewerEngagementConfig,
               private _authService: AuthService,
@@ -83,11 +87,11 @@ export class EpViewerEngagementComponent implements OnInit {
       endDay: null,
       startDay: null,
       compare: null
-    }
+    };
     this._loadReport();
   }
 
-  private _loadReport(sections = this._dataConfig): void {
+  private _loadReport(sections = this._dataConfig, userIds = ''): void {
     this._isBusy = true;
     this._blockerMessage = null;
 
@@ -96,11 +100,17 @@ export class EpViewerEngagementComponent implements OnInit {
     this._filter.fromDate = Math.floor(this.startDate.getTime() / 1000);
     this._filter.toDate = Math.floor(this.endDate.getTime() / 1000);
     this._filter.interval = KalturaReportInterval.days;
+    if (userIds.length > 0) {
+      this._filter.userIds = userIds;
+    } else {
+      delete this._filter.userIds;
+    }
+
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
 
     this._reportService.getReport(reportConfig, sections)
       .pipe(switchMap(report => {
-        return ObservableOf({ report, compare: null })
+        return ObservableOf({ report, compare: null });
       }))
       .subscribe(({ report, compare }) => {
           this._tableData = [];
@@ -204,4 +214,41 @@ export class EpViewerEngagementComponent implements OnInit {
       this._analytics.trackButtonClickEvent(ButtonType.Expand, 'Events_session_expand_user');
     }
   }
+
+  public _onSearch(): void {
+    if (this._peopleSearch.length) {
+      this._isBusy = true;
+      this._kalturaClient.request(new UserListAction({
+        pager: new KalturaFilterPager({pageSize: 500, pageIndex: 0}),
+        filter: new KalturaUserFilter({
+          firstNameOrLastNameStartsWith: this._peopleSearch
+        })
+      }))
+        .pipe(cancelOnDestroy(this))
+        .subscribe(response => {
+            if (response?.objects?.length) {
+              const userIds = response.objects.map(user => user.id).join(analyticsConfig.valueSeparator);
+              this._loadReport({ table: this._dataConfig[ReportDataSection.table] }, userIds);
+            } else {
+              this._loadReport({ table: this._dataConfig[ReportDataSection.table] }, this._peopleSearch + Math.random()); // make sure no users will be found
+            }
+          },
+          error => {
+            this._isBusy = false;
+            const actions = {
+              'close': () => {
+                this._blockerMessage = null;
+              },
+              'retry': () => {
+                this._onSearch();
+              },
+            };
+            this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
+          });
+    } else {
+      this._loadReport();
+    }
+  }
+
+  ngOnDestroy(): void {}
 }
