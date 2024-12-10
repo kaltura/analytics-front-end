@@ -91,15 +91,129 @@
     font-weight: 400;
   }
 }
+.userInfo {
+  padding: 16px;
+  width: 294px;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  .header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    .kUser {
+      cursor: pointer;
+      width: 80px;
+      height: 80px;
+      border-radius: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(49,190,166,0.2);
+      margin-right: 8px;
+      flex: 0 0 auto;
+      i {
+        display: inline-block;
+        font-size: 48px;
+        color: #31BEA6;
+      }
+    }
+  }
+  .content {
+    display: flex;
+    flex-direction: column;
+    .name {
+      color: $kGrayscale1;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .title {
+      color: $kGrayscale3;
+      font-size: 14px;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+    .label {
+      color: $kGrayscale2;
+      font-size: 14px;
+      font-weight: 700;
+      margin-right: 4px;
+    }
+    .value {
+      color: $kGrayscale1;
+      font-size: 14px;
+      font-weight: 700;
+    }
+  }
+}
+:host ::ng-deep .heatmap {
+  display: flex;
+  flex-direction: column;
+  height: 96px;
+  .moreInfo {
+    height: 48px;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    padding-left: 56px;
+    .kMiniIcon {
+      flex: 0 0 auto;
+      width: 24px;
+      height: 24px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      &.blue {
+        background-color: rgba(72, 122, 223, 0.2);
+        color: #487ADF;
+      }
+      i {
+        padding-bottom: 2px;
+        &:before {
+          font-size: 14px;
+        }
+      }
+    }
+    .value {
+      color: $kGrayscale1;
+      font-size: 18px;
+      font-weight: 700;
+      margin-left: 8px;
+      margin-right: 4px;
+    }
+    .label {
+      color: $kGrayscale2;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .separator {
+      width: 1px;
+      height: 24px;
+      margin-left: 32px;
+      margin-right: 32px;
+      background-color: $kGrayscale5;
+    }
+  }
+}
 :host ::ng-deep .kRowExpansion {
   padding: 0 !important;
   text-align: center;
+  height: 96px !important;
 }
 
 :host ::ng-deep .p-autocomplete-input-token input:focus {
   outline: 5px auto rgba(0, 150, 255, 1) !important;
 }
-
+:host ::ng-deep p-table .p-datatable-tbody > tr.heatmapRow:hover {
+  background-color: white;
+}
 .kHighContrast :host {
   th, td {
     color: $kGrayscale1;
