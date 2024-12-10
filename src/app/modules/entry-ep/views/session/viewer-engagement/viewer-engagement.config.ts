@@ -30,13 +30,49 @@ export class ViewerEngagementConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 3
           },
-          'count_raise_hand_clicked': {
+          'count_group_chat_messages_sent': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 4
           },
+          'count_poll_answered': {
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 5
+          },
           'combined_live_engaged_users_play_time_ratio': {
             format: value => ReportHelper.percents(value, false, true),
-            sortOrder: 5
+            sortOrder: 8
+          },
+          'title': {
+            format: value => value,
+            hidden: true,
+          },
+          'company': {
+            format: value => value,
+            hidden: true,
+          },
+          'country': {
+            format: value => value,
+            hidden: true,
+          },
+          'role': {
+            format: value => value,
+            hidden: true,
+          },
+          'industry': {
+            format: value => value,
+            hidden: true,
+          },
+          'count_raise_hand_clicked': {
+            format: value => ReportHelper.numberOrZero(value),
+            hidden: true,
+          },
+          'count_q_and_a_threads': {
+            format: value => ReportHelper.numberOrZero(value),
+            hidden: true,
+          },
+          'count_download_attachment_clicked': {
+            format: value => ReportHelper.numberOrZero(value),
+            hidden: true,
           }
         }
       },
@@ -45,16 +81,24 @@ export class ViewerEngagementConfig extends ReportDataBaseConfig {
         preSelected: 'live_view_time',
         fields: {
           'live_view_time': {
-            format: value => ReportHelper.numberOrZero(value)
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 1
           },
          'count_reaction_clicked': {
-            format: value => ReportHelper.numberOrZero(value)
+            format: value => ReportHelper.numberOrZero(value),
+           sortOrder: 2
           },
-          'count_raise_hand_clicked': {
-            format: value => ReportHelper.numberOrZero(value)
+          'count_group_chat_messages_sent': {
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 3
+          },
+          'count_poll_answered': {
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 4
           },
           'combined_live_engaged_users_play_time_ratio': {
             format: value => ReportHelper.percents(value, false, true),
+            sortOrder: 5
           }
         }
       }

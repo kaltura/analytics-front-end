@@ -45,7 +45,7 @@
               </th>
             </tr>
 
-            <tr *ngIf="_tableData?.length" class="kSummaryRow">
+            <tr *ngIf="_tabsData?.length" class="kSummaryRow">
               <td [ngStyle]="{'width':'40px'}">
               <th [ngStyle]="{'width': '30%'}">
                 <span>{{'app.playlist.summary' | translate}}</span>
@@ -67,7 +67,10 @@
               </td>
               <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0" [ngStyle]="{'paddingRight': col === 'combined_live_engaged_users_play_time_ratio' ? '24px' : '0px'}">
                 <ng-container>
-                  <span *ngIf="col !== 'combined_live_engaged_users_play_time_ratio'">{{data[col]}}</span>
+                  <span *ngIf="col !== 'combined_live_engaged_users_play_time_ratio'"
+                        (mouseleave)="_hideOverlay()"
+                        (mouseenter)="_showOverlay($event, data)"
+                  >{{data[col]}}</span>
                   <app-bullet *ngIf="col === 'combined_live_engaged_users_play_time_ratio'" colorScheme="dropoff" [value]="data[col]"></app-bullet>
                 </ng-container>
               </td>
@@ -80,14 +83,37 @@
             </div>
           </ng-template>
           <ng-template let-data let-index="rowIndex" pTemplate="rowexpansion">
-            <tr>
+            <tr class="heatmapRow">
               <td [attr.colspan]="_columns.length + 1" class="kRowExpansion">
-                <ep-heat-map [attr.data-aid]="'heat-map-' + index"
-                              [userId]="data['user_id']"
-                              [entryId]="entryIdIn"
-                              [duration]="duration"
-                              [actualStartDate]="actualStartDate"
-                              [filter]="_filter"></ep-heat-map>
+                <div class="heatmap">
+                  <ep-heat-map [attr.data-aid]="'heat-map-' + index"
+                               [userId]="data['user_id']"
+                               [entryId]="entryIdIn"
+                               [duration]="duration"
+                               [actualStartDate]="actualStartDate"
+                               [filter]="_filter"></ep-heat-map>
+                  <div class="moreInfo">
+                    <div class="kMiniIcon blue"><i class="icon-ic_questions"></i></div>
+                    <span class="value">{{data['count_q_and_a_threads']}}</span>
+                    <span class="label">{{'app.entryEp.session.count_q_and_a_threads' | translate}}</span>
+
+                    <div class="separator"></div>
+
+                    <div class="kMiniIcon blue"><i class="icon-download"></i></div>
+                    <span class="value">{{data['count_download_attachment_clicked']}}</span>
+                    <span class="label">{{'app.entryEp.session.count_download_attachment_clicked' | translate}}</span>
+
+                    <div class="separator"></div>
+
+                    <div class="kMiniIcon blue">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                        <path d="M3.58654 3.52583C3.40726 3.2985 3.45119 2.97542 3.68467 2.80421C3.91814 2.633 4.25275 2.6785 4.43204 2.90583L7.19134 6.40462C7.28098 6.51828 7.44829 6.54103 7.56503 6.45543C7.68177 6.36982 7.70373 6.20828 7.61409 6.09462L5.50403 3.41908C5.32475 3.19174 5.36868 2.86866 5.60215 2.69746C5.83563 2.52625 6.17024 2.57175 6.34952 2.79908L9.33607 6.586L8.9523 5.18828C8.87661 4.91258 9.04586 4.63185 9.33033 4.56125C9.6148 4.49065 9.90677 4.65691 9.98247 4.9326C10.5524 7.00843 11.9392 9.74455 9.7544 11.3466C8.35355 12.3739 6.3459 12.1009 5.27019 10.7369L2.34857 7.03231C2.16928 6.80498 2.21321 6.4819 2.44669 6.31069C2.68017 6.13948 3.01477 6.18498 3.19406 6.41231L4.65487 8.26461C4.74451 8.37828 4.91182 8.40102 5.02855 8.31542C5.14529 8.22982 5.16726 8.06828 5.07761 7.95461L2.96756 5.27907C2.78827 5.05174 2.8322 4.72866 3.06568 4.55745C3.29915 4.38624 3.63376 4.43174 3.81305 4.65907L5.67964 7.0259C5.76928 7.13956 5.93658 7.16231 6.05332 7.07671C6.17006 6.9911 6.19202 6.82956 6.10238 6.7159L3.58654 3.52583Z" fill="#487ADF"/>
+                      </svg>
+                    </div>
+                    <span class="value">{{data['count_raise_hand_clicked']}}</span>
+                    <span class="label">{{'app.entryEp.session.count_raise_hand_clicked' | translate}}</span>
+                  </div>
+                </div>
               </td>
             </tr>
           </ng-template>
@@ -103,3 +129,35 @@
   </div>
 
 </div>
+
+<p-overlayPanel [showTransitionOptions]="'250ms'" [hideTransitionOptions]="'0ms'" #overlay appendTo="body">
+  <ng-template pTemplate>
+    <div class="userInfo">
+      <div class="header">
+        <div class="kUser">
+          <i class="icon-small-viewer-contributor"></i>
+        </div>
+        <div class="content">
+          <span class="name">{{_userData['user_name']}}</span>
+          <span *ngIf="_userData['title']" class="title">{{_userData['title']}}</span>
+        </div>
+      </div>
+      <div class="row" *ngIf="_userData['role']">
+        <span class="label">{{'app.entryEp.session.role' | translate}}</span>
+        <span class="value">{{_userData['role']}}</span>
+      </div>
+      <div class="row" *ngIf="_userData['company']">
+        <span class="label">{{'app.entryEp.session.company' | translate}}</span>
+        <span class="value">{{_userData['company']}}</span>
+      </div>
+      <div class="row" *ngIf="_userData['industry']">
+        <span class="label">{{'app.entryEp.session.industry' | translate}}</span>
+        <span class="value">{{_userData['industry']}}</span>
+      </div>
+      <div class="row" *ngIf="_userData['country']">
+        <span class="label">{{'app.entryEp.session.country' | translate}}</span>
+        <span class="value">{{_userData['country']}}</span>
+      </div>
+    </div>
+  </ng-template>
+</p-overlayPanel>
