@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import {KalturaClient, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType, KalturaUserFilter, UserListAction} from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
@@ -20,6 +20,7 @@ import { ExportItem } from "shared/components/export-csv/export-config-base.serv
 import { ExportConfig } from "./export.config";
 import { analyticsConfig } from "configuration/analytics-config";
 import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
+import {OverlayPanel} from "primeng/overlaypanel";
 
 @Component({
   selector: 'app-ep-viewer-engagement',
@@ -33,6 +34,7 @@ import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
   ]
 })
 export class EpViewerEngagementComponent implements OnInit, OnDestroy {
+  @ViewChild('overlay') _overlay: OverlayPanel;
   @Input() entryIdIn = '';
   @Input() startDate: Date;
   @Input() actualStartDate: Date; // session actual start date
@@ -61,6 +63,7 @@ export class EpViewerEngagementComponent implements OnInit, OnDestroy {
     searchInTags: true,
     searchInAdminTags: false
   });
+  public _userData: any = null;
 
   public _peopleSearch = '';
 
@@ -247,6 +250,20 @@ export class EpViewerEngagementComponent implements OnInit, OnDestroy {
           });
     } else {
       this._loadReport();
+    }
+  }
+
+  public _showOverlay(event: any, data: any): void {
+    if (this._overlay && !analyticsConfig.multiAccount) {
+      this._userData = data;
+      this._overlay.show(event);
+    }
+  }
+
+  public _hideOverlay(): void {
+    if (this._overlay && !analyticsConfig.multiAccount) {
+      this._overlay.hide();
+      this._userData = null;
     }
   }
 
