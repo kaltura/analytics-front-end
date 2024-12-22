@@ -224,10 +224,10 @@ export class AppAnalytics {
           kalturaApplicationVer: analyticsConfig.appVersion
         });
         if (analyticsConfig.hostAppName) {
-          payload['application'] = analyticsConfig.hostAppName;
+          payload['hostingKalturaApplication'] = analyticsConfig.hostAppName;
         }
         if (analyticsConfig.hostAppVersion) {
-          payload['applicationVer'] = analyticsConfig.hostAppVersion;
+          payload['hostingKalturaApplicationVer'] = analyticsConfig.hostAppVersion;
         }
         if (feature) {
           Object.assign(payload, { feature });
