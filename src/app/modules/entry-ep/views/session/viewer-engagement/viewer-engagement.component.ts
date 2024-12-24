@@ -94,7 +94,7 @@ export class EpViewerEngagementComponent implements OnInit, OnDestroy {
     this._loadReport();
   }
 
-  private _loadReport(sections = this._dataConfig, userIds = ''): void {
+  public _loadReport(sections = this._dataConfig, userIds = ''): void {
     this._isBusy = true;
     this._blockerMessage = null;
 
@@ -219,7 +219,7 @@ export class EpViewerEngagementComponent implements OnInit, OnDestroy {
   }
 
   public _onSearch(): void {
-    if (this._peopleSearch.length) {
+    if (this._peopleSearch.length > 2) {
       this._isBusy = true;
       this._kalturaClient.request(new UserListAction({
         pager: new KalturaFilterPager({pageSize: 500, pageIndex: 0}),
@@ -248,8 +248,6 @@ export class EpViewerEngagementComponent implements OnInit, OnDestroy {
             };
             this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
           });
-    } else {
-      this._loadReport();
     }
   }
 
