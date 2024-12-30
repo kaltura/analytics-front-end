@@ -43,7 +43,7 @@ fse.emptyDirSync(path.resolve(packageRoot, 'dist'));
 const configFileName = "src/configuration/analytics-config.ts";
 const configFilePath = path.resolve(packageRoot, configFileName);
 let configData = fs.readFileSync(configFilePath, 'utf8');
-const regex = /appVersion: '\d\.\d\.\d'/;
+const regex = /appVersion: '\d\.\d\.\dd'/;
 configData = configData.replace(regex, `appVersion: '${versionNumber}'`);
 
 fs.writeFileSync(configFilePath, configData, 'utf-8');
