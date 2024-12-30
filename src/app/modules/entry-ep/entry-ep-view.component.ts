@@ -3,16 +3,16 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {
   BaseEntryGetAction, CuePointListAction,
   KalturaAPIException,
-  KalturaClient, KalturaCuePointFilter, KalturaCuePointListResponse,
+  KalturaClient, KalturaCuePointListResponse,
   KalturaEntryScheduleEventFilter,
   KalturaLiveEntry,
-  KalturaMeetingScheduleEvent,
   KalturaMultiRequest,
   KalturaMultiResponse,
   KalturaReportInterval, KalturaRoomEntry,
   KalturaScheduleEventListResponse,
   ScheduleEventListAction,
   KalturaCuePointType,
+  KalturaSessionCuePointFilter,
   KalturaSessionCuePoint, KalturaLiveStreamScheduleEvent
 } from 'kaltura-ngx-client';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
@@ -112,7 +112,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
       this._eventStartDate.setSeconds(0); // round down seconds
     }
     this._eventEndDate = new Date(endDate * 1000);
-  };
+  }
 
   private _loadEventDetails(): void {
     this._loadingEntry = true;
@@ -121,7 +121,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
     const request = new KalturaMultiRequest(
         new BaseEntryGetAction({ entryId: this._entryId }),
         new ScheduleEventListAction({filter: new KalturaEntryScheduleEventFilter({templateEntryIdEqual: this._entryId})}),
-        new CuePointListAction({filter: new KalturaCuePointFilter({orderBy: '-startTime', cuePointTypeEqual: KalturaCuePointType.session, entryIdEqual: this._entryId})})
+        new CuePointListAction({filter: new KalturaSessionCuePointFilter({orderBy: '-startTime', cuePointTypeEqual: KalturaCuePointType.session, entryIdEqual: this._entryId, endTimeLessThanOrEqual: this._now.getTime() / 1000})})
       );
 
     this._kalturaClient

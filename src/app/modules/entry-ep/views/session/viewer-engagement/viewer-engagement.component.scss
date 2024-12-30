@@ -97,6 +97,7 @@
 }
 .userInfo {
   padding: 16px;
+  box-sizing: border-box;
   width: 294px;
   display: flex;
   flex-direction: column;
@@ -152,6 +153,8 @@
       color: $kGrayscale1;
       font-size: 14px;
       font-weight: 700;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 }
