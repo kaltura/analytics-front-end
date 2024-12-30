@@ -143,13 +143,8 @@
   <ng-template pTemplate>
     <div class="userInfo">
       <div class="header">
-        <div class="kUser">
-          <i class="icon-small-viewer-contributor"></i>
-        </div>
-        <div class="content">
-          <span class="name">{{_userData['user_name']}}</span>
-          <span *ngIf="_userData['title']" class="title">{{_userData['title']}}</span>
-        </div>
+        <span class="name">{{_userData['user_name']}}</span>
+        <span *ngIf="_userData['title']" class="title">{{_userData['title']}}</span>
       </div>
       <div class="row" *ngIf="_userData['role']">
         <span class="label">{{'app.entryEp.session.role' | translate}}</span>

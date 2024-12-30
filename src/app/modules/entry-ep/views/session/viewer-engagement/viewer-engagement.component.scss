@@ -104,29 +104,8 @@
   overflow-x: hidden;
   .header {
     display: flex;
-    align-items: center;
-    margin-bottom: 16px;
-    .kUser {
-      cursor: pointer;
-      width: 80px;
-      height: 80px;
-      border-radius: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: rgba(49,190,166,0.2);
-      margin-right: 8px;
-      flex: 0 0 auto;
-      i {
-        display: inline-block;
-        font-size: 48px;
-        color: #31BEA6;
-      }
-    }
-  }
-  .content {
-    display: flex;
     flex-direction: column;
+    margin-bottom: 16px;
     .name {
       color: $kGrayscale1;
       font-size: 18px;
