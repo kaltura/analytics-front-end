@@ -17,7 +17,7 @@
                  [placeholder]="'app.entryEp.session.search' | translate"
                  (keyup.enter)="_onSearch()"
                  [(ngModel)]="_peopleSearch">
-          <div class="closeIcon" [class.disable]="_peopleSearch.length < 3" *ngIf="_peopleSearch.length > 0" (click)="_peopleSearch = ''; _loadReport()">
+          <div class="closeIcon" *ngIf="_peopleSearch.length > 0" (click)="_peopleSearch = ''; _loadReport()">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path fill-rule="evenodd" clip-rule="evenodd" d="M13.364 11.9497L17.6066 16.1924C17.9971 16.5829 17.9971 17.2161 17.6066 17.6066C17.2161 17.9971 16.5829 17.9971 16.1924 17.6066L11.9497 13.364L7.70711 17.6066C7.31658 17.9971 6.68342 17.9971 6.29289 17.6066C5.90237 17.2161 5.90237 16.5829 6.29289 16.1924L10.5355 11.9497L6.29289 7.70711C5.90237 7.31658 5.90237 6.68342 6.29289 6.29289C6.68342 5.90237 7.31658 5.90237 7.70711 6.29289L11.9497 10.5355L16.1924 6.29289C16.5829 5.90237 17.2161 5.90237 17.6066 6.29289C17.9971 6.68342 17.9971 7.31658 17.6066 7.70711L13.364 11.9497Z" fill="#878787" class="close"/>
             </svg>

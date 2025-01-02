@@ -219,12 +219,12 @@ export class EpViewerEngagementComponent implements OnInit, OnDestroy {
   }
 
   public _onSearch(): void {
-    if (this._peopleSearch.length > 2) {
+    if (this._peopleSearch.trim().length > 2 || this._peopleSearch.trim() === '') {
       this._isBusy = true;
       this._kalturaClient.request(new UserListAction({
         pager: new KalturaFilterPager({pageSize: 500, pageIndex: 0}),
         filter: new KalturaUserFilter({
-          firstNameOrLastNameStartsWith: this._peopleSearch
+          firstNameOrLastNameStartsWith: this._peopleSearch.trim()
         })
       }))
         .pipe(cancelOnDestroy(this))
