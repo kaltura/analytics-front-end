@@ -30,6 +30,7 @@ export class SessionsComponent implements OnDestroy {
   }
   @Input() exporting = false;
   @Input() startDate: Date;
+  @Input() endDate: Date;
 
   private _reportType = reportTypeMap(KalturaReportType.epTopSessions);
   private _dataConfig: ReportDataConfig;
@@ -69,7 +70,7 @@ export class SessionsComponent implements OnDestroy {
 
   private _loadReport(): void {
     this._eventSessionEntries = analyticsConfig.customData?.eventSessionEntries;
-    this._displaySessions = this.startDate.getTime() > this.SESSION_ID_RELEASE_DATE.getTime();
+    this._displaySessions = this.endDate.getTime() > this.SESSION_ID_RELEASE_DATE.getTime();
     if (this._displaySessions && this._eventSessionEntries !== '') {
       this._isBusy = true;
       this._blockerMessage = null;
