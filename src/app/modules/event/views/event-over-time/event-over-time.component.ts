@@ -98,7 +98,10 @@ export class EventOverTimeComponent implements OnDestroy {
       this._days = [];
       this._days.push({ label: this._translate.instant('app.event.allDays'), value: -1 });
       for (let i = 0; i < daysDifference; i++) {
-        this._days.push({label: moment(this.startDate).add(i, 'days').format(dateFormat), value: i});
+        const day = moment(this.startDate).add(i, 'days');
+        if (day.toDate().getTime() <= (this._now.getTime() + 24 * 3600 * 1000)) {
+          this._days.push({label: day.format(dateFormat), value: i});
+        }
       }
     }
   }
