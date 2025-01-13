@@ -240,13 +240,17 @@ export class ExportCsvComponent implements OnDestroy {
       this._analytics.trackButtonClickEvent(ButtonType.Export, 'Export', items, this.feature);
       this.onExport.emit();
       this._exportingCsv = true;
-
+      if (analyticsConfig.customData?.emailKs) {
+        this._kalturaClient.setDefaultRequestOptions({ks: analyticsConfig.customData.emailKs});
+      }
       this._kalturaClient.request(exportAction)
         .pipe(
           cancelOnDestroy(this),
           finalize(() => {
             this._exportingCsv = false;
-
+            if (analyticsConfig.customData?.emailKs) {
+              this._kalturaClient.setDefaultRequestOptions({ks: this._authService.ks});
+            }
             if (this._popup) {
               this._popup.close();
             }
