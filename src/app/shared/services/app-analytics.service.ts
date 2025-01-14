@@ -223,7 +223,7 @@ export class AppAnalytics {
           kalturaApplication: ApplicationType.Analytics,
           kalturaApplicationVer: analyticsConfig.appVersion
         });
-        if (analyticsConfig.hostAppName) {
+        if (typeof analyticsConfig.hostAppName !== 'undefined') {
           payload['hostingKalturaApplication'] = analyticsConfig.hostAppName;
         }
         if (analyticsConfig.hostAppVersion) {
