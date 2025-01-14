@@ -51,7 +51,7 @@ export interface AnalyticsConfig {
   dateFormat?: string;
   showNavBar?: boolean;
   isHosted?: boolean;
-  hostAppName?: string;
+  hostAppName?: number;
   hostAppVersion?: string;
   contrastTheme?: boolean;
   menuConfig?: {
