@@ -43,7 +43,7 @@ fse.emptyDirSync(path.resolve(packageRoot, 'dist'));
 const configFileName = "src/configuration/analytics-config.ts";
 const configFilePath = path.resolve(packageRoot, configFileName);
 let configData = fs.readFileSync(configFilePath, 'utf8');
-const regex = /appVersion: '\d\.\d\.\dd'/;
+const regex = /appVersion: '\d\.\d\.\d\d'/;
 configData = configData.replace(regex, `appVersion: '${versionNumber}'`);
 
 fs.writeFileSync(configFilePath, configData, 'utf-8');
@@ -53,7 +53,7 @@ console.log('analytics-config.ts has been updated!');
 const v2PlayerConfigFileName = "deploy/config.ini";
 const v2ConfigFilePath = path.resolve(packageRoot, v2PlayerConfigFileName);
 let v2ConfigData = fs.readFileSync(v2ConfigFilePath, 'utf8');
-const regex_v2 = /component.version=v\d\.\d\.\dd/;
+const regex_v2 = /component.version=v\d\.\d\.\d\d/;
 v2ConfigData = v2ConfigData.replace(regex_v2, `component.version=v${versionNumber}`);
 
 fs.writeFileSync(v2ConfigFilePath, v2ConfigData, 'utf-8');
@@ -63,7 +63,7 @@ console.log('v2 player config has been updated!');
 const v7PlayerConfigFileName = "deploy_v7/config.ini";
 const v7ConfigFilePath = path.resolve(packageRoot, v7PlayerConfigFileName);
 let v7ConfigData = fs.readFileSync(v7ConfigFilePath, 'utf8');
-const regex_v7 = /component.version=v\d\.\d\.\dd/;
+const regex_v7 = /component.version=v\d\.\d\.\d\d/;
 v7ConfigData = v7ConfigData.replace(regex_v7, `component.version=v${versionNumber}`);
 
 fs.writeFileSync(v7ConfigFilePath, v7ConfigData, 'utf-8');
