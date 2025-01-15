@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnDestroy, Output, ViewChild} from '@angular/core';
 import {AppAnalytics, AuthService, BrowserService, ButtonType} from 'shared/services';
 import {DateChangeEvent} from 'shared/components/date-filter/date-filter.service';
-import {KalturaClient, KalturaEndUserReportInputFilter, KalturaObjectBaseFactory, KalturaPager, KalturaReportExportItem, KalturaReportExportParams, KalturaReportResponseOptions, ReportExportToCsvAction} from 'kaltura-ngx-client';
+import {KalturaClient, KalturaEndUserReportInputFilter, KalturaObjectBaseFactory, KalturaPager, KalturaReportExportItem, KalturaReportExportParams, KalturaReportResponseOptions, ReportExportToCsvAction, UserGetAction, KalturaUser} from 'kaltura-ngx-client';
 import {TreeNode} from 'primeng/api';
 import {TranslateService} from '@ngx-translate/core';
 import {PopupWidgetComponent} from '@kaltura-ng/kaltura-ui';
@@ -9,11 +9,12 @@ import {RefineFilter} from 'shared/components/filter/filter.component';
 import {refineFilterToServerValue} from 'shared/components/filter/filter-to-server-value.util';
 import {analyticsConfig} from 'configuration/analytics-config';
 import {DateFilterUtils} from 'shared/components/date-filter/date-filter-utils';
-import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
+import {cancelOnDestroy, tag} from '@kaltura-ng/kaltura-common';
 import {finalize} from 'rxjs/operators';
 import {ExportItem} from 'shared/components/export-csv/export-config-base.service';
 import {KalturaLogger} from "@kaltura-ng/kaltura-logger";
 import {isEmptyObject} from "shared/utils/is-empty-object";
+import {error} from "protractor";
 
 @Component({
   selector: 'app-export-csv',
@@ -240,9 +241,6 @@ export class ExportCsvComponent implements OnDestroy {
       this._analytics.trackButtonClickEvent(ButtonType.Export, 'Export', items, this.feature);
       this.onExport.emit();
       this._exportingCsv = true;
-      if (analyticsConfig.customData?.emailKs) {
-        this._kalturaClient.setDefaultRequestOptions({ks: analyticsConfig.customData.emailKs});
-      }
       this._kalturaClient.request(exportAction)
         .pipe(
           cancelOnDestroy(this),
@@ -258,10 +256,6 @@ export class ExportCsvComponent implements OnDestroy {
         )
         .subscribe(
           () => {
-            // this._browserService.alert({
-            //   header: this._translate.instant('app.exportReports.exportReports'),
-            //   message: this._translate.instant('app.exportReports.successMessage'),
-            // });
           },
           () => {
             this._browserService.alert({
@@ -271,16 +265,40 @@ export class ExportCsvComponent implements OnDestroy {
           });
     };
 
-    this._browserService.confirm(
-      {
-        header: this._translate.instant('app.exportReports.title'),
-        message: this._authService.email ? this._translate.instant('app.exportReports.withEmail', {emailAddress: this._authService.email}) : this._translate.instant('app.exportReports.withoutEmail'),
-        acceptLabel: this._translate.instant('app.exportReports.approve'),
-        rejectLabel: this._translate.instant('app.common.cancel'),
-        accept: () => {
-          doExport();
-        }
-      });
+    const notifyUser = (emailAddress: string) => {
+      this._browserService.confirm(
+        {
+          header: this._translate.instant('app.exportReports.title'),
+          message: emailAddress ? this._translate.instant('app.exportReports.withEmail', {emailAddress}) : this._translate.instant('app.exportReports.withoutEmail'),
+          acceptLabel: this._translate.instant('app.exportReports.approve'),
+          rejectLabel: this._translate.instant('app.common.cancel'),
+          accept: () => {
+            doExport();
+          },
+          reject: () => {
+            if (analyticsConfig.customData?.emailKs) {
+              this._kalturaClient.setDefaultRequestOptions({ks: this._authService.ks});
+            }
+          }
+        });
+    };
+
+    if (analyticsConfig.customData?.emailKs) {
+      this._kalturaClient.setDefaultRequestOptions({ks: analyticsConfig.customData.emailKs});
+      this._kalturaClient.request(new UserGetAction())
+        .pipe(cancelOnDestroy(this))
+        .pipe(tag('block-shell'))
+        .subscribe(
+          (user: KalturaUser) => {
+            notifyUser(user.email);
+          },
+          error => {
+            notifyUser('');
+          }
+        );
+    } else {
+      notifyUser(this._authService.email || '');
+    }
   }
   public toggleDropdown() {
     if (this._popup) {
