@@ -121,7 +121,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
     const request = new KalturaMultiRequest(
         new BaseEntryGetAction({ entryId: this._entryId }),
         new ScheduleEventListAction({filter: new KalturaEntryScheduleEventFilter({templateEntryIdEqual: this._entryId})}),
-        new CuePointListAction({filter: new KalturaSessionCuePointFilter({orderBy: '-startTime', cuePointTypeEqual: KalturaCuePointType.session, entryIdEqual: this._entryId, endTimeLessThanOrEqual: this._now.getTime() / 1000})})
+        new CuePointListAction({filter: new KalturaSessionCuePointFilter({orderBy: '-startTime', cuePointTypeEqual: KalturaCuePointType.session, entryIdEqual: this._entryId, endTimeLessThanOrEqual: this._now.getTime() / 1000 })})
       );
 
     this._kalturaClient
@@ -170,12 +170,14 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
               this._selectedCuePoint = this._cuePoints[0];
               this._cuepointOptions = [];
               this._cuePoints.forEach(cuepoint => {
-                const duration = moment.duration(cuepoint.duration, 'seconds');
-                const format = cuepoint.duration > 3599 ? 'HH:mm:ss' : 'mm:ss';
-                this._cuepointOptions.push({
-                  label: `${moment(cuepoint.startTime * 1000).format('MMMM DD, YYYY')}\u00A0\u00A0\u00A0${moment(cuepoint.startTime * 1000).format('HH:mm')} - ${moment(cuepoint.endTime * 1000).format('HH:mm')}\u00A0\u00A0\u00A0(${moment.utc(duration.as('milliseconds')).format(format)})`,
-                  value: cuepoint
-                });
+                if (cuepoint.duration > 0) {
+                  const duration = moment.duration(cuepoint.duration, 'seconds');
+                  const format = cuepoint.duration > 3599 ? 'HH:mm:ss' : 'mm:ss';
+                  this._cuepointOptions.push({
+                    label: `${moment(cuepoint.startTime * 1000).format('MMMM DD, YYYY')}\u00A0\u00A0\u00A0${moment(cuepoint.startTime * 1000).format('HH:mm')} - ${moment(cuepoint.endTime * 1000).format('HH:mm')}\u00A0\u00A0\u00A0(${moment.utc(duration.as('milliseconds')).format(format)})`,
+                    value: cuepoint
+                  });
+                }
               });
               this.setStartEndDates(this._selectedCuePoint.startTime, this._selectedCuePoint.endTime);
             }
