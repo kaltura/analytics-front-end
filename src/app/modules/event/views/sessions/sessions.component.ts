@@ -54,6 +54,7 @@ export class SessionsComponent implements OnDestroy {
   private SESSION_ID_RELEASE_DATE = new Date(2024, 6, 31);
   public _session_id_release_date = DateFilterUtils.formatMonthDayString(this.SESSION_ID_RELEASE_DATE, analyticsConfig.locale, 'long');
   public _displaySessions = true;
+  public _displayDisclaimer = false;
   public _eventSessionEntries = null;
 
   constructor(private _reportService: ReportService,
@@ -69,8 +70,9 @@ export class SessionsComponent implements OnDestroy {
   }
 
   private _loadReport(): void {
-    this._eventSessionEntries = analyticsConfig.customData?.eventSessionEntries;
+    this._eventSessionEntries = analyticsConfig.customData?.eventSessionEntries;debugger;
     this._displaySessions = this.endDate.getTime() > this.SESSION_ID_RELEASE_DATE.getTime();
+    this._displayDisclaimer = this.endDate.getTime() > this.SESSION_ID_RELEASE_DATE.getTime() && this.startDate.getTime() <= this.SESSION_ID_RELEASE_DATE.getTime();
     if (this._displaySessions && this._eventSessionEntries !== '') {
       this._isBusy = true;
       this._blockerMessage = null;

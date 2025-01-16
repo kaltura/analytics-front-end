@@ -12,13 +12,33 @@ k-area-blocker {
   display: block;
 }
 .reportContent {
-  .title {
-    font-weight: 700;
-    font-size: 20px;
-    color: $kGrayscale1;
-    margin-bottom: 24px;
-    display: block;
-    margin: 24px;
+  .header {
+    display: flex;
+    align-items: center;
+    .title {
+      font-weight: 700;
+      font-size: 20px;
+      color: $kGrayscale1;
+      display: block;
+      margin: 24px;
+    }
+    .disclaimer {
+      margin-left: auto;
+      margin-right: 24px;
+      background-color: $kGrayscale7;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      padding: 4px 8px;
+      gap: 4px;
+      .span {
+        color: $kGrayscale1;
+        font-size: 14px;
+      }
+      i {
+        color: $kPrimary;
+      }
+    }
   }
   .row {
     height: 80px;
