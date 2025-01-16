@@ -70,7 +70,7 @@ export class SessionsComponent implements OnDestroy {
   }
 
   private _loadReport(): void {
-    this._eventSessionEntries = analyticsConfig.customData?.eventSessionEntries;debugger;
+    this._eventSessionEntries = analyticsConfig.customData?.eventSessionEntries;
     this._displaySessions = this.endDate.getTime() > this.SESSION_ID_RELEASE_DATE.getTime();
     this._displayDisclaimer = this.endDate.getTime() > this.SESSION_ID_RELEASE_DATE.getTime() && this.startDate.getTime() <= this.SESSION_ID_RELEASE_DATE.getTime();
     if (this._displaySessions && this._eventSessionEntries !== '') {

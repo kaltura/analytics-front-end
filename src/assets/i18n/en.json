@@ -1215,6 +1215,7 @@
       "minutes": "Minutes viewed",
       "allDays": "All days",
       "sessions": "Sessions",
+      "disclaimer": "Sessions that began before {{0}} are not available",
       "reportTitle": "Event summary report: {{0}}",
       "noData_tt": "Data is not available for events starting before June 2, 2024",
       "name": "Name",

@@ -152,7 +152,7 @@ export class EventOverTimeComponent implements OnDestroy {
       this._filter.toDate = Math.floor(new Date().getTime() / 1000);
       this._filter.interval = this._selectedTimeUnit;
     }
-    const order = this._metric === 'attendees' ? '-unique_event_attendees' : '-sum_view_period';
+    const order = this._metric === 'attendees' ? '-unique_event_attendees' : '-union_live_meeting_vod_view_time';
     const reportConfig: ReportConfig = { reportType, filter: this._filter, order };
     this._reportService.getReport(reportConfig, this._dataConfig, false)
       .pipe(cancelOnDestroy(this))
@@ -197,7 +197,7 @@ export class EventOverTimeComponent implements OnDestroy {
       { from: this._filter.fromDate, to: this._filter.toDate },
       this._filter.interval,
     );
-    const graphMetric = this._metric === 'attendees' ? 'unique_event_attendees' : 'sum_view_period';
+    const graphMetric = this._metric === 'attendees' ? 'unique_event_attendees' : 'union_live_meeting_vod_view_time';
     const calcPercent = (originalGraph: any) => {
       const tooltip = originalGraph.tooltip;
       const graph = JSON.parse(JSON.stringify(originalGraph));
