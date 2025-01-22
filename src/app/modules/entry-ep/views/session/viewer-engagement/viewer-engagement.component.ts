@@ -252,7 +252,7 @@ export class EpViewerEngagementComponent implements OnInit, OnDestroy {
   }
 
   public _showOverlay(event: any, data: any): void {
-    if (this._overlay && !analyticsConfig.multiAccount) {
+    if (this._overlay && !analyticsConfig.multiAccount && (data?.role || data?.company || data?.industry || data?.country)) {
       this._userData = data;
       this._overlay.show(event);
     }

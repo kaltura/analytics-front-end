@@ -143,24 +143,24 @@
   <ng-template pTemplate>
     <div class="userInfo">
       <div class="header">
-        <span class="name">{{_userData['user_name']}}</span>
-        <span *ngIf="_userData['title']" class="title">{{_userData['title']}}</span>
+        <span class="name">{{_userData?.user_name}}</span>
+        <span *ngIf="_userData?._title" class="title">{{_userData?.title}}</span>
       </div>
-      <div class="row" *ngIf="_userData['role']">
+      <div class="row" *ngIf="_userData?.role">
         <span class="label">{{'app.entryEp.session.role' | translate}}</span>
-        <span class="value">{{_userData['role']}}</span>
+        <span class="value">{{_userData?.role}}</span>
       </div>
-      <div class="row" *ngIf="_userData['company']">
+      <div class="row" *ngIf="_userData?.company">
         <span class="label">{{'app.entryEp.session.company' | translate}}</span>
-        <span class="value">{{_userData['company']}}</span>
+        <span class="value">{{_userData?.company}}</span>
       </div>
-      <div class="row" *ngIf="_userData['industry']">
+      <div class="row" *ngIf="_userData?.industry">
         <span class="label">{{'app.entryEp.session.industry' | translate}}</span>
-        <span class="value">{{_userData['industry']}}</span>
+        <span class="value">{{_userData?.industry}}</span>
       </div>
-      <div class="row" *ngIf="_userData['country']">
+      <div class="row" *ngIf="_userData?.country">
         <span class="label">{{'app.entryEp.session.country' | translate}}</span>
-        <span class="value">{{_userData['country']}}</span>
+        <span class="value">{{_userData?.country}}</span>
       </div>
     </div>
   </ng-template>
