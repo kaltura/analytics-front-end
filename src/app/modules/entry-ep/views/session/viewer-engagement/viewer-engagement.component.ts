@@ -105,9 +105,11 @@ export class EpViewerEngagementComponent implements OnInit, OnDestroy {
     this._filter.interval = KalturaReportInterval.days;
     if (userIds.length > 0) {
       this._filter.userIds = userIds;
-      this._pager = new KalturaFilterPager({ pageSize: 10, pageIndex: 1 });
+      this._pager.pageIndex = 1;
+      this._pager.pageSize = 50;
     } else {
       delete this._filter.userIds;
+      this._pager.pageSize = 10;
     }
 
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
