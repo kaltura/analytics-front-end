@@ -111,6 +111,9 @@ export class EpViewerEngagementComponent implements OnInit, OnDestroy {
       delete this._filter.userIds;
       this._pager.pageSize = 10;
     }
+     if (analyticsConfig.customData && analyticsConfig.customData.eventId) {
+       this._filter.virtualEventIdIn = analyticsConfig.customData.eventId;
+     }
 
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
 
