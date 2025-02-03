@@ -10,7 +10,7 @@
   background-color: $appBkgColor;
 }
 .kPreview {
-  width: 100%;
+  width: 50%;
   height: 100%;
   margin-right: 0px;
   justify-self: center;
@@ -28,9 +28,11 @@ k-area-blocker{
   flex-direction: row;
 }
 
-.kTotalContainer {
+.kTotalsContainer .kTotalContainer {
   width: 100%;
-
+  &.kSmall {
+    width: 50%;
+  }
   .kMiniIcon {
     &.aqua {
       background-color: rgba(22, 168, 215, 0.2);

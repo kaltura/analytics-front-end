@@ -6,7 +6,7 @@
     <div class="kDivider"></div>
     <div class="kTotalsRow">
       <div class="kTotalsContainer">
-        <div class="kTotalContainer" *ngFor="let tab of _tabsData">
+        <div class="kTotalContainer kSmall" *ngFor="let tab of _tabsData">
           <div class="kMiniIcon" [ngClass]="tab.iconColor"><i [class]="tab.icon"></i></div>
           <div class="kTotal">
             <span *ngIf="!_isCompareMode" class="kValue">{{tab.value}}</span>
