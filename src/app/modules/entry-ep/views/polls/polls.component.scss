@@ -1,0 +1,97 @@
+@import '../../../../../styles/variables';
+
+:host {
+  width: 100%;
+}
+.kTitle.drilled {
+  color: $kGrayscale3 !important;
+  cursor: pointer;
+  margin-right: 4px;
+  width: auto !important;
+  padding-right: 0px !important;
+}
+.title {
+  font-size: 20px;
+  font-weight: bold;
+  color: $kGrayscale1;
+  margin-right: 4px;
+}
+.slash {
+  font-size: 20px;
+  font-weight: bold;
+  color: $kGrayscale3;
+  margin-right: 4px;
+}
+
+.kTotalCount {
+  font-size: 15px;
+  font-weight: normal;
+  margin-left: 24px;
+  margin-bottom: 24px;
+}
+
+td span {
+  white-space: nowrap;
+}
+
+.kHighContrast :host {
+  th, td {
+    color: $kGrayscale1;
+
+    &.p-highlight span {
+      text-decoration: underline;
+    }
+
+    a {
+      text-decoration: underline;
+    }
+  }
+
+  ::ng-deep {
+    .kTabTitle {
+      color: $kGrayscale1 !important;
+    }
+
+    .kUnits {
+      color: $kGrayscale1 !important;
+    }
+
+    p-selectButton .p-highlight {
+      background-color: #00866a !important;
+      border: 1px solid #00866a !important;
+    }
+
+    app-bullet .kValue {
+      color: $kGrayscale1 !important;
+    }
+  }
+}
+.tableCell {
+  display: flex;
+  align-items: center;
+  .kIcon {
+    color: $kGrayscale3;
+    margin: 0 16px 0 0px;
+  }
+  .link {
+    color: $kPrimary;
+    cursor: pointer;
+  }
+}
+
+.drilldown {
+  margin-left: 24px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: $kGrayscale1;
+}
+.kSeparator {
+  width: 1px;
+  height: 12px;
+  margin-top: 2px;
+  background-color: $kGrayscale1;
+  margin-left: 8px;
+  margin-right: 8px;
+}

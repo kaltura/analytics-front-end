@@ -35,6 +35,9 @@ export interface AnalyticsConfig {
     },
     userReportsEndpoint?: {
       uri: string;
+    },
+    chatAnalyticsEndpoint?: {
+      uri: string;
     }
   };
   analyticsServer?: {

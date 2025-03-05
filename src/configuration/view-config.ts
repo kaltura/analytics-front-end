@@ -285,6 +285,7 @@ export const viewsConfig = {
     miniEngagement: {},
     miniPlays: {},
     recordings: {},
+    polls: {},
     session: {},
     geo: {},
     devices: {}

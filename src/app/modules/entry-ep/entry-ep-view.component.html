@@ -54,6 +54,10 @@
           <app-ep-session [isVirtualClassroom]="_isVirtualClassroom" [exporting]="_exporting" [entryIdIn]="_liveEntryIds" [actualStartDate]="_actualEventStartDate" [startDate]="_eventStartDate" [endDate]="_eventEndDate" [recordingEntryId]="_recordingEntryId" [isSimulive]="_isSimulive"></app-ep-session>
         </div>
 
+        <div *ngIf="!_loadingEntry" [class.kHidden]="!_viewConfig.polls" [class.exporting]="_exporting" id="polls" class="kReportContainer">
+          <app-ep-polls [entryId]="_entryId" [exporting]="_exporting"></app-ep-polls>
+        </div>
+
         <div *ngIf="!_loadingEntry && !_isVirtualClassroom" [class.kHidden]="!_viewConfig.recordings" [class.exporting]="_exporting" id="recordings" class="kReportContainer">
           <app-ep-recordings [entryIdIn]="_vodEntryIds" [startDate]="_eventStartDate" [endDate]="_now" [exporting]="_exporting"></app-ep-recordings>
         </div>
