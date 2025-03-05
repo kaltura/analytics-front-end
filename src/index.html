@@ -3,47 +3,16 @@
 <head>
   <meta charset="utf-8">
   <title>Analytics</title>
-  <base href="/">
-
+  <!--#if expr="$base_url" -->
+  <!--# echo var="base_url" encoding="none"-->
+  <!--#else -->
+  <base href="./">
+  <!--#endif -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato:400,700,900">
-
-  <script type="text/javascript">
-    var analyticsConfig = {
-      kalturaServer: {
-        uri : "api.nvq2.ovp.kaltura.com",
-        "previewUIConf": 12345678,
-        "previewUIConfV7":23988472
-      },
-      cdnServers: {
-        serverUri: "http://api.nvq2.ovp.kaltura.com",
-        securedServerUri: "https://api.nvq2.ovp.kaltura.com"
-      },
-      externalServices: {
-        appRegistryEndpoint: {
-          uri: "https://app-registry.nvq2.ovp.kaltura.com/api/v1/app-registry"
-        },
-        userReportsEndpoint: {
-          uri: "https://user.nvq2.ovp.kaltura.com/api/v1/reports"
-        },
-        chatAnalyticsEndpoint: {
-          uri: "https://chat.nvq2.ovp.kaltura.com/polls/analytics"
-        }
-      },
-      ks: "djJ8MTYzMDJ8OPnmUkLemKxAWjuLeodm1YuWS1et10eSYavHCMicIYxKZOSrvvjADQi7GScl5rWZNYhWNlKDgYe4poKg1LKmdpYRstnY8CjxQdngaboeZXoVAouG0wj61YggNrO2pKnfyOdRAU-2D6dZjMgibpji3E6M5Zbw8rzr-Vo661lOxyg_WZK_GnaIBY-usxA3Hp2my0_btCKQgDd2X-g2nXk1XgTCl7kplpD-7diMtXioUB5XrB2nwo4Wiqq6PLY7ekyp",
-      pid: "16302",
-      locale: "en",
-      multiAccount: false,
-      live: {
-        "pollInterval": 30,
-        "healthNotificationsCount": 50,
-      }
-    }
-  </script>
-
 </head>
-<body class="kOverrideFAIcons" style="overflow-y: auto">
+<body class="kOverrideFAIcons" style="overflow-y: hidden">
 <app-root></app-root>
 </body>
 </html>
