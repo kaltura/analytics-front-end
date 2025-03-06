@@ -8,7 +8,7 @@
   padding-top: 12px;
 }
 .kTitle.drilled {
-  color: $kGrayscale3 !important;
+  color: $kPrimary !important;
   cursor: pointer;
   margin-right: 4px;
   width: auto !important;
@@ -29,12 +29,6 @@
   font-size: 20px;
   font-weight: bold;
   color: $kGrayscale1;
-  margin-right: 4px;
-}
-.slash {
-  font-size: 20px;
-  font-weight: bold;
-  color: $kGrayscale3;
   margin-right: 4px;
 }
 
