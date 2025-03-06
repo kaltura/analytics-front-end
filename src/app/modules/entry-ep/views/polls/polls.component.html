@@ -4,10 +4,15 @@
     <span class="kTitle" (click)="_selectedPoll = null" [class.drilled]="_selectedPoll !== null">{{'app.entryEp.polls.title' | translate}}</span>
     <span class="slash" *ngIf="_selectedPoll !== null">/</span>
     <span class="title" *ngIf="_selectedPoll !== null">{{_selectedPoll.question}}</span>
+    <app-pdf-export *ngIf="_selectedPoll === null" [elementToExport]="pollsReportToExport"
+                    [eventName]="'Events_polls_pdf_download'"
+                    [feature]="'Polls'"
+                    [filename]="entryName + '_polls_report.pdf'" (preExport)="preExportHandler()"
+                    (postExport)="postExportHandler()" (exporting)="onExporting($event)"></app-pdf-export>
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
-    <div class="kReportContent" aria-labelledby="kWebcastDomains">
+    <div class="kReportContent" aria-labelledby="kPolls">
 
       <span class="kTotalCount" *ngIf="_selectedPoll === null">
           {{'app.entryEp.polls.totalPolls' | translate: { '0': _polls.length } }}
@@ -22,7 +27,7 @@
 
 
     <div class="kTable">
-      <div class="kTableContainer">
+      <div class="kTableContainer" [class.options]="_selectedPoll !== null">
         <p-table [class.kHidden]="_selectedPoll !== null" aria-label="Polls Table"
                  [value]="_polls"
                  [paginator]="true"
@@ -46,10 +51,10 @@
           </ng-template>
           <ng-template pTemplate="body" let-data>
             <tr>
-              <td *ngFor="let col of _columns; let i = index"
+              <td *ngFor="let col of _columns; let i = index" [ngStyle]="{'width': col === 'pollId' ? '50px' : col === 'question' ? '50%' : '25%'}"
                   [class.kHighlight]="i===1">
                 <ng-container>
-                  <div class="tableCell" [ngStyle]="{'width': col === 'pollId' ? '50px' : col === 'question' ? '50%' : '25%'}">
+                  <div class="tableCell">
                     <svg *ngIf="col === 'pollId'" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9974 3.56161C13.4494 3.49276 13 3.94691 13 4.49919V10.4992C13 11.0515 13.4477 11.4992 14 11.4992L20 11.4992C20.5523 11.4992 21.0064 11.0498 20.9376 10.5018C20.8486 9.79392 20.6652 9.09962 20.391 8.43773C19.989 7.46712 19.3997 6.58521 18.6569 5.84234C17.914 5.09947 17.0321 4.5102 16.0615 4.10816C15.3996 3.83399 14.7053 3.65056 13.9974 3.56161ZM18.9376 14.4966C19.0064 13.9486 18.5523 13.4992 18 13.4992H12C11.4477 13.4992 11 13.0515 11 12.4992V6.49919C11 5.94691 10.5506 5.49275 10.0026 5.56161C8.77376 5.71602 7.59276 6.15432 6.55544 6.84744C5.23985 7.72649 4.21447 8.97592 3.60897 10.4377C3.00347 11.8995 2.84504 13.5081 3.15372 15.0599C3.4624 16.6118 4.22433 18.0372 5.34315 19.156C6.46197 20.2749 7.88743 21.0368 9.43928 21.3455C10.9911 21.6542 12.5997 21.4957 14.0615 20.8902C15.5233 20.2847 16.7727 19.2593 17.6518 17.9438C18.3449 16.9064 18.7832 15.7254 18.9376 14.4966Z" fill="#888888"/>
                     </svg>
@@ -66,10 +71,107 @@
             </div>
           </ng-template>
         </p-table>
+
+        <p-table *ngIf="_selectedPoll !== null" aria-label="Polls Table"
+                 [value]="_selectedPoll.options"
+                 sortField="nvoted"
+                 [sortOrder]="-1">
+          <ng-template pTemplate="header">
+            <tr>
+              <th *ngFor="let col of _questionColumns" [ngStyle]="{'width': col === 'option' ? '50%' : '25%'}"
+                  [pSortableColumn]="col === 'nvoted' ? col : null"
+                  [class.nonSortable]="col !== 'nvoted'"
+              >
+                <div class="kColumnHeader">
+                    <span *ngIf="col !== 'pollId'" [kTooltip]="'app.entryEp.polls.' + col | translate" [showOnEllipsis]="true">
+                      {{'app.entryEp.polls.' + col | translate}}
+                    </span>
+                  <p-sortIcon [field]="col" *ngIf="col === 'nvoted'"></p-sortIcon>
+                </div>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-data>
+            <tr>
+              <td *ngFor="let col of _questionColumns; let i = index"
+                  [class.kHighlight]="i===0" [ngStyle]="{'width': col === 'option' ? '50%' : '25%'}">
+                <ng-container>
+                  <div class="tableCell">
+                    <span class="bulletValue">{{col === 'rate' ? data[col] + '%' : data[col]}}</span>
+                    <div *ngIf="col === 'rate'" class="bulletContainer">
+                      <app-bullet [value]="data[col]" [formatter]="null" [showValue]="false"></app-bullet>
+                    </div>
+                  </div>
+                </ng-container>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <div class="emptymessage" aria-label="Empty Results Message">
+              <div class="kEmptyMessage" *ngIf="!_isBusy">{{'app.common.noResults' | translate}}</div>
+              <div class="kEmptyMessage" *ngIf="_isBusy">&nbsp;</div>
+            </div>
+          </ng-template>
+        </p-table>
       </div>
     </div>
     </div>
   </k-area-blocker>
+
+  <div #pollsReportToExport class="reportToExport">
+    <span class="exportTitle">{{entryName}}</span>
+    <span class="exportDates">{{startDate | date:'m/d/yy'}} - {{endDate | date:'m/d/yy'}}</span>
+    <div class="exportPollsContainer">
+      <div class="exportPollContainer" *ngFor="let poll of _exportPolls, index as i">
+        <span class="exportPollTitle">{{poll.question}}</span>
+        <div class="exportDrilldown">
+          <span>{{'app.entryEp.polls.' + poll.type | translate }}</span>
+          <div class="kSeparator"></div>
+          <span>{{'app.entryEp.polls.numOptions' | translate: { '0': poll.options.length } }}</span>
+          <div class="kSeparator"></div>
+          <span>{{'app.entryEp.polls.numParticipants' | translate: { '0': poll.nvoted } }}</span>
+        </div>
+        <p-table [value]="poll.options" sortField="nvoted" [sortOrder]="-1" *ngIf="poll.type !== 'open'">
+          <ng-template pTemplate="header">
+            <tr>
+              <th *ngFor="let col of _questionColumns"
+                  [pSortableColumn]="col === 'nvoted' ? col : null"
+                  [class.nonSortable]="col !== 'nvoted'"
+              >
+                <div class="kColumnHeader">
+                    <span *ngIf="col !== 'pollId'" [kTooltip]="'app.entryEp.polls.' + col | translate" [showOnEllipsis]="true">
+                      {{'app.entryEp.polls.' + col | translate}}
+                    </span>
+                  <p-sortIcon [field]="col" *ngIf="col === 'nvoted'"></p-sortIcon>
+                </div>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-data>
+            <tr>
+              <td [ngStyle]="{height: '48px'}" *ngFor="let col of _questionColumns; let i = index"
+                  [class.kHighlight]="i===0">
+                <ng-container>
+                  <div class="tableCell">
+                    <span class="bulletValue">{{col === 'rate' ? data[col] + '%' : data[col]}}</span>
+                    <div *ngIf="col === 'rate'" class="bulletContainer">
+                      <app-bullet [value]="data[col]" [formatter]="null" [showValue]="false"></app-bullet>
+                    </div>
+                  </div>
+                </ng-container>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <div class="emptymessage" aria-label="Empty Results Message">
+              <div class="kEmptyMessage" *ngIf="!_isBusy">{{'app.common.noResults' | translate}}</div>
+              <div class="kEmptyMessage" *ngIf="_isBusy">&nbsp;</div>
+            </div>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
 
 </div>
 

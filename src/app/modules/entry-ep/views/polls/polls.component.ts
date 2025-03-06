@@ -16,7 +16,7 @@ export interface Option {
 export interface Poll {
   pollId: string;
   question: string;
-  type: 'single' | 'multiple' | 'correct' | 'open';
+  type: 'OpenAnswers' | 'single' | 'multiple' | 'correct' | 'open';
   nvoted: number;
   isAcceptingMultipleVotes: boolean;
   options: Option[];
@@ -33,14 +33,19 @@ export interface Poll {
 export class EpPollsComponent implements OnInit, OnDestroy {
 
   @Input() entryId = '';
+  @Input() entryName = '';
   @Input() exporting = false;
+  @Input() startDate: Date;
+  @Input() endDate: Date;
 
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
-  public _polls: any[] = [];
+  public _polls: Poll[] = [];
+  public _exportPolls: Poll[] = [];
   public _selectedPoll: Poll | null = null;
   public _columns: string[] = ['pollId', 'question', 'type', 'nvoted'];
-  public _questionColumns: string[] = ['answer', 'nvoted', 'rate'];
+  public _questionColumns: string[] = ['option', 'nvoted', 'rate'];
+  public _exporting = false;
 
   constructor(private _errorsManager: ErrorsManagerService,
               private _http: HttpClient,
@@ -88,7 +93,7 @@ export class EpPollsComponent implements OnInit, OnDestroy {
               option.rate = pollTotalVotes > 0 ? Math.round(option.nvoted / pollTotalVotes * 10000 ) / 100  : 0;
             });
           });
-            console.log('polls', this._polls);
+          this._exportPolls = this._polls.slice(0, 10); // for export use the first 10 polls
           this._isBusy = false;
         },
         error => {
@@ -114,6 +119,30 @@ export class EpPollsComponent implements OnInit, OnDestroy {
 
   public drillUp(): void {
     this._selectedPoll = null;
+  }
+
+  public preExportHandler(): void {
+    // this._viewConfig.devices = this._isVirtualClassroom ? {} : null;
+    // this._viewConfig.title = {}; // force show title for export
+    // if (this._isVirtualClassroom) {
+    //   this._analytics.trackButtonClickEvent(ButtonType.Download, 'VC_session_pdf_download', null, 'VC_session_dashboard');
+    // } else {
+    //   this._analytics.trackButtonClickEvent(ButtonType.Export, 'Events_session_PDF');
+    // }
+  }
+
+  public postExportHandler(): void {
+    // this._viewConfig.devices = {};
+    // this._viewConfig.title = this._saveTitleConfig; // restore title settings
+    // // force refresh of graph elements width
+    // document.getElementById('ep-session-graph').style.width = '1000px';
+    // setTimeout(() => {
+    //   document.getElementById('ep-session-graph').style.width = '100%';
+    // }, 0);
+  }
+
+  public onExporting(exporting: boolean): void {
+    this._exporting = exporting;
   }
 
 }

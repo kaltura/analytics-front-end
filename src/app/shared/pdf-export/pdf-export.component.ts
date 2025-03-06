@@ -52,14 +52,14 @@ export class PdfExportComponent {
       this._exporting = true;
       this.elementToExport.setAttribute('id', 'reportToExport');
       this.elementToExport.style.width = 1600 + 'px';
-      const originalHeight = this.elementToExport.style.height;
+      const originalHeight = this.elementToExport.offsetHeight;
       this.elementToExport.style.height = '2262px';
       // use a timeout to refresh the page binding
       setTimeout(() => {
-        var opt = {
+        let opt = {
           margin:       0,
           enableLinks:  true,
-          pagebreak:    { before: '.breakBefore',after: '.breakAfter'},
+          pagebreak:    { before: '.breakBefore', after: '.breakAfter'},
           filename:     this.filename ? this.filename : 'Summary.pdf',
           image:        { type: 'jpg', quality: 0.90 },
           html2canvas:  { width: this.elementToExport.clientWidth, useCORS: false, dpi: 150, scale: 1 },
@@ -80,9 +80,9 @@ export class PdfExportComponent {
             }, 500);
           }, 500);
 
-        },0);
+        }, 0);
       }, 1000);
-    }, 500)
+    }, 500);
   }
 }
 

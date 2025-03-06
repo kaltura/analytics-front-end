@@ -55,7 +55,7 @@
         </div>
 
         <div *ngIf="!_loadingEntry" [class.kHidden]="!_viewConfig.polls" [class.exporting]="_exporting" id="polls" class="kReportContainer">
-          <app-ep-polls [entryId]="_entryId" [exporting]="_exporting"></app-ep-polls>
+          <app-ep-polls [entryId]="_entryId" [entryName]="_entry.name" [exporting]="_exporting" [startDate]="_eventStartDate" [endDate]="_eventEndDate"></app-ep-polls>
         </div>
 
         <div *ngIf="!_loadingEntry && !_isVirtualClassroom" [class.kHidden]="!_viewConfig.recordings" [class.exporting]="_exporting" id="recordings" class="kReportContainer">

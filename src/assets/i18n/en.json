@@ -614,7 +614,7 @@
         "nvoted": "Unique participants",
         "numOptions": "{{0}} options",
         "numParticipants": "{{0}} Unique participants",
-        "answers": "Answers",
+        "option": "Answers",
         "rate": "Rate"
       },
       "recordings": {
