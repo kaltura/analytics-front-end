@@ -266,6 +266,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
   public preExportHandler(): void {
     this._viewConfig.devices = this._isVirtualClassroom ? {} : null;
     this._viewConfig.title = {}; // force show title for export
+    this._viewConfig.polls = null; // hide polls as it has its own export to pdf
     if (this._isVirtualClassroom) {
       this._analytics.trackButtonClickEvent(ButtonType.Download, 'VC_session_pdf_download', null, 'VC_session_dashboard');
     } else {
@@ -275,6 +276,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
 
   public postExportHandler(): void {
     this._viewConfig.devices = {};
+    this._viewConfig.polls = {};
     this._viewConfig.title = this._saveTitleConfig; // restore title settings
     // force refresh of graph elements width
     document.getElementById('ep-session-graph').style.width = '1000px';
