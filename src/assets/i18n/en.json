@@ -602,6 +602,21 @@
           "offline": "Offline"
         }
       },
+      "polls": {
+        "title": "Polls",
+        "totalPolls": "{{0}} Launched polls",
+        "question": "Question",
+        "type": "Type",
+        "single": "Single answer",
+        "multiple": "Multiple answer",
+        "open": "Open ended question",
+        "correct": "Correct answer",
+        "nvoted": "Unique participants",
+        "numOptions": "{{0}} options",
+        "numParticipants": "{{0}} Unique participants",
+        "option": "Answers",
+        "rate": "Rate"
+      },
       "recordings": {
         "viewers": "Unique viewers",
         "entries": "Associated Recordings",

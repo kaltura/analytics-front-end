@@ -19,6 +19,7 @@ import { EpMiniViewersComponent } from "./views/mini-viewers/mini-viewers.compon
 import { EpMiniMinutesViewedComponent } from "./views/mini-minutes-viewed/mini-minutes-viewed.component";
 import { EpMiniPlaysComponent } from "./views/mini-plays/mini-plays.component";
 import { EpRecordingsComponent } from "./views/recordings/recordings.component";
+import { EpPollsComponent } from "./views/polls/polls.component";
 import { SelectButtonModule } from "primeng/selectbutton";
 import { UsersTableComponent } from "./views/recordings/users-table/users-table.component";
 import { EntriesTableComponent } from "./views/recordings/entries-table/entries-table.component";
@@ -62,6 +63,7 @@ import { EpHeatMapComponent } from "./views/session/viewer-engagement/heat-map/h
     EntriesTableComponent,
     EpMiniEngagementComponent,
     EpSessionComponent,
+    EpPollsComponent,
     EpViewerEngagementComponent,
     EpHeatMapComponent,
     ReactionsComponent,
