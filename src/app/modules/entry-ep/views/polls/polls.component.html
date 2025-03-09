@@ -2,7 +2,7 @@
 
   <div class="kFilters">
     <span class="kTitle" (click)="_selectedPoll = null" [class.drilled]="_selectedPoll !== null">{{'app.entryEp.polls.title' | translate}}</span>
-    <span class="title" *ngIf="_selectedPoll !== null">/</span>
+    <span class="title slash" *ngIf="_selectedPoll !== null">/</span>
     <span class="title" *ngIf="_selectedPoll !== null">{{_selectedPoll.question}}</span>
     <app-pdf-export *ngIf="_selectedPoll === null" [elementToExport]="pollsReportToExport"
                     [eventName]="'Events_polls_pdf_download'"

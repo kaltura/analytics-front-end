@@ -8,11 +8,17 @@
   padding-top: 12px;
 }
 .kTitle.drilled {
-  color: $kPrimary !important;
+  color: $kGrayscale3 !important;
   cursor: pointer;
   margin-right: 4px;
   width: auto !important;
   padding-right: 0px !important;
+  &:hover {
+    color: $kGrayscale1 !important;
+  }
+}
+.slash {
+  color: $kGrayscale3 !important;
 }
 .kHidden {
   visibility: hidden;
