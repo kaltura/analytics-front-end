@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { AuthService, ErrorsManagerService } from 'shared/services';
+import {AppAnalytics, AuthService, ButtonType, ErrorsManagerService} from 'shared/services';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
@@ -50,7 +50,7 @@ export class EpPollsComponent implements OnInit, OnDestroy {
   constructor(private _errorsManager: ErrorsManagerService,
               private _http: HttpClient,
               private _authService: AuthService,
-              private _logger: KalturaLogger) {
+              private _analytics: AppAnalytics) {
   }
 
   ngOnInit() {
@@ -113,32 +113,22 @@ export class EpPollsComponent implements OnInit, OnDestroy {
 
   public drillDown(poll: Poll): void {
     if (poll.type !== 'open') {
+      this._analytics.trackButtonClickEvent(ButtonType.Navigate, 'Events_session_polls_question_click', poll.type, 'session_dashboard');
       this._selectedPoll = poll;
     }
   }
 
   public drillUp(): void {
+    this._analytics.trackButtonClickEvent(ButtonType.Navigate, 'Events_session_polls_all_polls', null, 'session_dashboard');
     this._selectedPoll = null;
   }
 
   public preExportHandler(): void {
-    // this._viewConfig.devices = this._isVirtualClassroom ? {} : null;
-    // this._viewConfig.title = {}; // force show title for export
-    // if (this._isVirtualClassroom) {
-    //   this._analytics.trackButtonClickEvent(ButtonType.Download, 'VC_session_pdf_download', null, 'VC_session_dashboard');
-    // } else {
-    //   this._analytics.trackButtonClickEvent(ButtonType.Export, 'Events_session_PDF');
-    // }
+    this._analytics.trackButtonClickEvent(ButtonType.Navigate, 'Events_session_polls_download_pdf', null, 'session_dashboard');
   }
 
-  public postExportHandler(): void {
-    // this._viewConfig.devices = {};
-    // this._viewConfig.title = this._saveTitleConfig; // restore title settings
-    // // force refresh of graph elements width
-    // document.getElementById('ep-session-graph').style.width = '1000px';
-    // setTimeout(() => {
-    //   document.getElementById('ep-session-graph').style.width = '100%';
-    // }, 0);
+  public onPage(event: any): void {
+    this._analytics.trackButtonClickEvent(ButtonType.Browse, 'Events_session_polls_paginate', event.page, 'session_dashboard');
   }
 
   public onExporting(exporting: boolean): void {

@@ -8,7 +8,7 @@
                     [eventName]="'Events_polls_pdf_download'"
                     [feature]="'Polls'"
                     [filename]="entryName + '_polls_report.pdf'" (preExport)="preExportHandler()"
-                    (postExport)="postExportHandler()" (exporting)="onExporting($event)"></app-pdf-export>
+                    (exporting)="onExporting($event)"></app-pdf-export>
   </div>
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
@@ -31,6 +31,7 @@
         <p-table [class.kHidden]="_selectedPoll !== null" aria-label="Polls Table"
                  [value]="_polls"
                  [paginator]="true"
+                 (onPage)="onPage($event)"
                  sortField="nvoted"
                  [sortOrder]="-1"
                  [rows]="5">
