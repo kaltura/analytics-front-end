@@ -69,7 +69,7 @@ export class EpPollsComponent implements OnInit, OnDestroy {
       'Content-Type': 'application/json',
     });
 
-    this._http.post(`${analyticsConfig.externalServices.chatAnalyticsEndpoint.uri}`, {contextId: this.entryId}, {headers}).pipe(cancelOnDestroy(this))
+    this._http.post(`${analyticsConfig.externalServices.chatAnalyticsEndpoint.uri}/polls/analytics`, {contextId: this.entryId}, {headers}).pipe(cancelOnDestroy(this))
       .subscribe((data: any) => {
           this._polls = data.analytics;
           // update poll type
