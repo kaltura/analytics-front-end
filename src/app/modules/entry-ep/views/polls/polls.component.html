@@ -75,19 +75,19 @@
 
         <p-table *ngIf="_selectedPoll !== null" aria-label="Polls Table"
                  [value]="_selectedPoll.options"
-                 sortField="nvoted"
+                 sortField="option"
                  [sortOrder]="-1">
           <ng-template pTemplate="header">
             <tr>
               <th *ngFor="let col of _questionColumns" [ngStyle]="{'width': col === 'option' ? '50%' : '25%'}"
-                  [pSortableColumn]="col === 'nvoted' ? col : null"
-                  [class.nonSortable]="col !== 'nvoted'"
+                  [pSortableColumn]="col !== 'rate' ? col : null"
+                  [class.nonSortable]="col === 'rate'"
               >
                 <div class="kColumnHeader">
                     <span *ngIf="col !== 'pollId'" [kTooltip]="'app.entryEp.polls.' + col | translate" [showOnEllipsis]="true">
                       {{'app.entryEp.polls.' + col | translate}}
                     </span>
-                  <p-sortIcon [field]="col" *ngIf="col === 'nvoted'"></p-sortIcon>
+                  <p-sortIcon [field]="col" *ngIf="col !== 'rate'"></p-sortIcon>
                 </div>
               </th>
             </tr>
@@ -121,7 +121,7 @@
 
   <div #pollsReportToExport class="reportToExport">
     <span class="exportTitle">{{entryName}}</span>
-    <span class="exportDates">{{startDate | date:'m/d/yy'}} - {{endDate | date:'m/d/yy'}}</span>
+    <span class="exportDates">{{startDate | date:'MM/d/yy H:mm'}} - {{endDate | date:'MM/d/yy H:mm'}}</span>
     <div class="exportPollsContainer">
       <div class="exportPollContainer" *ngFor="let poll of _exportPolls, index as i">
         <span class="exportPollTitle">{{poll.question}}</span>
@@ -132,18 +132,18 @@
           <div class="kSeparator"></div>
           <span>{{'app.entryEp.polls.numParticipants' | translate: { '0': poll.nvoted } }}</span>
         </div>
-        <p-table [value]="poll.options" sortField="nvoted" [sortOrder]="-1" *ngIf="poll.type !== 'open'">
+        <p-table [value]="poll.options" sortField="option" [sortOrder]="-1" *ngIf="poll.type !== 'open'">
           <ng-template pTemplate="header">
             <tr>
               <th *ngFor="let col of _questionColumns"
-                  [pSortableColumn]="col === 'nvoted' ? col : null"
-                  [class.nonSortable]="col !== 'nvoted'"
+                  [pSortableColumn]="col === 'option' ? col : null"
+                  [class.nonSortable]="col !== 'option'"
               >
                 <div class="kColumnHeader">
                     <span *ngIf="col !== 'pollId'" [kTooltip]="'app.entryEp.polls.' + col | translate" [showOnEllipsis]="true">
                       {{'app.entryEp.polls.' + col | translate}}
                     </span>
-                  <p-sortIcon [field]="col" *ngIf="col === 'nvoted'"></p-sortIcon>
+                  <p-sortIcon [field]="col" *ngIf="col === 'option'"></p-sortIcon>
                 </div>
               </th>
             </tr>
