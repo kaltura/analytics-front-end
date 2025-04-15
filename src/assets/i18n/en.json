@@ -596,6 +596,7 @@
         "country": "Country",
         "people": "Attendees",
         "search": "Search attendees",
+        "maxUsers": "Your search term is too short. Please enter more characters of the name to refine the results.",
         "heatMap": {
           "engaged": "Engaged",
           "notEngaged": "Not Engaged",

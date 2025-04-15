@@ -49,6 +49,7 @@ export class EpViewerEngagementComponent implements OnInit, OnDestroy {
   public _exportConfig: ExportItem[] = [];
   public _exportDateFilter: DateChangeEvent = null;
   private _ignoreFirstSortEvent = true;
+  public _showMaxUsersMessage = false;
 
   public _columns: string[] = [];
   public _totalCount = 0;
@@ -97,7 +98,7 @@ export class EpViewerEngagementComponent implements OnInit, OnDestroy {
   public _loadReport(sections = this._dataConfig, userIds = ''): void {
     this._isBusy = true;
     this._blockerMessage = null;
-
+    this._showMaxUsersMessage = false;
     this._filter.entryIdIn = this.entryIdIn;
     this._filter.timeZoneOffset = DateFilterUtils.getTimeZoneOffset(),
     this._filter.fromDate = Math.floor(this.startDate.getTime() / 1000);
@@ -227,6 +228,7 @@ export class EpViewerEngagementComponent implements OnInit, OnDestroy {
   public _onSearch(): void {
     if (this._peopleSearch.trim().length > 2 || this._peopleSearch.trim() === '') {
       this._isBusy = true;
+      this._showMaxUsersMessage = false;
       this._kalturaClient.request(new UserListAction({
         pager: new KalturaFilterPager({pageSize: 500, pageIndex: 0}),
         filter: new KalturaUserFilter({
@@ -238,6 +240,7 @@ export class EpViewerEngagementComponent implements OnInit, OnDestroy {
             if (response?.objects?.length) {
               const userIds = response.objects.map(user => user.id).join(analyticsConfig.valueSeparator);
               this._loadReport({ table: this._dataConfig[ReportDataSection.table] }, userIds);
+              this._showMaxUsersMessage = response.objects.length === 500;
             } else {
               this._loadReport({ table: this._dataConfig[ReportDataSection.table] }, this._peopleSearch + Math.random()); // make sure no users will be found
             }

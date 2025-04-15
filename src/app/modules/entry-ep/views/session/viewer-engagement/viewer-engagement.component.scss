@@ -82,18 +82,32 @@
       }
     }
   }
-  .kSearchInput {
+  .kSearchHolder {
     margin-left: auto;
-    margin-right: 8px;
-    background: $kMagnifyingGlassBkg;
-    width: 200px;
-    padding: 6px 32px 7px 32px;
-    border-radius: 4px;
-    border: 1px solid $kGrayscale3;
-    color: $kGrayscale1;
-    font-size: 15px;
-    font-weight: 400;
+    display: flex;
+    flex-direction: column;
+    .searchField {
+      display: flex;
+      gap: 8px;
+      .kSearchInput {
+        background: $kMagnifyingGlassBkg;
+        width: 200px;
+        padding: 6px 32px 7px 32px;
+        border-radius: 4px;
+        border: 1px solid $kGrayscale3;
+        color: $kGrayscale1;
+        font-size: 15px;
+        font-weight: 400;
+      }
+    }
+    .maxUsers {
+      font-size: 13px;
+      width: 300px;
+      margin-top: 4px;
+    }
+
   }
+
 }
 .userInfo {
   padding: 16px;
