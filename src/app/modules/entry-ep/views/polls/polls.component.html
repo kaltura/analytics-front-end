@@ -132,6 +132,7 @@
           <div class="kSeparator"></div>
           <span>{{'app.entryEp.polls.numParticipants' | translate: { '0': poll.nvoted } }}</span>
         </div>
+        <span *ngIf="poll.type === 'open'" class="openMessage">{{'app.entryEp.polls.openMessage' | translate}}</span>
         <p-table [value]="poll.options" sortField="option" [sortOrder]="-1" *ngIf="poll.type !== 'open'">
           <ng-template pTemplate="header">
             <tr>
@@ -174,6 +175,7 @@
       <div class="footer">
         <i></i>
         <span>{{'app.engagement.footer' | translate}}</span>
+        <span class="footerLabel">{{'app.entryEp.polls.footer' | translate}}</span>
       </div>
     </div>
   </div>

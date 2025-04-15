@@ -616,7 +616,9 @@
         "numOptions": "{{0}} options",
         "numParticipants": "{{0}} Unique participants",
         "option": "Answers",
-        "rate": "Rate"
+        "rate": "Rate",
+        "openMessage": "To view responses to open-ended questions, please download the Poll and Quiz Activity Report.",
+        "footer": "* This PDF report includes up to 10 polls. To access data for additional polls, download the Poll and Quiz Activity Report."
       },
       "recordings": {
         "viewers": "Unique viewers",

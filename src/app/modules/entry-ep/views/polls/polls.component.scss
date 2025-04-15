@@ -167,6 +167,12 @@
         border-top: 1px solid #d9d9d9;
       }
     }
+    .openMessage {
+      width: 100%;
+      text-align: center;
+      font-size: 16px;
+      line-height: 48px;
+    }
     .footer {
       width: 1600px;
       height: 64px;
@@ -191,6 +197,10 @@
         font-size: 14px;
         color: $kGrayscale1;
         margin-left: 4px;
+      }
+      .footerLabel {
+        margin-left: auto;
+        margin-right: 24px;
       }
     }
   }
