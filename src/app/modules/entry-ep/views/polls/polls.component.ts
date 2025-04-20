@@ -20,6 +20,7 @@ export interface Poll {
   nvoted: number;
   isAcceptingMultipleVotes: boolean;
   options: Option[];
+  visualization?: {type: string, icon: string};
 }
 
 @Component({
