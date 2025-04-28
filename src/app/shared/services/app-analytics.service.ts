@@ -105,49 +105,49 @@ export class AppAnalytics {
                 const route = (event as NavigationEnd).urlAfterRedirects;
                 switch (true) {
                     case route.startsWith('/audience/engagement'):
-                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_engagement');
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_engagement', null, 'engagement_dashboard');
                         break;
                     case route.startsWith('/entry/'):
-                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_entry');
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_entry', null, 'entry_dashboard');
                         break;
                     case route.startsWith('/user/'):
-                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_user');
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_user', null, 'user_dashboard');
                         break;
                     case route.startsWith('/event/'):
-                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_event');
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_event', null, 'event_dashboard');
                         break;
                     case route.startsWith('/audience/content-interactions'):
-                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_content_interactions');
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_content_interactions', null, 'content_interactions_dashboard');
                         break;
                     case route.startsWith('/audience/technology'):
-                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_technology');
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_technology', null, 'technology_dashboard');
                         break;
                     case route.startsWith('/audience/geo-location'):
-                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_geo_location');
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_geo_location', null, 'geo_location_dashboard');
                         break;
                     case route.startsWith('/contributors/top-contributors'):
-                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_contributors');
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_contributors', null, 'contributors_dashboard');
                         break;
                     case route.startsWith('/bandwidth/overview'):
-                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_usage_overview');
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_usage_overview', null, 'usage_overview_dashboard');
                         break;
                     case route.startsWith('/bandwidth/publisher'):
-                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_publishers_bandwidth_storage');
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_publishers_bandwidth_storage', null, 'publishers_bandwidth_storage_dashboard');
                         break;
                     case route.startsWith('/bandwidth/end-user'):
-                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_end_user_storage');
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_end_user_storage', null, 'end_user_storage_dashboard');
                         break;
                     case route.startsWith('/live'):
-                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_live');
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_live', null, 'live_dashboard');
                         break;
                     case route.startsWith('/entry-live/'):
-                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_entry_live');
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_entry_live', null, 'entry_live_dashboard');
                         break;
                     case route.startsWith('/entry-webcast/'):
-                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_entry_webcast');
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_entry_webcast', null, 'entry_webcast_dashboard');
                         break;
                     case route.startsWith('/entry-ep/'):
-                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_events_session');
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_events_session', null, 'session_dashboard');
                         break;
                     case route.startsWith('/event/'):
                         this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_events_event', null, 'Event_dashboard');
