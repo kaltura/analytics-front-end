@@ -208,6 +208,7 @@ export const viewsConfig = {
   },
   event: {
     title: {},
+    backBtn: {},
     download: {},
     miniFunnel: {},
     miniProfile: {},
