@@ -16,7 +16,7 @@ export interface Option {
 export interface Poll {
   pollId: string;
   question: string;
-  type: 'OpenAnswers' | 'single' | 'multiple' | 'correct' | 'open';
+  type: 'OpenAnswers' | 'single' | 'multiple' | 'correct' | 'open' | 'RatingScale' | 'CrowdVote';
   nvoted: number;
   isAcceptingMultipleVotes: boolean;
   options: Option[];
@@ -79,6 +79,9 @@ export class EpPollsComponent implements OnInit, OnDestroy {
               poll.type = 'open';
             } else {
               poll.type = poll.isAcceptingMultipleVotes ? 'multiple' : 'single';
+              if (poll.visualization) {
+                poll.type = poll.visualization.type === 'rating scale' ? 'RatingScale' : poll.visualization.type === 'crowd vote' ? 'CrowdVote' : poll.type;
+              }
               poll.options.forEach(option => {
                 if (option.isCorrect) {
                   poll.type = 'correct';
@@ -93,6 +96,9 @@ export class EpPollsComponent implements OnInit, OnDestroy {
             poll.options.forEach(option => {
               option.rate = pollTotalVotes > 0 ? Math.round(option.nvoted / pollTotalVotes * 10000 ) / 100  : 0;
             });
+            if (poll.visualization) {
+              console.log(poll);
+            }
           });
           this._exportPolls = this._polls.slice(0, 10); // for export use the first 10 polls
           this._isBusy = false;
