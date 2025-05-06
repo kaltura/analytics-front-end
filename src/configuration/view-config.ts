@@ -129,6 +129,7 @@ export const viewsConfig = {
       domains: {},
     },
     details: {},
+    allDetails: {},
     totals: {
       social: {
         likes: {},
