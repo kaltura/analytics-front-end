@@ -50,4 +50,34 @@
     </ng-container>
 
   </ng-container>
+  <kPopupWidget #confirmExportPopup
+                [attr.data-aid]="'confirm-export-csv'"
+                [popupWidth]="560"
+                [modal]="true"
+                [closeBtn]="false">
+
+      <div class="kExportConfirm">
+        <div class="kHeader">
+          <span class="kTitle">{{'app.exportReports.title' | translate}}</span>
+        </div>
+        <div class="kMain">
+          <span>{{ emailAddress.length > 0 ? ('app.exportReports.withEmail' | translate: {'emailAddress': emailAddress}) : ('app.exportReports.withoutEmail' | translate) }}</span>
+          <div class="kHeaders">
+            <p-checkbox [binary]="true" label="{{'app.exportReports.headers' | translate}}" name="friendlyHeaders" [(ngModel)]="_useFriendlyHeadersNames"></p-checkbox>
+            <kInputHelper>
+              <span>{{'app.exportReports.headers_tt' | translate}}</span>
+            </kInputHelper>
+          </div>
+        </div>
+        <div class="kFooter">
+          <a role="button" tabindex="0"
+             (click)="confirmExportPopup.close()"
+             (keydown.enter)="confirmExportPopup.close()">
+            {{'app.common.cancel' | translate}}
+          </a>
+          <button class="kButtonBranded" pButton [label]="'app.exportReports.approve' | translate" (click)="_doExport(savedSelected, savedAdditionalFilters)"></button>
+        </div>
+      </div>
+
+  </kPopupWidget>
 </div>
