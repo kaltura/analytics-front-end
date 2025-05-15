@@ -114,6 +114,10 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
     this._eventEndDate = new Date(endDate * 1000);
   }
 
+  private isValidEntryId(entryId: string): boolean {
+    return /^[0-9]_[0-9a-z]{8}$/i.test(entryId);
+  }
+
   private _loadEventDetails(): void {
     this._loadingEntry = true;
     this._blockerMessage = null;
@@ -189,7 +193,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
             this._vodEntryIds = entry.redirectEntryId;
           }
           this._allEntryIds = entry.redirectEntryId ? `${this._liveEntryIds}${analyticsConfig.valueSeparator}${this._vodEntryIds}` : this._liveEntryIds;
-          if (entry.broadcastEntryId || entry.referenceId) { // DIY Live Broadcast
+          if ((entry.broadcastEntryId && this.isValidEntryId(entry.broadcastEntryId)) || (entry.referenceId && this.isValidEntryId(entry.referenceId)) ) { // DIY Live Broadcast
             const liveEntryId = entry.broadcastEntryId ? entry.broadcastEntryId : entry.referenceId; // prefer broadcastEntryId
             this._liveEntryIds += `${analyticsConfig.valueSeparator}${liveEntryId}`;
             this._allEntryIds += `${analyticsConfig.valueSeparator}${liveEntryId}`;
