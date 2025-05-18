@@ -106,6 +106,22 @@
   margin-right: 0 !important;
 }
 
+.kRealtimeDisclaimer {
+  display: flex;
+  padding: 4px 8px;
+  align-items: center;
+  gap: 4px;
+  height: 32px;
+  background-color: $kGrayscale7;
+  border-radius: 4px;
+  margin-bottom: 24px;
+  width: fit-content;
+  span {
+    font-size: 14px;
+    color: $kGrayscale1;
+  }
+}
+
 .kFilter {
   display: flex;
   align-items: center;

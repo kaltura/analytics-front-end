@@ -780,6 +780,7 @@
       }
     },
     "entryLive": {
+      "note": "Real-time data is only available for 7 days after the broadcast. Be sure to export any necessary information within this timeframe.",
       "changeDate": "Change Date",
       "createdOn": "Created On: {{0}}",
       "owner": "Owner: {{0}}",
