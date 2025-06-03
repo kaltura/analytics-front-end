@@ -87,7 +87,6 @@ export abstract class WidgetBase<T = any> implements OnDestroy {
 
       this._pollingSubscription = this._hookToPolls(poll$)
         .subscribe((response) => {
-          this.updateLayout();
 
           if (response.error) {
             this.stopPolling(response.error);
@@ -158,7 +157,7 @@ export abstract class WidgetBase<T = any> implements OnDestroy {
       setTimeout(() => {
         const height = document.getElementById('analyticsApp').getBoundingClientRect().height;
         this._frameEventManager.publish(FrameEvents.UpdateLayout, { height });
-      }, 0);
+      }, 200);
     }
   }
 }
