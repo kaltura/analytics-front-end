@@ -42,6 +42,7 @@ export class EpSessionComponent implements OnInit, OnDestroy {
   @Input() exporting = false;
   @Input() isVirtualClassroom: boolean;
   @Input() isSimulive: boolean;
+  @Input() isExplicitLive: boolean;
 
   private _order = '-date_id';
   private _reportType = KalturaReportType.epWebcastEngagementTimeline;
@@ -148,8 +149,8 @@ export class EpSessionComponent implements OnInit, OnDestroy {
             const sessionEnd = this.endDate.getTime() / 1000;
             this._recordingDuration = (recording as KalturaMediaEntry).duration;
             let recordingStart = (recording as KalturaMediaEntry).createdAt;
-            // for simulive, the recording is a predefined entry with older creation date so we set its start time to the session start time if the difference in more than 2 hours
-            if (this.isSimulive) {
+            // for simulive, the recording is a predefined entry with older creation date. for explicit live users might have started the recording before the session start time
+            if (recordingStart < sessionStart && (this.isSimulive || this.isExplicitLive)) {
               recordingStart = sessionStart;
             }
             const recordingEnd = recordingStart + this._recordingDuration;

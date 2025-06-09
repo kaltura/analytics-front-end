@@ -13,7 +13,7 @@ import {
   ScheduleEventListAction,
   KalturaCuePointType,
   KalturaSessionCuePointFilter,
-  KalturaSessionCuePoint, KalturaLiveStreamScheduleEvent
+  KalturaSessionCuePoint, KalturaLiveStreamScheduleEvent, KalturaNullableBoolean
 } from 'kaltura-ngx-client';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
 import {FrameEventManagerService, FrameEvents} from 'shared/modules/frame-event-manager/frame-event-manager.service';
@@ -60,6 +60,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
   public _vodEntryIds = '';
   public _recordingEntryId = '';
   public _isSimulive = false;
+  public _isExplicitLive = false;
   public _allEntryIds = '';
 
   private _saveTitleConfig = this._viewConfig.title;
@@ -157,7 +158,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
           if (!entry) {
             return;
           }
-
+          this._isExplicitLive = (entry as KalturaLiveEntry).explicitLive ? (entry as KalturaLiveEntry).explicitLive === KalturaNullableBoolean.trueValue : false;
           if (eventList?.objects?.length > 0) {
             this._isVirtualClassroom = false;
             const event: KalturaLiveStreamScheduleEvent = eventList.objects[0] as KalturaLiveStreamScheduleEvent;
