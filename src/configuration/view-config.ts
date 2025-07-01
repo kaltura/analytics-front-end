@@ -292,6 +292,9 @@ export const viewsConfig = {
     geo: {},
     devices: {}
   },
+  userEp: {
+
+  },
   playlist: {
     title: {},
     backBtn: {},

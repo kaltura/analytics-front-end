@@ -1,0 +1,48 @@
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { DropdownModule } from 'primeng/dropdown';
+import { ButtonModule } from 'primeng/button';
+import { PaginatorModule } from 'primeng/paginator';
+import { NgxEchartsModule } from 'shared/ngx-echarts/ngx-echarts.module';
+
+import { routing } from './user-ep.routes';
+import { UserEpViewComponent } from './user-ep-view.component';
+import { SharedModule } from 'shared/shared.module';
+import { AreaBlockerModule, InputHelperModule, TagsModule, TooltipModule, PopupWidgetModule } from '@kaltura-ng/kaltura-ui';
+import { TableModule } from 'primeng/table';
+import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { SelectButtonModule } from "primeng/selectbutton";
+
+@NgModule({
+  imports: [
+    AreaBlockerModule,
+    TagsModule,
+    CommonModule,
+    FormsModule,
+    TranslateModule,
+    DropdownModule,
+    ButtonModule,
+    PaginatorModule,
+    SelectButtonModule,
+    SharedModule,
+    TableModule,
+    TooltipModule,
+    PopupWidgetModule,
+    NgxEchartsModule,
+    RouterModule.forChild(routing),
+    AutoCompleteModule,
+    OverlayPanelModule,
+    InputHelperModule,
+  ],
+  declarations: [
+    UserEpViewComponent,
+  ],
+  exports: [],
+  providers: []
+})
+export class UserEpModule {
+}
