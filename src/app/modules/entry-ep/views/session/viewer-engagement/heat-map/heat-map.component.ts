@@ -28,46 +28,6 @@ export class EpHeatMapComponent implements OnInit, OnDestroy {
   public _isBusy = false;
   public _heatMap: HeatMapItem[] = [];
 
-  @ViewChild('follower') _follower: ElementRef;
-
-  @HostListener('mousemove', ['$event'])
-  public onMouseMove(event: MouseEvent): void {
-    if (!this._follower || !this._el) {
-      return;
-    }
-    const threshold = 3;
-    const follower = this._follower.nativeElement as HTMLElement;
-    const el = this._el.nativeElement as HTMLElement;
-    const rect = el.getClientRects()[0] as ClientRect;
-    let mouseX = Math.min(event.pageX - rect.left, el.offsetWidth) - threshold;
-
-    if (mouseX < 0) {
-      mouseX = 0;
-    }
-
-    this._renderer.setStyle(follower, 'display', 'block');
-    this._renderer.setStyle(follower, 'left', `${mouseX}px`);
-
-    setTimeout(() => { // let tooltip render on page
-      const durationTooltipElement = document.querySelector('.kHeatMapTooltipWrapper .kDuration');
-      if (durationTooltipElement) {
-        this._zone.runOutsideAngular(() => { // run outside of angular to prevent unwanted change detections
-          const progressPercent = Math.round((mouseX + threshold) / el.offsetWidth * 100) / 100;
-          const progressValue = ReportHelper.time(String(progressPercent * this.duration));
-          durationTooltipElement.innerHTML = this._translate.instant('app.entry.heatMap.duration', [progressValue]);
-        });
-      }
-    }, 0);
-  }
-
-  @HostListener('mouseleave')
-  public onMouseLeave(): void {
-    if (this._follower) {
-      this._renderer.setStyle(this._follower.nativeElement, 'display', 'none');
-    }
-  }
-
-
   constructor(private _heatMapStore: HeatMapStoreService,
               private _translate: TranslateService,
               private _el: ElementRef,
@@ -111,9 +71,29 @@ export class EpHeatMapComponent implements OnInit, OnDestroy {
         width: `${100 / points.length}%`,
         color,
         tooltip: `<div class="kHeatMapTooltipWrapper"><div class="kDuration"></div><div class="kHeatMapTooltip"><i class="kBullet" style="background-color: ${color}"></i><span class="kMessage">${message}</span></div></div>`
-      })
-    })
+      });
+    });
     return items;
+  }
+
+  public onSectionMouseMove(event: MouseEvent): void {
+    const minutes = (event.target as any).id;
+    const hours = Math.floor(parseInt(minutes) / 60);
+    const hrs = hours > 0 ? hours.toString() + ':' : '';
+    let mins = (parseInt(minutes) % 60).toString();
+    if (mins.length < 2) {
+      mins = '0' + mins; // add leading zero if needed
+    }
+    const seconds = Math.abs(event.offsetX) / document.getElementById(minutes).offsetWidth * 60;
+    let secs = Math.round(parseFloat(seconds.toString()) * 100 / 100).toString(); // round to 2 decimal places
+    if (secs.length < 2) {
+      secs = '0' + secs; // add leading zero if needed
+    }
+    if (secs === '60') {
+      secs = '59'; // prevent showing 60 seconds
+    }
+    const durationTooltipElement = document.querySelector('.kHeatMapTooltipWrapper .kDuration');
+    durationTooltipElement.innerHTML = this._translate.instant('app.entry.heatMap.duration', [hrs + mins + ":" + secs]);
   }
 
 }
