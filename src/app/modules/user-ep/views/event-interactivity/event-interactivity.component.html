@@ -8,7 +8,7 @@
       <span class="title">{{'app.userEp.interactivity' | translate}}</span>
       <div class="kColumns">
         <div class="kMetrics">
-          <div class="metric" [kTooltip]="'app.event.polls_tt' | translate">
+          <div class="metric">
             <div class="icons">
               <svg width="30" height="32" viewBox="0 0 30 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M3.73151 26.2685C-1.24384 20.9783 -1.24384 9.0244 3.73151 3.73148C9.02171 -1.24386 20.9756 -1.24386 26.2685 3.73148C31.2438 9.02169 31.2438 20.9755 26.2685 26.2685C20.9756 31.2438 9.02171 31.2438 3.73151 26.2685Z" fill="#FFD62F"/>
@@ -28,38 +28,54 @@
             </div>
             <span *ngIf="!_displayNewMetrics" class="na" [kTooltip]="'app.event.noData_tt' | translate" [placement]="'bottom'">{{'app.common.na' | translate}}</span>
             <span *ngIf="_displayNewMetrics" class="label">{{'app.userEp.reactions' | translate: {'0': _reactionsCount} }}</span>
+            <kInputHelper *ngIf="_displayNewMetrics">
+              <span>{{'app.userEp.reactions_tt' | translate}}</span>
+            </kInputHelper>
           </div>
 
-          <div class="metric" [kTooltip]="'app.event.chat_tt' | translate">
+          <div class="metric">
             <div class="icons">
               <div class="kMiniIcon blue"><i class="icon-captions"></i></div>
             </div>
             <span *ngIf="!_displayNewMetrics" class="na" [kTooltip]="'app.event.noData_tt' | translate" [placement]="'bottom'">{{'app.common.na' | translate}}</span>
             <span *ngIf="_displayNewMetrics" class="label">{{'app.userEp.chat' | translate: {'0': _messagesCount} }}</span>
+            <kInputHelper *ngIf="_displayNewMetrics">
+              <span>{{'app.userEp.chat_tt' | translate}}</span>
+            </kInputHelper>
           </div>
 
-          <div class="metric" [kTooltip]="'app.event.polls_tt' | translate">
+          <div class="metric">
             <div class="icons">
               <div class="kMiniIcon blue"><i class="icon-ic_poll"></i></div>
             </div>
             <span *ngIf="!_displayNewMetrics" class="na" [kTooltip]="'app.event.noData_tt' | translate" [placement]="'bottom'">{{'app.common.na' | translate}}</span>
             <span *ngIf="_displayNewMetrics" class="label">{{'app.userEp.polls' | translate: {'0': _pollsCount} }}</span>
+            <kInputHelper *ngIf="_displayNewMetrics">
+              <span>{{'app.userEp.polls_tt' | translate}}</span>
+            </kInputHelper>
           </div>
         </div>
+
         <div class="kMetrics">
-          <div class="metric" [kTooltip]="'app.event.questions_tt' | translate">
+          <div class="metric">
             <div class="icons">
               <div class="kMiniIcon blue"><i class="icon-ic_questions"></i></div>
             </div>
             <span *ngIf="!_displayNewMetrics" class="na" [kTooltip]="'app.event.noData_tt' | translate" [placement]="'bottom'">{{'app.common.na' | translate}}</span>
             <span *ngIf="_displayNewMetrics" class="label">{{'app.userEp.qna' | translate: {'0': _questionsCount} }}</span>
+            <kInputHelper *ngIf="_displayNewMetrics">
+              <span>{{'app.userEp.qna_tt' | translate}}</span>
+            </kInputHelper>
           </div>
 
-          <div class="metric" [kTooltip]="'app.event.download_tt' | translate">
+          <div class="metric">
             <div class="icons">
               <div class="kMiniIcon blue"><i class="icon-download"></i></div>
             </div>
             <span *ngIf="_displayNewMetrics" class="label">{{'app.userEp.downloads' | translate: {'0': _downloadCount} }}</span>
+            <kInputHelper *ngIf="_displayNewMetrics">
+              <span>{{'app.userEp.downloads_tt' | translate}}</span>
+            </kInputHelper>
           </div>
         </div>
       </div>
