@@ -12,7 +12,7 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import {AuthService, BrowserService, ErrorsManagerService, NavigationDrillDownService} from 'shared/services';
 import { ViewConfig } from "configuration/view-config";
 import { DateChangeEvent } from "shared/components/date-filter/date-filter.service";
-import { analyticsConfig } from "configuration/analytics-config";
+import {analyticsConfig} from 'configuration/analytics-config';
 import {DateFilterUtils, DateRanges} from "shared/components/date-filter/date-filter-utils";
 import { ExportItem } from "shared/components/export-csv/export-config-base.service";
 import { RefineFilter } from "shared/components/filter/filter.component";

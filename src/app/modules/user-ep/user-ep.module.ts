@@ -16,6 +16,7 @@ import { TableModule } from 'primeng/table';
 import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { SelectButtonModule } from "primeng/selectbutton";
+import {EventInteractivityComponent} from "./views/event-interactivity/event-interactivity.component";
 
 @NgModule({
   imports: [
@@ -40,6 +41,7 @@ import { SelectButtonModule } from "primeng/selectbutton";
   ],
   declarations: [
     UserEpViewComponent,
+    EventInteractivityComponent
   ],
   exports: [],
   providers: []

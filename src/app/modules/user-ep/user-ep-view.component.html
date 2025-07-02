@@ -1,8 +1,35 @@
-<div #reportToExport data-aid="report-group-entry-webcast" class="kMain" [class.exporting]="_exporting">
-<!--  <k-area-blocker [showLoader]="_loadingEntry" [message]="_blockerMessage">-->
-    <h1>User EP dashboard</h1>
-    <h3>User: {{_userId}}</h3>
-    <h3>Event: {{_eventId}}</h3>
-<!--  </k-area-blocker>-->
+<div #reportToExport data-aid="report-group-user-ep" class="kMain">
+  <k-area-blocker [showLoader]="_loadingEvent" [message]="_blockerMessage">
+    <div class="kReportView">
+      <div class="kReport kContent kOverrideFAIcons">
+        <div class="kReportHeader" [class.noTitle]="!_viewConfig.title">
+          <h1 *ngIf="_viewConfig.title" class="kTitle kTruncateTitle"
+              [kTooltip]="_userName" [showOnEllipsis]="true"
+              [placement]="'bottom'">{{ _userName }}</h1>
+          <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title" [class.exporting]="_exporting">
+            <app-pdf-export *ngIf="_viewConfig.download"
+                            [eventName]="'Events_event_pdf_download'"
+                            [feature]="'Event'"
+                            [elementToExport]="reportToExport" [filename]="exportFilename"
+                            (preExport)="preExportHandler()" (postExport)="postExportHandler()"
+                            (exporting)="onExporting($event)"></app-pdf-export>
+
+          </div>
+        </div>
+
+        <div [class.kHidden]="!_eventLoaded || !_viewConfig.eventInteractivity" class="kReportContainer">
+          <app-event-interactivity #interactivity
+                                     [virtualEventLoaded]="_eventLoaded"
+                                     [exporting]="_exporting"
+                                     [eventIn]="_eventId"
+                                     [userId]="_userId"
+                                     [startDate]="_eventStartDate"
+                                     [endDate]="_eventEndDate">
+          </app-event-interactivity>
+        </div>
+
+      </div>
+    </div>
+  </k-area-blocker>
 </div>
 

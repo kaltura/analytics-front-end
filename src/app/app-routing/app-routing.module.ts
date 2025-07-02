@@ -90,7 +90,7 @@ const routes: Routes = [
         loadChildren: () => import('../modules/entry-ep/entry-ep.module').then(m => m.EntryEpModule)
       },
       {
-        path: 'user-ep/:eventId/:userId',
+        path: 'user-ep/:eventId/:userId/:userName',
         loadChildren: () => import('../modules/user-ep/user-ep.module').then(m => m.UserEpModule)
       },
       {

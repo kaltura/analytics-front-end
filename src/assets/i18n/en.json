@@ -1210,6 +1210,14 @@
       },
       "accountError": "This entry belongs to another account however you do not have privileges to view this account.\nPartner ID: {{0}}"
     },
+    "userEp": {
+      "interactivity": "Event interactivity",
+      "reactions": "{{0}} Reactions",
+      "chat": "{{0}} Chat messages sent",
+      "polls": "{{0}} Poll responses",
+      "qna": "{{0}} Q&A threads created",
+      "downloads": "{{0}} Attachments downloaded"
+    },
     "event": {
       "attendeeProfile": "Registrants profile",
       "attendeeTypePercent": "{{0}}% Of overall registrants",

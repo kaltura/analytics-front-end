@@ -293,7 +293,9 @@ export const viewsConfig = {
     devices: {}
   },
   userEp: {
-
+    title: {},
+    download: {},
+    eventInteractivity: {}
   },
   playlist: {
     title: {},
