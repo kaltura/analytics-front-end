@@ -1,0 +1,36 @@
+<div data-aid="report-event-mini-engagement" class="kReport kSocialHighlights kOverrideFAIcons">
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+
+    <div class="reportContent">
+      <div class="header">
+        <div class="icons">
+          <div class="kMiniIcon blue"><i class="icon-viewer-contributor"></i></div>
+        </div>
+        <span class="title">{{'app.userEp.userDetails' | translate}}</span>
+      </div>
+
+      <div class="row">
+        <span class="label">{{'app.userEp.role' | translate}}</span>
+        <span class="label value" *ngIf="_tableData?.length">{{_tableData[0]?.role || _tableData[0].title}}</span>
+      </div>
+      <div class="row">
+        <span class="label">{{'app.userEp.company' | translate}}</span>
+        <span class="label value" *ngIf="_tableData?.length">{{_tableData[0]?.company}}</span>
+      </div>
+      <div class="row">
+        <span class="label">{{'app.userEp.industry' | translate}}</span>
+        <span class="label value" *ngIf="_tableData?.length">{{_tableData[0]?.industry}}</span>
+      </div>
+      <div class="row">
+        <span class="label">{{'app.userEp.country' | translate}}</span>
+        <span class="label value" *ngIf="_tableData?.length">{{_tableData[0]?.country}}</span>
+      </div>
+
+
+    </div>
+
+  </k-area-blocker>
+</div>
+

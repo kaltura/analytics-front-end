@@ -17,6 +17,7 @@ import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { SelectButtonModule } from "primeng/selectbutton";
 import {EventInteractivityComponent} from "./views/event-interactivity/event-interactivity.component";
+import {UserDetailsComponent} from "./views/user-details/user-details.component";
 
 @NgModule({
   imports: [
@@ -41,7 +42,8 @@ import {EventInteractivityComponent} from "./views/event-interactivity/event-int
   ],
   declarations: [
     UserEpViewComponent,
-    EventInteractivityComponent
+    EventInteractivityComponent,
+    UserDetailsComponent
   ],
   exports: [],
   providers: []

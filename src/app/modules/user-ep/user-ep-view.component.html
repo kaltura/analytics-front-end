@@ -18,14 +18,20 @@
         </div>
 
         <div [class.kHidden]="!_eventLoaded || !_viewConfig.eventInteractivity" class="kReportContainer">
-          <app-event-interactivity #interactivity
-                                     [virtualEventLoaded]="_eventLoaded"
+          <app-event-interactivity   [virtualEventLoaded]="_eventLoaded"
                                      [exporting]="_exporting"
                                      [eventIn]="_eventId"
                                      [userId]="_userId"
                                      [startDate]="_eventStartDate"
                                      [endDate]="_eventEndDate">
           </app-event-interactivity>
+          <app-event-user-details    [virtualEventLoaded]="_eventLoaded"
+                                     [exporting]="_exporting"
+                                     [eventIn]="_eventId"
+                                     [userId]="_userId"
+                                     [startDate]="_eventStartDate"
+                                     [endDate]="_eventEndDate">
+          </app-event-user-details>
         </div>
 
       </div>

@@ -1216,7 +1216,12 @@
       "chat": "{{0}} Chat messages sent",
       "polls": "{{0}} Poll responses",
       "qna": "{{0}} Q&A threads created",
-      "downloads": "{{0}} Attachments downloaded"
+      "downloads": "{{0}} Attachments downloaded",
+      "userDetails": "User details",
+      "role": "Role",
+      "company": "Company",
+      "industry": "Industry",
+      "country": "Country"
     },
     "event": {
       "attendeeProfile": "Registrants profile",
