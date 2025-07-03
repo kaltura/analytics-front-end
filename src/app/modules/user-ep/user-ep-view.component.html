@@ -18,13 +18,23 @@
         </div>
 
         <div [class.kHidden]="!_eventLoaded || !_viewConfig.eventInteractivity" class="kReportContainer">
-          <app-event-interactivity   [virtualEventLoaded]="_eventLoaded"
-                                     [exporting]="_exporting"
-                                     [eventIn]="_eventId"
-                                     [userId]="_userId"
-                                     [startDate]="_eventStartDate"
-                                     [endDate]="_eventEndDate">
-          </app-event-interactivity>
+          <div class="kColumnsWide">
+            <app-metrics-cards         [virtualEventLoaded]="_eventLoaded"
+                                       [exporting]="_exporting"
+                                       [eventIn]="_eventId"
+                                       [userId]="_userId"
+                                       [startDate]="_eventStartDate"
+                                       [endDate]="_eventEndDate">
+            </app-metrics-cards>
+            <app-event-interactivity   [virtualEventLoaded]="_eventLoaded"
+                                       [exporting]="_exporting"
+                                       [eventIn]="_eventId"
+                                       [userId]="_userId"
+                                       [startDate]="_eventStartDate"
+                                       [endDate]="_eventEndDate">
+            </app-event-interactivity>
+          </div>
+
           <app-event-user-details    [virtualEventLoaded]="_eventLoaded"
                                      [exporting]="_exporting"
                                      [eventIn]="_eventId"

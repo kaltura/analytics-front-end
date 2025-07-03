@@ -18,6 +18,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { SelectButtonModule } from "primeng/selectbutton";
 import {EventInteractivityComponent} from "./views/event-interactivity/event-interactivity.component";
 import {UserDetailsComponent} from "./views/user-details/user-details.component";
+import {MetricsCardsComponent} from "./views/metrics-cards/metrics-cards.component";
 
 @NgModule({
   imports: [
@@ -43,7 +44,8 @@ import {UserDetailsComponent} from "./views/user-details/user-details.component"
   declarations: [
     UserEpViewComponent,
     EventInteractivityComponent,
-    UserDetailsComponent
+    UserDetailsComponent,
+    MetricsCardsComponent
   ],
   exports: [],
   providers: []

@@ -1,29 +1,31 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportType } from 'kaltura-ngx-client';
+import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
-import { of as ObservableOf } from 'rxjs';
+import { ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
+import { switchMap } from 'rxjs/operators';
+import { forkJoin, of as ObservableOf } from 'rxjs';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
-import { UserDetailsConfig } from './user-details.config';
+import { MetricsCardsConfig } from './metrics-cards.config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils";
-import { switchMap } from "rxjs/operators";
+import {analyticsConfig} from "configuration/analytics-config";
+import {FrameEventManagerService, FrameEvents} from "shared/modules/frame-event-manager/frame-event-manager.service";
 
 @Component({
-  selector: 'app-event-user-details',
-  templateUrl: './user-details.component.html',
-  styleUrls: ['./user-details.component.scss'],
+  selector: 'app-metrics-cards',
+  templateUrl: './metrics-cards.component.html',
+  styleUrls: ['./metrics-cards.component.scss'],
   providers: [
-    KalturaLogger.createLogger('EventInteractivityComponent'),
-    UserDetailsConfig,
+    KalturaLogger.createLogger('MetricsCardsComponent'),
+    MetricsCardsConfig,
     ReportService,
   ]
 })
-export class UserDetailsComponent implements OnInit {
+export class MetricsCardsComponent implements OnInit {
 
   private _dataConfig: ReportDataConfig;
   private _cncDataConfig: ReportDataConfig;
-  protected _componentId = 'event-interactivity';
+  protected _componentId = 'metrics-cards';
 
   @Input() eventIn = '';
   @Input() userId = '';
@@ -42,21 +44,27 @@ export class UserDetailsComponent implements OnInit {
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   private _order = '-date_id';
-  private _reportType = KalturaReportType.epWebcastLiveUserEngagement;
+  private _reportType = KalturaReportType.epWebcastEngagement;
+  private _cncReportType = KalturaReportType.cncParticipation;
   public _reportInterval = KalturaReportInterval.days;
   public _pager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
   public _filter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false
   });
-  public _tableData: any[] = [];
 
-  private uniqueViewersCount = 0;
+  public _totalMinutesViewed = '0';
+  public _avgLiveEngagement = '0';
+  public _videosViewed = '0';
+  public _sessionViewed = '0';
 
   constructor(private _reportService: ReportService,
               private _errorsManager: ErrorsManagerService,
-              _dataConfigService: UserDetailsConfig) {
+              private _logger: KalturaLogger,
+              private _frameEventManager: FrameEventManagerService,
+              _dataConfigService: MetricsCardsConfig) {
     this._dataConfig = _dataConfigService.getConfig();
+    this._cncDataConfig = _dataConfigService.getCncConfig();
   }
 
   ngOnInit(): void {
@@ -80,9 +88,8 @@ export class UserDetailsComponent implements OnInit {
         return ObservableOf({ report, compare: null });
       }))
       .subscribe(({ report, compare }) => {
-          this._tableData = [];
-          if (report.table && report.table.header && report.table.data) {
-            this._handleTable(report.table); // handle totals
+          if (report.totals) {
+            this._handleTotals(report.totals); // handle totals
           }
 
           this._isBusy = false;
@@ -101,9 +108,9 @@ export class UserDetailsComponent implements OnInit {
         });
   }
 
-  private _handleTable(table: KalturaReportTable): void {
-    const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
-    this._tableData = tableData;
+  private _handleTotals(totals: KalturaReportTotal): void {
+    const tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
+    // TODO: handle totals
   }
 
 }

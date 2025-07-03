@@ -2,12 +2,14 @@ import { Component, Input, OnInit } from '@angular/core';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
-import { switchMap } from 'rxjs/operators';
-import { forkJoin, of as ObservableOf } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { EventInteractivityConfig } from './event-interactivity.config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils";
+import {analyticsConfig} from "configuration/analytics-config";
+import {FrameEventManagerService, FrameEvents} from "shared/modules/frame-event-manager/frame-event-manager.service";
+import {PageScrollConfig, PageScrollInstance, PageScrollService} from "ngx-page-scroll";
 
 @Component({
   selector: 'app-event-interactivity',
@@ -64,6 +66,9 @@ export class EventInteractivityComponent implements OnInit {
 
   constructor(private _reportService: ReportService,
               private _errorsManager: ErrorsManagerService,
+              private pageScrollService: PageScrollService,
+              private _logger: KalturaLogger,
+              private _frameEventManager: FrameEventManagerService,
               _dataConfigService: EventInteractivityConfig) {
     this._dataConfig = _dataConfigService.getConfig();
     this._cncDataConfig = _dataConfigService.getCncConfig();
@@ -130,6 +135,21 @@ export class EventInteractivityComponent implements OnInit {
       this._messagesCount = tabsData[3].rawValue !== '' ? ReportHelper.numberOrZero(tabsData[3].rawValue as number) : '0';
       this._questionsCount = tabsData[5].rawValue !== '' ? ReportHelper.numberOrZero(tabsData[5].rawValue as number) : '0';
       this._pollsCount = tabsData[6].rawValue !== '' ? ReportHelper.numberOrZero(tabsData[6].rawValue as number) : '0';
+    }
+  }
+
+  public scrollTo(target: string): void {
+    this._logger.trace('Handle scroll to details report action by user', { target });
+    if (analyticsConfig.isHosted) {
+      const targetEl = document.getElementById(target.substr(1)) as HTMLElement;
+      if (targetEl) {
+        this._logger.trace('Send scrollTo event to the host app', { offset: targetEl.offsetTop });
+        this._frameEventManager.publish(FrameEvents.ScrollTo, targetEl.offsetTop);
+      }
+    } else {
+      PageScrollConfig.defaultDuration = 500;
+      const pageScrollInstance: PageScrollInstance = PageScrollInstance.simpleInstance(document, target);
+      this.pageScrollService.start(pageScrollInstance);
     }
   }
 

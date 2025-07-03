@@ -53,6 +53,7 @@
             <kInputHelper *ngIf="_displayNewMetrics">
               <span>{{'app.userEp.polls_tt' | translate}}</span>
             </kInputHelper>
+            <a class="kLink" *ngIf="!exporting" (click)="scrollTo('#polls')">{{'app.userEp.details' | translate}}</a>
           </div>
         </div>
 

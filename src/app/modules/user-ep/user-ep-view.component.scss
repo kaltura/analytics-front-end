@@ -44,6 +44,14 @@
   padding-bottom: 24px;
   background-color: $appBkgColor;
   display: flex;
+  .kColumnsWide {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    margin-right: 32px;
+    margin-bottom: 32px;
+    gap: 32px;
+  }
   &.stickToBottom {
     padding-bottom: 0px;
   }

@@ -1,0 +1,65 @@
+<div data-aid="report-event-mini-engagement" class="kReport kSocialHighlights kOverrideFAIcons">
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+
+    <div class="reportContent">
+      <div class="metric">
+        <div class="icons">
+          <div class="kMiniIcon orange"><i class="icon-small-time"></i></div>
+        </div>
+        <span class="value">{{_totalMinutesViewed}}</span>
+        <div class="labelHolder">
+          <span class="label">{{'app.userEp.totalMinViewed' | translate}}</span>
+          <kInputHelper>
+            <span>{{'app.userEp.totalMinViewed_tt' | translate}}</span>
+          </kInputHelper>
+        </div>
+      </div>
+
+      <div class="metric">
+        <div class="icons">
+          <div class="kMiniIcon green"><i class="icon-small-impressions"></i></div>
+        </div>
+        <span class="value">{{_avgLiveEngagement}}</span>
+        <div class="labelHolder">
+          <span class="label">{{'app.userEp.avgLiveEngagement' | translate}}</span>
+          <kInputHelper>
+            <span>{{'app.userEp.avgLiveEngagement_tt' | translate}}</span>
+          </kInputHelper>
+        </div>
+      </div>
+
+      <div class="metric">
+        <div class="icons">
+          <div class="kMiniIcon blue"><i class="icon-small-play"></i></div>
+        </div>
+        <span class="value">{{_videosViewed}}</span>
+        <div class="labelHolder">
+          <span class="label">{{'app.userEp.videosViewed' | translate}}</span>
+          <kInputHelper>
+            <span>{{'app.userEp.videosViewed_tt' | translate}}</span>
+          </kInputHelper>
+        </div>
+      </div>
+
+      <div class="metric">
+        <div class="icons">
+          <div class="kMiniIcon blue"><i class="icon-calendar"></i></div>
+        </div>
+        <span class="value">{{_sessionViewed}}</span>
+        <div class="labelHolder">
+          <span class="label">{{'app.userEp.sessionsViewed' | translate}}</span>
+          <kInputHelper>
+            <span>{{'app.userEp.sessionsViewed_tt' | translate}}</span>
+          </kInputHelper>
+        </div>
+
+      </div>
+
+
+    </div>
+
+  </k-area-blocker>
+</div>
+

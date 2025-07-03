@@ -1227,7 +1227,16 @@
       "role": "Role",
       "company": "Company",
       "industry": "Industry",
-      "country": "Country"
+      "country": "Country",
+      "details": "See details",
+      "totalMinViewed": "Total min. viewed",
+      "totalMinViewed_tt": "Total min. viewed tooltip TBD",
+      "avgLiveEngagement": "Avg. live engagement",
+      "avgLiveEngagement_tt": "Avg. live engagement tooltip TBD",
+      "videosViewed": "Videos viewed",
+      "videosViewed_tt": "Videos viewed tooltip TBD",
+      "sessionsViewed": "Session views",
+      "sessionsViewed_tt": "Session views tooltip TBD"
     },
     "event": {
       "attendeeProfile": "Registrants profile",
