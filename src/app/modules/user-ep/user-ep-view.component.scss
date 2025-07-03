@@ -40,58 +40,23 @@
 .kFloatLeft {
   margin-left: auto;
 }
-.kReportContainer{
-  padding-bottom: 24px;
+.kReportContainer {
+  margin-bottom: 32px;
   background-color: $appBkgColor;
   display: flex;
+
   .kColumnsWide {
     width: 70%;
     display: flex;
     flex-direction: column;
     margin-right: 32px;
-    margin-bottom: 32px;
     gap: 32px;
   }
-  &.stickToBottom {
-    padding-bottom: 0px;
-  }
-  .kSmallReportContainer {
-    width: calc(50% - 12px);
-    &:first-child {
-      margin-right: 24px;
-    }
-  }
-  .kMiniReportContainer{
+
+  .kColumnsNarrow {
     width: 30%;
-    flex: 1 1 auto;
-    height: 274px;
-    &.kMiniTopReportContainer{
-      height: 120px;
-    }
-    .col {
-      display: flex;
-      flex-direction: column;
-      ::ng-deep app-devices-overview .kNoResults {
-        height: 166px;
-      }
-    }
-  }
-  .kMiniTopReportSmall{
-    width: 30%;
-  }
-  .kMiniTopReportWide{
-    width: calc(60% + 48px);
-  }
-  .showOnTablet {
-    display: none;
-  }
-  .separator {
-    width: 24px;
-    flex: 0 0 auto;
-  }
-  .divider {
-    height: 24px;
-    width: 100%;
+    display: flex;
+    flex-direction: column;
   }
 }
 .kReport {

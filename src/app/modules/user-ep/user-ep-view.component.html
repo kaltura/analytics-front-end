@@ -34,14 +34,22 @@
                                        [endDate]="_eventEndDate">
             </app-event-interactivity>
           </div>
-
-          <app-event-user-details    [virtualEventLoaded]="_eventLoaded"
-                                     [exporting]="_exporting"
-                                     [eventIn]="_eventId"
-                                     [userId]="_userId"
-                                     [startDate]="_eventStartDate"
-                                     [endDate]="_eventEndDate">
-          </app-event-user-details>
+          <div class="kColumnsNarrow">
+            <app-event-user-details    [virtualEventLoaded]="_eventLoaded"
+                                       [exporting]="_exporting"
+                                       [eventIn]="_eventId"
+                                       [userId]="_userId"
+                                       [startDate]="_eventStartDate"
+                                       [endDate]="_eventEndDate">
+            </app-event-user-details>
+            <app-other-events          [virtualEventLoaded]="_eventLoaded"
+                                       [exporting]="_exporting"
+                                       [eventIn]="_eventId"
+                                       [userId]="_userId"
+                                       [startDate]="_eventStartDate"
+                                       [endDate]="_eventEndDate">
+            </app-other-events>
+          </div>
         </div>
 
       </div>

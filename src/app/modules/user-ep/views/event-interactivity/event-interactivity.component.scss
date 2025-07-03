@@ -7,6 +7,7 @@
 }
 .kReport {
   margin-bottom: 0px !important;
+  height: 100%;
 }
 .kLink {
   margin-left: 8px;
@@ -18,6 +19,7 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+    gap: 16px;
   }
 }
 .reportContent {
@@ -65,10 +67,6 @@
   .metric {
     display: flex;
     align-items: center;
-    margin-bottom: 16px;
-    &:last-child {
-      margin-bottom: 0px;
-    }
   }
   .label {
     font-size: 15px;

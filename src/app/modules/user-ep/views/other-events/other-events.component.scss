@@ -1,7 +1,7 @@
 @import '../../../../../styles/variables';
 :host {
   display: block;
-  height: 234px;
+  height: 195px;
   width: 100%;
 }
 .kReport {
@@ -24,39 +24,22 @@
       font-size: 20px;
       color: $kGrayscale1;
     }
-    .icons {
-      margin-right: 12px;
-    }
-    .kMiniIcon {
-      flex: 0 0 auto;
-      width: 30px;
-      height: 30px;
-      border-radius: 15px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-
-      &.blue {
-        background-color: rgba(72, 122, 223, 0.2);
-        color: #487ADF;
-      }
-    }
   }
   .row {
     display: flex;
     margin-bottom: 16px;
+    i {
+      font-size: 16px;
+      color: #487ADF;
+    }
     .label {
       font-size: 16px;
       color: $kGrayscale1;
     }
     .value {
       font-weight: 700;
+      margin-right: 4px;
       margin-left: 8px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      width: 100%;
     }
   }
 }

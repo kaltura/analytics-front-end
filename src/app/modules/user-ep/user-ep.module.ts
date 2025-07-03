@@ -19,6 +19,7 @@ import { SelectButtonModule } from "primeng/selectbutton";
 import {EventInteractivityComponent} from "./views/event-interactivity/event-interactivity.component";
 import {UserDetailsComponent} from "./views/user-details/user-details.component";
 import {MetricsCardsComponent} from "./views/metrics-cards/metrics-cards.component";
+import {OtherEventsComponent} from "./views/other-events/other-events.component";
 
 @NgModule({
   imports: [
@@ -45,7 +46,8 @@ import {MetricsCardsComponent} from "./views/metrics-cards/metrics-cards.compone
     UserEpViewComponent,
     EventInteractivityComponent,
     UserDetailsComponent,
-    MetricsCardsComponent
+    MetricsCardsComponent,
+    OtherEventsComponent
   ],
   exports: [],
   providers: []

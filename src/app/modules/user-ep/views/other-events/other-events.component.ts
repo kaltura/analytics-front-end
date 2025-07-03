@@ -4,26 +4,26 @@ import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService, ReportConfig, ReportService } from 'shared/services';
 import { of as ObservableOf } from 'rxjs';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
-import { UserDetailsConfig } from './user-details.config';
+import { OtherEventsConfig } from './other-events.config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils";
 import { switchMap } from "rxjs/operators";
 
 @Component({
-  selector: 'app-event-user-details',
-  templateUrl: './user-details.component.html',
-  styleUrls: ['./user-details.component.scss'],
+  selector: 'app-other-events',
+  templateUrl: './other-events.component.html',
+  styleUrls: ['./other-events.component.scss'],
   providers: [
-    KalturaLogger.createLogger('EventInteractivityComponent'),
-    UserDetailsConfig,
+    KalturaLogger.createLogger('OtherEventsComponent'),
+    OtherEventsConfig,
     ReportService,
   ]
 })
-export class UserDetailsComponent implements OnInit {
+export class OtherEventsComponent implements OnInit {
 
   private _dataConfig: ReportDataConfig;
   private _cncDataConfig: ReportDataConfig;
-  protected _componentId = 'user-details';
+  protected _componentId = 'other-events';
 
   @Input() eventIn = '';
   @Input() userId = '';
@@ -55,7 +55,7 @@ export class UserDetailsComponent implements OnInit {
 
   constructor(private _reportService: ReportService,
               private _errorsManager: ErrorsManagerService,
-              _dataConfigService: UserDetailsConfig) {
+              _dataConfigService: OtherEventsConfig) {
     this._dataConfig = _dataConfigService.getConfig();
   }
 

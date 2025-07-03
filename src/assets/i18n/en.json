@@ -1236,7 +1236,12 @@
       "videosViewed": "Videos viewed",
       "videosViewed_tt": "Videos viewed tooltip TBD",
       "sessionsViewed": "Session views",
-      "sessionsViewed_tt": "Session views tooltip TBD"
+      "sessionsViewed_tt": "Session views tooltip TBD",
+      "other": "Other event activity",
+      "other_tt": "Other event activity tooltip TBD",
+      "eventReg": "event registrations",
+      "eventsAtt": "events attended",
+      "sessionsAtt": "sessions attended"
     },
     "event": {
       "attendeeProfile": "Registrants profile",
