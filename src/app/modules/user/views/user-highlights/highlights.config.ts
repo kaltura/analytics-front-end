@@ -10,7 +10,7 @@ export class HighlightsConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.graph]: {
@@ -25,10 +25,12 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             colors: [getPrimaryColor('time'), getSecondaryColor('time')],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.user.sum_time_viewed`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
-          'avg_time_viewed': {
-            format: value => value,
-            colors: [getPrimaryColor('time'), getSecondaryColor('time')],
-            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.user.avg_time_viewed`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
+          'avg_view_period_time': {
+            format: value => parseFloat(value.toFixed(1)),
+            title: this._translate.instant(`app.playlist.avg_view_period_time`),
+            sortOrder: 2,
+            colors: [getPrimaryColor('moderation'), getSecondaryColor('moderation')],
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.playlist.avg_view_period_time`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
           'count_loads': {
             format: value => value,
@@ -81,7 +83,7 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 3,
           },
-          'avg_time_viewed': {
+          'avg_view_period_time': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 4,
           },
@@ -112,9 +114,9 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             title: this._translate.instant(`app.user.count_plays`),
             sortOrder: 2,
           },
-          'avg_time_viewed': {
+          'avg_view_period_time': {
             format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.user.avg_time_viewed`),
+            title: this._translate.instant(`app.playlist.avg_view_period_time`),
             sortOrder: 3,
           },
           'sum_time_viewed': {

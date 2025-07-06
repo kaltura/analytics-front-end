@@ -1478,6 +1478,7 @@
       "avg_time_viewed": "Avg. View Time",
       "count_loads": "Player Impressions",
       "avg_completion_rate": "Avg. Completion Rate",
+      "avg_view_period_time": "Avg. Viewing Time",
       "total_completion_rate": "Total Completion Rate",
       "user_role": "User Role:",
       "email": "Email:",

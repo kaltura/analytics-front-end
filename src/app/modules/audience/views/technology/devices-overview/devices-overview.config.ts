@@ -20,8 +20,8 @@ export class DevicesOverviewConfig extends ReportDataBaseConfig {
           'count_plays': {
             format: value => value,
           },
-          'avg_time_viewed': {
-            format: value => value,
+          'avg_view_period_time': {
+            format: value => ReportHelper.numberOrZero(value),
           },
           'sum_time_viewed': {
             format: value => value,
@@ -53,12 +53,12 @@ export class DevicesOverviewConfig extends ReportDataBaseConfig {
             sortOrder: 3,
             colors: ['time'],
           },
-          'avg_time_viewed': {
+          'avg_view_period_time': {
             format: value => value,
-            title: this._translate.instant(`app.audience.technology.avg_time_viewed`),
+            title: this._translate.instant(`app.playlist.avg_view_period_time`),
             sortOrder: 4,
             colors: ['time'],
-          },
+          }
         }
       }
     };
