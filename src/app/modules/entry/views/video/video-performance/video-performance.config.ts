@@ -56,10 +56,6 @@ export class VideoPerformanceConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.percents(value / 100, false),
             sortOrder: 6,
           },
-          'avg_view_drop_off': {
-            format: value => ReportHelper.percents(value, false),
-            sortOrder: 7,
-          },
           'total_completion_rate': {
             format: value => ReportHelper.percents(value / 100, false),
             sortOrder: 8,
@@ -102,14 +98,7 @@ export class VideoPerformanceConfig extends ReportDataBaseConfig {
             sortOrder: 4,
             colors: [getPrimaryColor('dropoff'), getSecondaryColor('dropoff')],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.entry.avg_completion_rate`)}:&nbsp;${ReportHelper.percents(value / 100, false, true)}</span>`
-          },
-          'avg_view_drop_off': {
-            format: value => Math.min(value * 100, 100),
-            title: this._translate.instant(`app.entry.avg_view_drop_off`),
-            sortOrder: 5,
-            colors: [getPrimaryColor('moderation'), getSecondaryColor('moderation')],
-            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.entry.avg_view_drop_off`)}:&nbsp;${ReportHelper.percents(value / 100, false)}</span>`
-          },
+          }
         }
       },
       [ReportDataSection.totals]: {
@@ -141,12 +130,6 @@ export class VideoPerformanceConfig extends ReportDataBaseConfig {
             title: this._translate.instant(`app.entry.avg_completion_rate`),
             tooltip: this._translate.instant('app.entry.avg_completion_rate_tt'),
             sortOrder: 5,
-          },
-          'avg_view_drop_off': {
-            format: value => value,
-            title: this._translate.instant(`app.entry.avg_view_drop_off`),
-            tooltip: this._translate.instant('app.entry.avg_view_drop_off_tt'),
-            sortOrder: 6,
           }
         }
       }

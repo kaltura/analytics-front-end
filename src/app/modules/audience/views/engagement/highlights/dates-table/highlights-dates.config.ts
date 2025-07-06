@@ -10,7 +10,7 @@ export class HighlightsDatesConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.table]: {
@@ -39,10 +39,10 @@ export class HighlightsDatesConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 4,
           },
-          'avg_view_drop_off': {
-            format: value => ReportHelper.percents(value, true, true),
-            sortOrder: 5,
-          },
+          'avg_completion_rate': {
+            format: value => ReportHelper.percents(value / 100, true, true),
+            sortOrder: 6,
+          }
         }
       }
     };

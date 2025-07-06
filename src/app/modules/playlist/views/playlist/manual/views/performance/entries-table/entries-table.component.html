@@ -20,9 +20,6 @@
         <th [ngStyle]="{'width': '10%'}" [kTooltip]="'app.entry.sum_time_viewed' | translate" [showOnEllipsis]="true" [pSortableColumn]="isCompareMode ? null : 'sum_time_viewed'">{{'app.entry.sum_time_viewed' | translate}}
           <p-sortIcon [field]="'sum_time_viewed'" *ngIf="!isCompareMode"></p-sortIcon>
         </th>
-        <th [ngStyle]="{'width': '10%'}" [kTooltip]="'app.entry.avg_view_drop_off' | translate" [showOnEllipsis]="true" [pSortableColumn]="isCompareMode ? null : 'avg_view_drop_off'">{{'app.entry.avg_view_drop_off' | translate}}
-          <p-sortIcon [field]="'avg_view_drop_off'" *ngIf="!isCompareMode"></p-sortIcon>
-        </th>
         <th [ngStyle]="{'width': '17%'}" [kTooltip]="'app.entry.avg_completion_rate' | translate" [showOnEllipsis]="true" [pSortableColumn]="isCompareMode ? null : 'avg_completion_rate'">{{'app.entry.avg_completion_rate' | translate}}
           <p-sortIcon [field]="'avg_completion_rate'" *ngIf="!isCompareMode"></p-sortIcon>
         </th>
@@ -44,9 +41,6 @@
         </th>
         <th>
           <span>{{summary['sum_time_viewed']}}</span>
-        </th>
-        <th>
-          <span>{{summary['avg_view_drop_off']}}</span>
         </th>
         <th [ngStyle]="{'paddingRight':'8px'}">
           <app-bullet [hideBulletOnTablet]="true" [value]="summary['avg_completion_rate']" [animate]="false" [colorScheme]="'dropoff'"></app-bullet>
