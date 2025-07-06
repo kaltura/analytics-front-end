@@ -27,7 +27,7 @@ export class HighlightsDatesConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 1,
           },
-          'sum_time_viewed': {
+          'sum_view_period': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 2,
           },

@@ -19,10 +19,10 @@ export class PerformanceConfig extends ReportDataBaseConfig {
             colors: [getPrimaryColor(), getSecondaryColor()],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.highlightsReport.count_plays`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
-          'sum_time_viewed': {
+          'sum_view_period': {
             format: value => value,
             colors: [getPrimaryColor('time'), getSecondaryColor('time')],
-            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.highlightsReport.sum_view_period`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
           'unique_known_users': {
             format: value => value,
@@ -52,9 +52,9 @@ export class PerformanceConfig extends ReportDataBaseConfig {
             tooltip: this._translate.instant(`app.engagement.highlightsReport.unique_known_users_tt`),
             sortOrder: 1,
           },
-          'sum_time_viewed': {
+          'sum_view_period': {
             format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed`),
+            title: this._translate.instant(`app.engagement.highlightsReport.sum_view_period`),
             units: value => 'min',
             sortOrder: 2,
           },

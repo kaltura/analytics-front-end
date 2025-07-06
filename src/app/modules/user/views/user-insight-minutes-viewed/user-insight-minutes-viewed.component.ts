@@ -30,12 +30,12 @@ import { TrendService } from 'shared/services/trend.service';
 })
 export class UserInsightMinutesViewedComponent extends UserBase implements OnDestroy {
   @Input() userId: string;
-  
+
   protected _componentId = 'insight-minutes-viewed';
   private _dataConfig: ReportDataConfig;
   private _reportType = reportTypeMap(KalturaReportType.userEngagementTimeline);
   private _order = '+date_id';
-  
+
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _pager = new KalturaFilterPager({ pageSize: 500, pageIndex: 1 });
@@ -49,11 +49,11 @@ export class UserInsightMinutesViewedComponent extends UserBase implements OnDes
   public _mostViewedDay: string;
   public _mostViewedDayFormat = analyticsConfig.dateFormat === 'month-day-year' ? 'dddd MM/DD/YY' : 'dddd DD/MM/YYYY';
   public _colors = [getPrimaryColor('time'), getSecondaryColor('time')];
-  
+
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
   }
-  
+
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _reportService: ReportService,
@@ -63,13 +63,13 @@ export class UserInsightMinutesViewedComponent extends UserBase implements OnDes
     super();
     this._dataConfig = _dataConfigService.getConfig();
   }
-  
+
   ngOnDestroy(): void {
   }
-  
+
   private _parseTableData(table: KalturaReportTable): { maxViewsRow: TableRow<any>, graphData: number[], weeklyAvg: number } {
     const avg = arr => arr.reduce((prev, curr) => prev + curr, 0) / arr.length;
-    
+
     const tableData = this._reportService
       .parseTableData(table, this._dataConfig[ReportDataSection.table]).tableData
       .map((item: TableRow<any>) => {
@@ -77,47 +77,47 @@ export class UserInsightMinutesViewedComponent extends UserBase implements OnDes
         item['week'] = item['date_id'].get('week');
         return item;
       });
-    
-    const maxViewsRow = tableData.reduce((prev, current) => (prev['sum_time_viewed'] > current['sum_time_viewed']) ? prev : current, {});
-  
+
+    const maxViewsRow = tableData.reduce((prev, current) => (prev['sum_view_period'] > current['sum_view_period']) ? prev : current, {});
+
     const dataByDay = groupBy(tableData, 'day');
     const graphData = Object
       .keys(dataByDay)
-      .map(key => parseFloat(ReportHelper.numberOrZero(dataByDay[key].reduce((acc, val) => acc + val['sum_time_viewed'], 0))));
-  
+      .map(key => parseFloat(ReportHelper.numberOrZero(dataByDay[key].reduce((acc, val) => acc + val['sum_view_period'], 0))));
+
     const dataByWeek = groupBy(tableData, 'week');
     const weeklyData = Object
       .keys(dataByWeek)
-      .map(key => dataByWeek[key].reduce((acc, val) => acc + val['sum_time_viewed'], 0));
-    
+      .map(key => dataByWeek[key].reduce((acc, val) => acc + val['sum_view_period'], 0));
+
     const weeklyAvg = avg(weeklyData);
-    
+
     return { maxViewsRow, graphData, weeklyAvg };
   }
-  
+
   private _handleTable(table: KalturaReportTable): void {
     const { maxViewsRow, graphData, weeklyAvg } = this._parseTableData(table);
     this._chartData = this._dataConfigService.getGraphConfig(graphData);
-    
+
     this._weeklyMinutes = ReportHelper.numberOrZero(weeklyAvg);
     this._mostViewedDay = maxViewsRow['date_id'].format(this._mostViewedDayFormat);
   }
-  
+
   private _handleCompare(current: KalturaReportTable, compare: KalturaReportTable): void {
     const getTooltipRowString = (time, value) => `<div class="kTotalsCompareTooltip"><span class="kTimePeriod">${time}</span><span class="kTotalsCompareTooltipValue"><strong>${value}</strong>&nbsp;</span></div>`;
     const { graphData, weeklyAvg } = this._parseTableData(current);
     let compareGraphData = [];
     let compareWeeklyAvg = 0;
-    
+
     if (compare.data) {
       const compareParsedData = this._parseTableData(compare);
       compareGraphData = compareParsedData.graphData;
       compareWeeklyAvg = compareParsedData.weeklyAvg;
     }
-    
+
     this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM DD, YYYY');
     this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM DD, YYYY');
-    
+
     this._chartData = this._dataConfigService.getGraphConfig(graphData, compareGraphData);
     const { value, direction } = this._trendService.calculateTrend(weeklyAvg, compareWeeklyAvg);
     this._compareWeeklyMinutes = {
@@ -127,11 +127,11 @@ export class UserInsightMinutesViewedComponent extends UserBase implements OnDes
       tooltip: `${getTooltipRowString(this._currentDates, ReportHelper.numberOrZero(weeklyAvg))}${getTooltipRowString(this._compareDates, ReportHelper.numberOrZero(compareWeeklyAvg))}`,
     };
   }
-  
+
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
-    
+
     this._filter.userIds = this.userId;
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order, pager: this._pager };
     this._reportService.getReport(reportConfig, sections)
@@ -139,10 +139,10 @@ export class UserInsightMinutesViewedComponent extends UserBase implements OnDes
         if (!this._isCompareMode) {
           return ObservableOf({ report, compare: null });
         }
-        
+
         this._compareFilter.userIds = this.userId;
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: this._order, pager: this._pager };
-        
+
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
       }))
@@ -154,7 +154,7 @@ export class UserInsightMinutesViewedComponent extends UserBase implements OnDes
               this._handleTable(report.table);
             }
           }
-          
+
           this._isBusy = false;
         },
         error => {
@@ -170,7 +170,7 @@ export class UserInsightMinutesViewedComponent extends UserBase implements OnDes
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
-  
+
   protected _updateFilter(): void {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDate = this._dateFilter.startDate;
@@ -184,10 +184,10 @@ export class UserInsightMinutesViewedComponent extends UserBase implements OnDes
       this._compareFilter = null;
     }
   }
-  
+
   protected _updateRefineFilter(): void {
     this._pager.pageIndex = 1;
-    
+
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);

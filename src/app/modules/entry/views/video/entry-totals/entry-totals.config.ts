@@ -35,7 +35,7 @@ export class EntryTotalsConfig extends ReportDataBaseConfig {
             icon: 'icon-small-viewer-contributor',
             iconColor: 'green',
           },
-          'sum_time_viewed': {
+          'sum_view_period': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.entry.minutes`),
             units: value => 'min',

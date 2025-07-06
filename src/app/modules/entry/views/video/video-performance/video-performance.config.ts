@@ -48,7 +48,7 @@ export class VideoPerformanceConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 4,
           },
-          'sum_time_viewed': {
+          'sum_view_period': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 5,
           },
@@ -85,12 +85,12 @@ export class VideoPerformanceConfig extends ReportDataBaseConfig {
             colors: [getPrimaryColor('viewers'), getSecondaryColor('viewers')],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.entry.unique_viewers`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
-          'sum_time_viewed': {
+          'sum_view_period': {
             format: value => value,
-            title: this._translate.instant(`app.entry.sum_time_viewed`),
+            title: this._translate.instant(`app.entry.sum_view_period`),
             sortOrder: 3,
             colors: [getPrimaryColor('time'), getSecondaryColor('time')],
-            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.entry.sum_time_viewed`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.entry.sum_view_period`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
           'avg_completion_rate': {
             format: value => Math.min(value, 100),
@@ -120,7 +120,7 @@ export class VideoPerformanceConfig extends ReportDataBaseConfig {
             tooltip: this._translate.instant('app.entry.unique_known_users_tt'),
             sortOrder: 3,
           },
-          'sum_time_viewed': {
+          'sum_view_period': {
             format: value => value,
             title: this._translate.instant(`app.entry.sum_time_viewed`),
             sortOrder: 4,

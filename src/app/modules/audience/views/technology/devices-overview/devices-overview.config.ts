@@ -23,7 +23,7 @@ export class DevicesOverviewConfig extends ReportDataBaseConfig {
           'avg_view_period_time': {
             format: value => ReportHelper.numberOrZero(value),
           },
-          'sum_time_viewed': {
+          'sum_view_period': {
             format: value => value,
           },
           'unique_viewers': {
@@ -47,9 +47,9 @@ export class DevicesOverviewConfig extends ReportDataBaseConfig {
             sortOrder: 2,
             colors: ['viewers'],
           },
-          'sum_time_viewed': {
-            format: value => value,
-            title: this._translate.instant(`app.audience.technology.sum_time_viewed`),
+          'sum_view_period': {
+            format: value => ReportHelper.numberOrZero(value),
+            title: this._translate.instant(`app.audience.technology.sum_view_period`),
             sortOrder: 3,
             colors: ['time'],
           },

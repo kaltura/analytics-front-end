@@ -25,7 +25,7 @@ export class InsightPeakDayConfig extends ReportDataBaseConfig {
           'count_plays': {
             format: value => ReportHelper.numberOrZero(value),
           },
-          'sum_time_viewed': {
+          'sum_view_period': {
             format: value => ReportHelper.numberOrZero(value),
           },
           'unique_known_users': {

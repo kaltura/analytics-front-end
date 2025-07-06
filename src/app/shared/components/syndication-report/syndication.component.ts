@@ -372,7 +372,7 @@ export class SyndicationComponent implements OnDestroy {
       case 'count_loads':
         this._distributionColorScheme = 'impressions';
         break;
-      case 'sum_time_viewed':
+      case 'sum_view_period':
         this._distributionColorScheme = 'time';
         break;
       case 'avg_completion_rate':

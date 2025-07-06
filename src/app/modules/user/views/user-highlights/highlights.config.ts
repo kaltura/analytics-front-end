@@ -20,10 +20,10 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             colors: [getPrimaryColor(), getSecondaryColor()],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.user.count_plays`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
-          'sum_time_viewed': {
+          'sum_view_period': {
             format: value => value,
             colors: [getPrimaryColor('time'), getSecondaryColor('time')],
-            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.user.sum_time_viewed`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.user.sum_view_period`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
           'avg_view_period_time': {
             format: value => parseFloat(value.toFixed(1)),
@@ -87,7 +87,7 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 4,
           },
-          'sum_time_viewed': {
+          'sum_view_period': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 5,
           },
@@ -119,9 +119,9 @@ export class HighlightsConfig extends ReportDataBaseConfig {
             title: this._translate.instant(`app.playlist.avg_view_period_time`),
             sortOrder: 3,
           },
-          'sum_time_viewed': {
+          'sum_view_period': {
             format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.user.sum_time_viewed`),
+            title: this._translate.instant(`app.user.sum_view_period`),
             sortOrder: 4,
           },
           'avg_completion_rate': {

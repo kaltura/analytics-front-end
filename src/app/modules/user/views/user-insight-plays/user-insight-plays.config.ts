@@ -9,7 +9,7 @@ export class UserInsightPlaysConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.table]: {
@@ -23,7 +23,7 @@ export class UserInsightPlaysConfig extends ReportDataBaseConfig {
           'count_plays': {
             format: value => parseInt(value, 10),
           },
-          'sum_time_viewed': {
+          'sum_view_period': {
             format: value => ReportHelper.numberOrZero(value),
           },
           'added_entries': {

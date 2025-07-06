@@ -28,9 +28,9 @@ export class UserTotalsConfig extends ReportDataBaseConfig {
             icon: 'icon-small-play',
             iconColor: 'blue',
           },
-          'sum_time_viewed': {
+          'sum_view_period': {
             format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.user.sum_time_viewed`),
+            title: this._translate.instant(`app.user.sum_view_period`),
             sortOrder: 3,
             icon: 'icon-small-time',
             iconColor: 'orange',

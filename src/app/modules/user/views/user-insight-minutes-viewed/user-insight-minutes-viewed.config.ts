@@ -11,12 +11,12 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 @Injectable()
 export class UserInsightMinutesViewedConfig extends ReportDataBaseConfig {
   private _trendIcon = new TrendPipe();
-  
+
   constructor(_translate: TranslateService,
               private _trendService: TrendService) {
     super(_translate);
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.table]: {
@@ -24,14 +24,14 @@ export class UserInsightMinutesViewedConfig extends ReportDataBaseConfig {
           'date_id': {
             format: value => DateFilterUtils.parseDateString(value),
           },
-          'sum_time_viewed': {
+          'sum_view_period': {
             format: value => parseFloat(value),
           },
         }
       },
     };
   }
-  
+
   public getGraphConfig(current: number[], compare: number[] = null): EChartOption {
     return {
       color: [getPrimaryColor('time'), getSecondaryColor('time')],
@@ -57,10 +57,10 @@ export class UserInsightMinutesViewedConfig extends ReportDataBaseConfig {
           if (params.length > 1) {
             const { value, direction } = this._trendService.calculateTrend(params[0].data, params[1].data);
             const icon = this._trendIcon.transform(direction);
-            
+
             return `<div class="kGraphTooltip" style="display: flex; align-items: center"><div><span class="kBullet" style="color: ${getPrimaryColor('time')}">&bull;</span>&nbsp;<span style="font-weight: bold; color: #333333">${this._translate.instant('app.user.minutesViewed', [params[0].data])}</span><br><span class="kBullet" style="color: ${getSecondaryColor('time')}">&bull;</span>&nbsp;<span style="font-weight: bold; color: #333333">${this._translate.instant('app.user.minutesViewed', [params[1].data])}</span></div><span class="kTrend" style="margin-left: 8px"><i class="${icon}"></i><span>${value !== null ? value + '%' : '–'}</span></span></div>`;
           }
-          
+
           return `<div class="kGraphTooltip"><span class="kBullet" style="color: ${getPrimaryColor('time')}">&bull;</span>&nbsp;<span style="font-weight: bold; color: #333333">${this._translate.instant('app.user.minutesViewed', [params[0].data])}</span></div>`;
         }
       },
