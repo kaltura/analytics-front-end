@@ -13,30 +13,34 @@ export class MetricsCardsConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.totals]: {
         fields: {
-          'combined_live_engaged_users_play_time_ratio': {
-            format: value => ReportHelper.percents(value, false),
+          'total_view_time': {
+            format: value => ReportHelper.integerOrZero(value ),
             sortOrder: 1,
           },
-          'reaction_clicked_unique_users': {
-            format: value => ReportHelper.integerOrZero(value),
+          'combined_live_engaged_users_play_time_ratio': {
+            format: value => ReportHelper.percents(value, false),
             sortOrder: 2,
           },
           'count_reaction_clicked': {
             format: value => ReportHelper.integerOrZero(value),
             sortOrder: 3,
           },
-          'download_attachment_unique_users': {
-            format: value => ReportHelper.percents(value, false),
+          'count_download_attachment_clicked': {
+            format: value => ReportHelper.integerOrZero(value),
             sortOrder: 4,
           },
-          'count_download_attachment_clicked': {
+          'count_group_chat_messages_sent': {
             format: value => ReportHelper.integerOrZero(value),
             sortOrder: 5,
           },
-          'unique_combined_live_viewers': {
+          'count_q_and_a_threads': {
             format: value => ReportHelper.integerOrZero(value),
             sortOrder: 6,
-          }
+          },
+          'count_poll_answered': {
+            format: value => ReportHelper.integerOrZero(value),
+            sortOrder: 7,
+          },
         }
       }
     };

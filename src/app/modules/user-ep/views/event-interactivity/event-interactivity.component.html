@@ -1,6 +1,6 @@
 <div data-aid="report-event-interactivity" class="kReport kSocialHighlights kOverrideFAIcons">
 
-  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+  <k-area-blocker [showLoader]="_isBusy">
 
 
     <div class="reportContent">
@@ -26,9 +26,8 @@
                 </defs>
               </svg>
             </div>
-            <span *ngIf="!_displayNewMetrics" class="na" [kTooltip]="'app.event.noData_tt' | translate" [placement]="'bottom'">{{'app.common.na' | translate}}</span>
-            <span *ngIf="_displayNewMetrics" class="label">{{'app.userEp.reactions' | translate: {'0': _reactionsCount} }}</span>
-            <kInputHelper *ngIf="_displayNewMetrics">
+            <span class="label">{{'app.userEp.reactions' | translate: {'0': _reactionsCount} }}</span>
+            <kInputHelper>
               <span>{{'app.userEp.reactions_tt' | translate}}</span>
             </kInputHelper>
           </div>
@@ -37,9 +36,8 @@
             <div class="icons">
               <div class="kMiniIcon blue"><i class="icon-captions"></i></div>
             </div>
-            <span *ngIf="!_displayNewMetrics" class="na" [kTooltip]="'app.event.noData_tt' | translate" [placement]="'bottom'">{{'app.common.na' | translate}}</span>
-            <span *ngIf="_displayNewMetrics" class="label">{{'app.userEp.chat' | translate: {'0': _messagesCount} }}</span>
-            <kInputHelper *ngIf="_displayNewMetrics">
+            <span class="label">{{'app.userEp.chat' | translate: {'0': _messagesCount} }}</span>
+            <kInputHelper>
               <span>{{'app.userEp.chat_tt' | translate}}</span>
             </kInputHelper>
           </div>
@@ -48,9 +46,8 @@
             <div class="icons">
               <div class="kMiniIcon blue"><i class="icon-ic_poll"></i></div>
             </div>
-            <span *ngIf="!_displayNewMetrics" class="na" [kTooltip]="'app.event.noData_tt' | translate" [placement]="'bottom'">{{'app.common.na' | translate}}</span>
-            <span *ngIf="_displayNewMetrics" class="label">{{'app.userEp.polls' | translate: {'0': _pollsCount} }}</span>
-            <kInputHelper *ngIf="_displayNewMetrics">
+            <span class="label">{{'app.userEp.polls' | translate: {'0': _pollsCount} }}</span>
+            <kInputHelper>
               <span>{{'app.userEp.polls_tt' | translate}}</span>
             </kInputHelper>
             <a class="kLink" *ngIf="!exporting" (click)="scrollTo('#polls')">{{'app.userEp.details' | translate}}</a>
@@ -62,9 +59,8 @@
             <div class="icons">
               <div class="kMiniIcon blue"><i class="icon-ic_questions"></i></div>
             </div>
-            <span *ngIf="!_displayNewMetrics" class="na" [kTooltip]="'app.event.noData_tt' | translate" [placement]="'bottom'">{{'app.common.na' | translate}}</span>
-            <span *ngIf="_displayNewMetrics" class="label">{{'app.userEp.qna' | translate: {'0': _questionsCount} }}</span>
-            <kInputHelper *ngIf="_displayNewMetrics">
+            <span class="label">{{'app.userEp.qna' | translate: {'0': _questionsCount} }}</span>
+            <kInputHelper>
               <span>{{'app.userEp.qna_tt' | translate}}</span>
             </kInputHelper>
           </div>
@@ -73,8 +69,8 @@
             <div class="icons">
               <div class="kMiniIcon blue"><i class="icon-download"></i></div>
             </div>
-            <span *ngIf="_displayNewMetrics" class="label">{{'app.userEp.downloads' | translate: {'0': _downloadCount} }}</span>
-            <kInputHelper *ngIf="_displayNewMetrics">
+            <span class="label">{{'app.userEp.downloads' | translate: {'0': _downloadCount} }}</span>
+            <kInputHelper>
               <span>{{'app.userEp.downloads_tt' | translate}}</span>
             </kInputHelper>
           </div>

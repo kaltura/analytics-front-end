@@ -19,19 +19,20 @@
 
         <div [class.kHidden]="!_eventLoaded || !_viewConfig.eventInteractivity" class="kReportContainer">
           <div class="kColumnsWide">
-            <app-metrics-cards         [virtualEventLoaded]="_eventLoaded"
-                                       [exporting]="_exporting"
-                                       [eventIn]="_eventId"
-                                       [userId]="_userId"
-                                       [startDate]="_eventStartDate"
-                                       [endDate]="_eventEndDate">
+            <app-metrics-cards #metrics  [virtualEventLoaded]="_eventLoaded"
+                                         [exporting]="_exporting"
+                                         [eventIn]="_eventId"
+                                         [userId]="_userId"
+                                         [startDate]="_eventStartDate"
+                                         [endDate]="_eventEndDate">
             </app-metrics-cards>
-            <app-event-interactivity   [virtualEventLoaded]="_eventLoaded"
+            <app-event-interactivity   [_isBusy]="metrics._isBusy"
                                        [exporting]="_exporting"
-                                       [eventIn]="_eventId"
-                                       [userId]="_userId"
-                                       [startDate]="_eventStartDate"
-                                       [endDate]="_eventEndDate">
+                                       [_downloadCount]="metrics._downloadCount"
+                                       [_messagesCount]="metrics._messagesCount"
+                                       [_pollsCount]="metrics._pollsCount"
+                                       [_questionsCount]="metrics._questionsCount"
+                                       [_reactionsCount]="metrics._reactionsCount">
             </app-event-interactivity>
           </div>
           <div class="kColumnsNarrow">

@@ -44,8 +44,7 @@ export class MetricsCardsComponent implements OnInit {
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   private _order = '-date_id';
-  private _reportType = KalturaReportType.epWebcastEngagement;
-  private _cncReportType = KalturaReportType.cncParticipation;
+  private _reportType = KalturaReportType.epWebcastVodLiveUsersEngagement;
   public _reportInterval = KalturaReportInterval.days;
   public _pager = new KalturaFilterPager({ pageSize: 25, pageIndex: 1 });
   public _filter = new KalturaEndUserReportInputFilter({
@@ -55,8 +54,15 @@ export class MetricsCardsComponent implements OnInit {
 
   public _totalMinutesViewed = '0';
   public _avgLiveEngagement = '0';
+
   public _videosViewed = '0';
   public _sessionViewed = '0';
+
+  public _reactionsCount = '0';
+  public _messagesCount = '0';
+  public _questionsCount = '0';
+  public _downloadCount = '0';
+  public _pollsCount = '0';
 
   constructor(private _reportService: ReportService,
               private _errorsManager: ErrorsManagerService,
@@ -64,7 +70,6 @@ export class MetricsCardsComponent implements OnInit {
               private _frameEventManager: FrameEventManagerService,
               _dataConfigService: MetricsCardsConfig) {
     this._dataConfig = _dataConfigService.getConfig();
-    this._cncDataConfig = _dataConfigService.getCncConfig();
   }
 
   ngOnInit(): void {
@@ -110,7 +115,13 @@ export class MetricsCardsComponent implements OnInit {
 
   private _handleTotals(totals: KalturaReportTotal): void {
     const tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
-    // TODO: handle totals
+    this._totalMinutesViewed = tabsData[0].value;
+    this._avgLiveEngagement = tabsData[1].value;
+    this._reactionsCount = tabsData[2].value;
+    this._downloadCount = tabsData[3].value;
+    this._messagesCount = tabsData[4].value;
+    this._questionsCount = tabsData[5].value;
+    this._pollsCount = tabsData[6].value;
   }
 
 }
