@@ -1,7 +1,7 @@
 <h5 *ngIf="_isBusy" class="mini-loader"><span></span><span></span></h5>
 <div *ngIf="!_isBusy" class="kHeatMap">
   <div *ngFor="let item of _heatMap; let i = index" class="kHeatMapItem" [id]="i"
-       [kTooltip]="item.tooltip" [escape]="false" [maxWidth]="800" (mousemove)="onSectionMouseMove($event)"
+       [kTooltip]="item.tooltip"  [tooltipOffset]="i > (_heatMap.length - _heatMap.length / 10) ? 45 : 0" [placement]="i > (_heatMap.length - _heatMap.length / 10) ? 'left' : 'top'" [escape]="false" [maxWidth]="800" (mousemove)="onSectionMouseMove($event)"
        [ngStyle]="{'width': item.width, 'left': item.left, 'background-color': item.color}">&nbsp;</div>
   <div #follower class="kFollower"></div>
   <span class="kTimelineStart">0:00</span>
