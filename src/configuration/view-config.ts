@@ -295,7 +295,11 @@ export const viewsConfig = {
   userEp: {
     title: {},
     download: {},
-    eventInteractivity: {}
+    metricsCards: {},
+    eventInteractivity: {},
+    userDetails: {},
+    otherEvents: {},
+    contentOnDemand: {}
   },
   playlist: {
     title: {},

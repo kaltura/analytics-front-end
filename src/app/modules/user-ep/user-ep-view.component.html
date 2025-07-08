@@ -17,14 +17,17 @@
           </div>
         </div>
 
-        <div [class.kHidden]="!_eventLoaded || !_viewConfig.eventInteractivity" class="kReportContainer">
+        <div [class.kHidden]="!_eventLoaded" class="kReportContainer">
           <div class="kColumnsWide">
             <app-metrics-cards #metrics  [virtualEventLoaded]="_eventLoaded"
                                          [exporting]="_exporting"
                                          [eventIn]="_eventId"
                                          [userId]="_userId"
                                          [startDate]="_eventStartDate"
-                                         [endDate]="_eventEndDate">
+                                         [endDate]="_eventEndDate"
+                                         [contentOnDemandLoading]="contentOnDemand._isBusy"
+                                         [_videosViewed]="contentOnDemand.totalCount.toString()"
+                                         [class.kHidden]="!_viewConfig.metricsCards">
             </app-metrics-cards>
             <app-event-interactivity   [_isBusy]="metrics._isBusy"
                                        [exporting]="_exporting"
@@ -32,7 +35,8 @@
                                        [_messagesCount]="metrics._messagesCount"
                                        [_pollsCount]="metrics._pollsCount"
                                        [_questionsCount]="metrics._questionsCount"
-                                       [_reactionsCount]="metrics._reactionsCount">
+                                       [_reactionsCount]="metrics._reactionsCount"
+                                       *ngIf="_viewConfig.eventInteractivity">
             </app-event-interactivity>
           </div>
           <div class="kColumnsNarrow">
@@ -41,18 +45,28 @@
                                        [eventIn]="_eventId"
                                        [userId]="_userId"
                                        [startDate]="_eventStartDate"
-                                       [endDate]="_eventEndDate">
+                                       [endDate]="_eventEndDate"
+                                       *ngIf="_viewConfig.userDetails">
             </app-event-user-details>
             <app-other-events          [virtualEventLoaded]="_eventLoaded"
                                        [exporting]="_exporting"
                                        [eventIn]="_eventId"
                                        [userId]="_userId"
                                        [startDate]="_eventStartDate"
-                                       [endDate]="_eventEndDate">
+                                       [endDate]="_eventEndDate"
+                                       *ngIf="_viewConfig.otherEvents">
             </app-other-events>
           </div>
         </div>
 
+        <div [class.kHidden]="!_eventLoaded || !_viewConfig.contentOnDemand" class="kReportContainer">
+          <app-event-user-content-on-demand [virtualEventLoaded]="_eventLoaded" #contentOnDemand
+                                            [exporting]="_exporting"
+                                            [eventIn]="_eventId"
+                                            [userId]="_userId"
+                                            [startDate]="_eventStartDate">
+          </app-event-user-content-on-demand>
+        </div>
       </div>
     </div>
   </k-area-blocker>

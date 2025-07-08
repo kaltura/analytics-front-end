@@ -40,6 +40,7 @@ export class MetricsCardsComponent implements OnInit {
   @Input() exporting = false;
   @Input() startDate: Date;
   @Input() endDate: Date;
+  @Input() contentOnDemandLoading: boolean;
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -55,7 +56,7 @@ export class MetricsCardsComponent implements OnInit {
   public _totalMinutesViewed = '0';
   public _avgLiveEngagement = '0';
 
-  public _videosViewed = '0';
+  @Input() public _videosViewed = '0';
   public _sessionViewed = '0';
 
   public _reactionsCount = '0';

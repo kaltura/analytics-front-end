@@ -20,6 +20,7 @@ import {EventInteractivityComponent} from "./views/event-interactivity/event-int
 import {UserDetailsComponent} from "./views/user-details/user-details.component";
 import {MetricsCardsComponent} from "./views/metrics-cards/metrics-cards.component";
 import {OtherEventsComponent} from "./views/other-events/other-events.component";
+import {ContentOnDemandComponent} from "./views/content-on-demand/content-on-demand.component";
 
 @NgModule({
   imports: [
@@ -47,7 +48,8 @@ import {OtherEventsComponent} from "./views/other-events/other-events.component"
     EventInteractivityComponent,
     UserDetailsComponent,
     MetricsCardsComponent,
-    OtherEventsComponent
+    OtherEventsComponent,
+    ContentOnDemandComponent
   ],
   exports: [],
   providers: []
