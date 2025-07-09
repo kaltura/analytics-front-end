@@ -4,7 +4,7 @@ import { ReportDataBaseConfig, ReportDataConfig, ReportDataSection } from 'share
 import { ReportHelper } from 'shared/services';
 
 @Injectable()
-export class MetricsCardsConfig extends ReportDataBaseConfig {
+export class UserEngagementConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
@@ -13,33 +13,25 @@ export class MetricsCardsConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.totals]: {
         fields: {
-          'total_view_time': {
-            format: value => ReportHelper.integerOrZero(value ),
-            sortOrder: 1,
-          },
-          'combined_live_engaged_users_play_time_ratio': {
-            format: value => ReportHelper.percents(value, false),
-            sortOrder: 2,
-          },
           'count_reaction_clicked': {
             format: value => ReportHelper.integerOrZero(value),
-            sortOrder: 3,
+            sortOrder: 1,
           },
           'count_download_attachment_clicked': {
             format: value => ReportHelper.integerOrZero(value),
-            sortOrder: 4,
+            sortOrder: 2,
           },
           'count_group_chat_messages_sent': {
             format: value => ReportHelper.integerOrZero(value),
-            sortOrder: 5,
+            sortOrder: 3,
           },
-          'count_q_and_a_threads': {
-            format: value => ReportHelper.integerOrZero(value),
-            sortOrder: 6,
+          'count_raise_hand_clicked': {
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 4,
           },
           'count_poll_answered': {
             format: value => ReportHelper.integerOrZero(value),
-            sortOrder: 7,
+            sortOrder: 5,
           },
         }
       }

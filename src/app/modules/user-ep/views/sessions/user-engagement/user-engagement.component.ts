@@ -5,42 +5,33 @@ import { ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 
 import { switchMap } from 'rxjs/operators';
 import { forkJoin, of as ObservableOf } from 'rxjs';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
-import { MetricsCardsConfig } from './metrics-cards.config';
+import { UserEngagementConfig } from './user-engagement.config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils";
 import {analyticsConfig} from "configuration/analytics-config";
 import {FrameEventManagerService, FrameEvents} from "shared/modules/frame-event-manager/frame-event-manager.service";
 
 @Component({
-  selector: 'app-metrics-cards',
-  templateUrl: './metrics-cards.component.html',
-  styleUrls: ['./metrics-cards.component.scss'],
+  selector: 'app-user-engagement',
+  templateUrl: './user-engagement.component.html',
+  styleUrls: ['./user-engagement.component.scss'],
   providers: [
-    KalturaLogger.createLogger('MetricsCardsComponent'),
-    MetricsCardsConfig,
+    KalturaLogger.createLogger('UserEngagementComponent'),
+    UserEngagementConfig,
     ReportService,
   ]
 })
-export class MetricsCardsComponent implements OnInit {
+export class UserEngagementComponent implements OnInit {
 
   private _dataConfig: ReportDataConfig;
   protected _componentId = 'metrics-cards';
 
   @Input() eventIn = '';
   @Input() userId = '';
-  @Input() set virtualEventLoaded(value: boolean) {
-    if (value === true) {
-      // use timeout to allow data binding to finish
-      setTimeout(() => {
-        this._loadReport();
-      }, 0);
-    }
-  }
   @Input() exporting = false;
   @Input() startDate: Date;
   @Input() endDate: Date;
-  @Input() contentOnDemandLoading: boolean;
-  @Input() sessionsLoading: boolean;
+  @Input() totalAttachments = '0';
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -53,15 +44,9 @@ export class MetricsCardsComponent implements OnInit {
     searchInAdminTags: false
   });
 
-  public _totalMinutesViewed = '0';
-  public _avgLiveEngagement = '0';
-
-  @Input() public _videosViewed = '0';
-  @Input()  _sessionViewed = '0';
-
   public _reactionsCount = '0';
   public _messagesCount = '0';
-  public _questionsCount = '0';
+  public _raisedHandCount = '0';
   public _downloadCount = '0';
   public _pollsCount = '0';
 
@@ -69,11 +54,12 @@ export class MetricsCardsComponent implements OnInit {
               private _errorsManager: ErrorsManagerService,
               private _logger: KalturaLogger,
               private _frameEventManager: FrameEventManagerService,
-              _dataConfigService: MetricsCardsConfig) {
+              _dataConfigService: UserEngagementConfig) {
     this._dataConfig = _dataConfigService.getConfig();
   }
 
   ngOnInit(): void {
+    this._loadReport();
   }
 
   private _loadReport(sections = this._dataConfig): void {
@@ -116,13 +102,11 @@ export class MetricsCardsComponent implements OnInit {
 
   private _handleTotals(totals: KalturaReportTotal): void {
     const tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals);
-    this._totalMinutesViewed = tabsData[0].value;
-    this._avgLiveEngagement = tabsData[1].value;
-    this._reactionsCount = tabsData[2].value;
-    this._downloadCount = tabsData[3].value;
-    this._messagesCount = tabsData[4].value;
-    this._questionsCount = tabsData[5].value;
-    this._pollsCount = tabsData[6].value;
+    this._reactionsCount = tabsData[0].value;
+    this._downloadCount = tabsData[1].value;
+    this._messagesCount = tabsData[2].value;
+    this._raisedHandCount = tabsData[3].value;
+    this._pollsCount = tabsData[4].value;
   }
 
 }

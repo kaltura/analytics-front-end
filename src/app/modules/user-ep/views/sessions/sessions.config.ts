@@ -4,7 +4,7 @@ import { ReportDataBaseConfig, ReportDataConfig, ReportDataSection } from 'share
 import { ReportHelper } from 'shared/services';
 
 @Injectable()
-export class ContentOnDemandConfig extends ReportDataBaseConfig {
+export class SessionsConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
@@ -13,17 +13,12 @@ export class ContentOnDemandConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.table]: {
         fields: {
-          'partner_id': {
-            format: value => value,
-            nonComparable: true,
-            hidden: true,
-          },
-          'object_id': {
+          'event_session_context_id': {
             format: value => value,
             nonComparable: true,
             sortOrder: 1,
           },
-          'entry_name': {
+          'name': {
             format: value => value,
             nonComparable: true,
             sortOrder: 2,
@@ -32,17 +27,16 @@ export class ContentOnDemandConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 6,
           },
-          'total_completion_rate': {
-            format: value => ReportHelper.percents(value / 100, true, true),
-            sortOrder: 7,
+          'combined_live_engaged_users_ratio': {
+            format: value => ReportHelper.percents(value, false, true),
+            sortOrder: 4,
           },
         }
       },
       [ReportDataSection.totals]: {
         fields: {
-          'count_plays': {
-            format: value => ReportHelper.numberOrZero(value),
-            sortOrder: 1,
+          'unique_combined_live_viewers': {
+            format: value => ReportHelper.numberOrZero(value)
           }
         }
       }

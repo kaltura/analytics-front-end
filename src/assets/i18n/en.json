@@ -1224,6 +1224,7 @@
       "downloads_tt": "Attachments downloaded tooltip TBD",
       "userDetails": "User details",
       "userDetails_tt": "User details tooltip TBD",
+      "raisedHand": "{{0}} Raised hands",
       "role": "Role",
       "company": "Company",
       "industry": "Industry",
@@ -1241,7 +1242,10 @@
       "other_tt": "Other event activity tooltip TBD",
       "eventReg": "event registrations",
       "eventsAtt": "events attended",
-      "sessionsAtt": "sessions attended"
+      "sessionsAtt": "sessions attended",
+      "entry_name": "Name",
+      "sum_view_period": "Minutes viewed",
+      "total_completion_rate": "Completion rate"
     },
     "event": {
       "attendeeProfile": "Registrants profile",

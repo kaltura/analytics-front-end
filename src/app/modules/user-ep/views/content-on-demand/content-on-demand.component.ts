@@ -57,7 +57,7 @@ export class ContentOnDemandComponent implements OnDestroy {
   public _columns: string[] = [];
   public totalCount = 0;
   public firstTimeLoading = true;
-  public _pager = new KalturaFilterPager({ pageIndex: 1, pageSize: 5 });
+  public _pager = new KalturaFilterPager({ pageIndex: 1, pageSize: 3 });
   private _filter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false

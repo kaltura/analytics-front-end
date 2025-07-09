@@ -6,7 +6,7 @@
       <span class="title">{{'app.event.content' | translate}}</span>
 
       <p-table dataKey="object_id"
-               [sortField]="'count_plays'"
+               [sortField]="'total_completion_rate'"
                [value]="_tableData"
                [customSort]="true"
                [defaultSortOrder]="-1"
@@ -15,7 +15,7 @@
         <ng-template pTemplate="header">
           <tr>
             <th *ngFor="let col of _columns" [pSortableColumn]="col === 'entry_name' ||  col === 'object_id' ? null : col" [class.nonSortable]="col === 'entry_name' || col === 'object_id'" [ngStyle]="{'width': col === 'object_id' ? '110px' : '100%'}">
-              <span *ngIf="col !== 'object_id'">{{'app.entry.' + col | translate}}</span>
+              <span *ngIf="col !== 'object_id'">{{'app.userEp.' + col | translate}}</span>
               <p-sortIcon [field]="col" *ngIf="col !== 'name'"></p-sortIcon>
             </th>
 
@@ -28,7 +28,6 @@
                 <thumb-loader *ngIf="col === 'object_id'" [useBase64]="true" [thumbnailUrl]="data.thumbnailUrl" (onClick)="_drillDown(data)"></thumb-loader>
                 <div class="tableCell">
                   <span *ngIf="col !== 'entry_name' && col !== 'object_id'">{{data[col]}}</span>
-                  <app-bullet *ngIf="col === 'count_plays'" [value]="data['playRate']" [formatter]="null" [showValue]="false" [kTooltip]="data['playRate'] + '%'"></app-bullet>
                 </div>
                 <a class="kEntryLink kTableColumn"
                       *ngIf="col === 'entry_name' && !data['deleted']"

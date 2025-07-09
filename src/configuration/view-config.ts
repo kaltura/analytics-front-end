@@ -299,6 +299,7 @@ export const viewsConfig = {
     eventInteractivity: {},
     userDetails: {},
     otherEvents: {},
+    sessions: {},
     contentOnDemand: {}
   },
   playlist: {

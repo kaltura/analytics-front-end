@@ -26,7 +26,9 @@
                                          [startDate]="_eventStartDate"
                                          [endDate]="_eventEndDate"
                                          [contentOnDemandLoading]="contentOnDemand._isBusy"
+                                         [sessionsLoading]="sessions._isBusy"
                                          [_videosViewed]="contentOnDemand.totalCount.toString()"
+                                         [_sessionViewed]="sessions.totalCount.toString()"
                                          [class.kHidden]="!_viewConfig.metricsCards">
             </app-metrics-cards>
             <app-event-interactivity   [_isBusy]="metrics._isBusy"
@@ -57,6 +59,16 @@
                                        *ngIf="_viewConfig.otherEvents">
             </app-other-events>
           </div>
+        </div>
+
+        <div [class.kHidden]="!_eventLoaded || !_viewConfig.sessions" class="kReportContainer">
+          <app-event-user-sessions [virtualEventLoaded]="_eventLoaded" #sessions
+                              [exporting]="_exporting"
+                              [eventIn]="_eventId"
+                              [userId]="_userId"
+                              [endDate]="_eventEndDate"
+                              [startDate]="_eventStartDate">
+          </app-event-user-sessions>
         </div>
 
         <div [class.kHidden]="!_eventLoaded || !_viewConfig.contentOnDemand" class="kReportContainer">
