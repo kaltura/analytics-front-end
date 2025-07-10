@@ -27,6 +27,7 @@ export class UserEngagementComponent implements OnInit {
   protected _componentId = 'metrics-cards';
 
   @Input() eventIn = '';
+  @Input() eventSessionContextIdIn = '';
   @Input() userId = '';
   @Input() exporting = false;
   @Input() startDate: Date;
@@ -66,6 +67,7 @@ export class UserEngagementComponent implements OnInit {
     this._isBusy = true;
     this._blockerMessage = null;
     this._filter.virtualEventIdIn = this.eventIn;
+    this._filter.eventSessionContextIdIn = this.eventSessionContextIdIn;
     this._filter.userIds = this.userId;
     this._filter.timeZoneOffset = DateFilterUtils.getTimeZoneOffset();
     this._filter.fromDate = Math.floor(this.startDate.getTime() / 1000);
