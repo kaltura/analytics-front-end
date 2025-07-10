@@ -8,7 +8,7 @@ export class EntriesTableConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.table]: {
@@ -41,17 +41,13 @@ export class EntriesTableConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 3,
           },
-          'sum_time_viewed': {
+          'sum_view_period': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 4,
           },
           'unique_known_users': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 5,
-          },
-          'avg_view_drop_off': {
-            format: value => ReportHelper.percents(value, true, true),
-            sortOrder: 6,
           },
           'avg_completion_rate': {
             format: value =>  ReportHelper.percents(value / 100, false, true),

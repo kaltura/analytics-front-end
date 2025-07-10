@@ -10,7 +10,7 @@ export class MiniPeakDayConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.table]: {
@@ -25,7 +25,7 @@ export class MiniPeakDayConfig extends ReportDataBaseConfig {
           'count_plays': {
             format: value => ReportHelper.numberOrZero(value),
           },
-          'sum_time_viewed': {
+          'sum_view_period': {
             format: value => ReportHelper.numberOrZero(value),
           },
           'unique_known_users': {

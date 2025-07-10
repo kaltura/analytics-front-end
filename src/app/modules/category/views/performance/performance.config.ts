@@ -9,7 +9,7 @@ export class PerformanceConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.graph]: {
@@ -24,21 +24,15 @@ export class PerformanceConfig extends ReportDataBaseConfig {
             colors: [getPrimaryColor('impressions'), getSecondaryColor('impressions')],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.highlightsReport.count_loads`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
-          'sum_time_viewed': {
+          'sum_view_period': {
             format: value => value,
             colors: [getPrimaryColor('time'), getSecondaryColor('time')],
-            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.highlightsReport.sum_view_period`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
           'unique_known_users': {
             format: value => value,
             colors: [getPrimaryColor('viewers'), getSecondaryColor('viewers')],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.highlightsReport.unique_known_users`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
-          },
-          'avg_view_drop_off': {
-            format: value => Math.min(value, 100),
-            parse: value => Math.min(Math.round(parseFloat(value) * 100), 100),
-            colors: [getPrimaryColor('moderation'), getSecondaryColor('moderation')],
-            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.highlightsReport.avg_view_drop_off`)}:&nbsp;${value}%</span>`
           },
           'avg_completion_rate': {
             format: value => Math.min(value, 100),
@@ -68,17 +62,11 @@ export class PerformanceConfig extends ReportDataBaseConfig {
             tooltip: this._translate.instant(`app.engagement.highlightsReport.unique_known_users_tt`),
             sortOrder: 2,
           },
-          'sum_time_viewed': {
+          'sum_view_period': {
             format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed`),
+            title: this._translate.instant(`app.engagement.highlightsReport.sum_view_period`),
             units: value => 'min',
             sortOrder: 3,
-          },
-          'avg_view_drop_off': {
-            format: value => ReportHelper.percents(value, true, true),
-            title: this._translate.instant(`app.engagement.highlightsReport.avg_view_drop_off`),
-            tooltip: this._translate.instant(`app.engagement.highlightsReport.avg_view_drop_off_tt`),
-            sortOrder: 4,
           },
           'avg_completion_rate': {
             format: value => ReportHelper.percents(value / 100, false),

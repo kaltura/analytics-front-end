@@ -36,7 +36,7 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
           'unique_known_users': {
             format: value => ReportHelper.numberOrNA(value)
           },
-          'avg_view_drop_off': {
+          'avg_completion_rate': {
             format: value => ReportHelper.percents(value, true, true)
           },
           'coordinates': {
@@ -57,11 +57,12 @@ export class GeoLocationDataConfig extends ReportDataBaseConfig {
             title: this._translate.instant(`app.audience.geo.unique_known_users`),
             tooltip: this._translate.instant(`app.audience.geo.unique_known_users_tt`),
           },
-          'avg_view_drop_off': {
-            format: value => ReportHelper.percents(value, true, true),
-            title: this._translate.instant(`app.audience.geo.avg_view_drop_off`),
-            tooltip: this._translate.instant(`app.audience.geo.avg_view_drop_off_tt`),
-          }
+          'avg_completion_rate': {
+            format: value => ReportHelper.percents(value / 100, false),
+            title: this._translate.instant(`app.engagement.topDomainsReport.avg_completion_rate`),
+            tooltip: this._translate.instant(`app.engagement.topDomainsReport.avg_completion_rate_tt`),
+            sortOrder: 5,
+          },
         }
       }
     };

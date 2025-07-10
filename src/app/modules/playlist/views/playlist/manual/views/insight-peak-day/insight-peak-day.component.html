@@ -26,8 +26,8 @@
       </div>
       <div class="kValueHolder" *ngIf="_peakDayData?.date_id && _peakDayData?.date_id.length">
         <i class="icon-small-time kOrange"></i>
-        <span class="kVal">{{_peakDayData?.sum_time_viewed}}</span>
-        <span class="kLabel">{{'app.engagement.highlightsReport.sum_time_viewed' | translate}}</span>
+        <span class="kVal">{{_peakDayData?.sum_view_period}}</span>
+        <span class="kLabel">{{'app.engagement.highlightsReport.sum_view_period' | translate}}</span>
       </div>
       <div class="topEntry" *ngIf="_peakDayData?.thumbnailUrl">
         <thumb-loader [thumbnailUrl]="_peakDayData?.thumbnailUrl"></thumb-loader>
