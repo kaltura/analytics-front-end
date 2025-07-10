@@ -62,12 +62,17 @@
         </div>
 
         <div [class.kHidden]="!_eventLoaded" class="kReportContainer">
-          <app-ep-user-minutes-viewed
-            [eventId]="_eventId"
-            [userId]="_userId"
-            [endDate]="_eventEndDate"
-            [startDate]="_eventStartDate">
-          </app-ep-user-minutes-viewed>
+          <div class="kColumnsWide">
+            <app-ep-user-minutes-viewed
+              [eventId]="_eventId"
+              [userId]="_userId"
+              [endDate]="_eventEndDate"
+              [startDate]="_eventStartDate">
+            </app-ep-user-minutes-viewed>
+          </div>
+          <div class="kColumnsNarrow">
+
+          </div>
         </div>
 
         <div [class.kHidden]="!_eventLoaded || !_viewConfig.sessions" class="kReportContainer">
@@ -76,6 +81,7 @@
                               [eventIn]="_eventId"
                               [userId]="_userId"
                               [endDate]="_eventEndDate"
+                              [totalAttachments]="metrics._downloadCount"
                               [startDate]="_eventStartDate">
           </app-event-user-sessions>
         </div>

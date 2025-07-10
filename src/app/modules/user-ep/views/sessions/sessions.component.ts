@@ -33,6 +33,7 @@ export class SessionsComponent implements OnDestroy {
   @Input() exporting = false;
   @Input() startDate: Date;
   @Input() endDate: Date;
+  @Input() totalAttachments = '0';
 
   private _reportType = reportTypeMap(KalturaReportType.epTopSessions);
   private _dataConfig: ReportDataConfig;

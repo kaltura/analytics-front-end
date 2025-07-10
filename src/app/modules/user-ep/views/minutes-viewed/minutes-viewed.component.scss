@@ -16,33 +16,9 @@
   box-sizing: border-box;
   display: flex;
   width: 100%;
-  .kMiniIcon {
-    flex: 0 0 auto;
-    width: 30px;
-    height: 30px;
-    border-radius: 15px;
+  .labelHolder {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    margin-right: 12px;
-    &.blue{
-      background-color: rgba(72,122,223,0.2);
-      color: #487ADF;
-    }
-    &.green{
-      background-color: rgba(49,190,166,0.2);
-      color: #31BEA6;
-
-    }
-    &.aqua {
-      background-color: rgba(22, 168, 215, 0.2);
-      color: #16a8d7;
-    }
-    &.orange{
-      background-color: rgba(225,150,46,0.2);
-      color: #E1962E;
-    }
+    align-items: flex-end;
   }
   .dataContainer {
     display: flex;

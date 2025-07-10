@@ -28,8 +28,10 @@ export class EpUserMinutesViewedComponent implements OnInit {
   @Input() eventId = '';
   @Input() userId = '';
   @Input() set startDate(value: Date) {
-    this._startDate = value;
-    setTimeout(() => this._loadReport(), 0);
+    if (value) {
+      this._startDate = value;
+      setTimeout(() => this._loadReport(), 0);
+    }
   }
   @Input() endDate: Date;
 

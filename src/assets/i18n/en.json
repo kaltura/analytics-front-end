@@ -1248,7 +1248,10 @@
       "total_completion_rate": "Completion rate",
       "union_live_meeting_vod_view_time": "Minutes viewed",
       "combined_live_engaged_users_play_time_ratio": "Live engagement rate",
-      "name": "Name"
+      "name": "Name",
+      "liveMinutesViewed_tt": "Total minutes viewed during live sessions tooltip TBD",
+      "vodMinutesViewed_tt": "Total recordings minutes viewed tooltip TBD",
+      "codMinutesViewed_tt": "Total content on-demand minutes viewed tooltip TBD"
     },
     "event": {
       "attendeeProfile": "Registrants profile",
