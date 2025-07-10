@@ -3,7 +3,7 @@ import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInter
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import { ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { switchMap } from 'rxjs/operators';
-import { forkJoin, of as ObservableOf } from 'rxjs';
+import { of as ObservableOf } from 'rxjs';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { UserEngagementConfig } from './user-engagement.config';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';

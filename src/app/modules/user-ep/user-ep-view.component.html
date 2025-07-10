@@ -61,6 +61,15 @@
           </div>
         </div>
 
+        <div [class.kHidden]="!_eventLoaded" class="kReportContainer">
+          <app-ep-user-minutes-viewed
+            [eventId]="_eventId"
+            [userId]="_userId"
+            [endDate]="_eventEndDate"
+            [startDate]="_eventStartDate">
+          </app-ep-user-minutes-viewed>
+        </div>
+
         <div [class.kHidden]="!_eventLoaded || !_viewConfig.sessions" class="kReportContainer">
           <app-event-user-sessions [virtualEventLoaded]="_eventLoaded" #sessions
                               [exporting]="_exporting"

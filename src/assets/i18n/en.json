@@ -1245,7 +1245,10 @@
       "sessionsAtt": "sessions attended",
       "entry_name": "Name",
       "sum_view_period": "Minutes viewed",
-      "total_completion_rate": "Completion rate"
+      "total_completion_rate": "Completion rate",
+      "union_live_meeting_vod_view_time": "Minutes viewed",
+      "combined_live_engaged_users_play_time_ratio": "Live engagement rate",
+      "name": "Name"
     },
     "event": {
       "attendeeProfile": "Registrants profile",

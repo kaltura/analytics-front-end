@@ -23,11 +23,11 @@ export class SessionsConfig extends ReportDataBaseConfig {
             nonComparable: true,
             sortOrder: 2,
           },
-          'sum_view_period': {
+          'union_live_meeting_vod_view_time': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 6,
           },
-          'combined_live_engaged_users_ratio': {
+          'combined_live_engaged_users_play_time_ratio': {
             format: value => ReportHelper.percents(value, false, true),
             sortOrder: 4,
           },
