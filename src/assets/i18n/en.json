@@ -1251,7 +1251,10 @@
       "name": "Name",
       "liveMinutesViewed_tt": "Total minutes viewed during live sessions tooltip TBD",
       "vodMinutesViewed_tt": "Total recordings minutes viewed tooltip TBD",
-      "codMinutesViewed_tt": "Total content on-demand minutes viewed tooltip TBD"
+      "codMinutesViewed_tt": "Total content on-demand minutes viewed tooltip TBD",
+      "attachments": "Attachments",
+      "attachmentsattachment_name": "Name",
+      "attachmentsentry_name": "Session"
     },
     "event": {
       "attendeeProfile": "Registrants profile",

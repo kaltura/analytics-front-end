@@ -23,6 +23,7 @@ import { ContentOnDemandComponent } from "./views/content-on-demand/content-on-d
 import { SessionsComponent } from "./views/sessions/sessions.component";
 import { UserEngagementComponent } from "./views/sessions/user-engagement/user-engagement.component";
 import { EpUserMinutesViewedComponent } from "./views/minutes-viewed/minutes-viewed.component";
+import { UserAttachmentsComponent } from "./views/attachments/attachments.component";
 
 @NgModule({
   imports: [
@@ -54,7 +55,8 @@ import { EpUserMinutesViewedComponent } from "./views/minutes-viewed/minutes-vie
     ContentOnDemandComponent,
     SessionsComponent,
     UserEngagementComponent,
-    EpUserMinutesViewedComponent
+    EpUserMinutesViewedComponent,
+    UserAttachmentsComponent
   ],
   exports: [],
   providers: []

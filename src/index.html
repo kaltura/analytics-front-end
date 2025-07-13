@@ -3,16 +3,51 @@
 <head>
   <meta charset="utf-8">
   <title>Analytics</title>
-  <!--#if expr="$base_url" -->
-  <!--# echo var="base_url" encoding="none"-->
-  <!--#else -->
-  <base href="./">
-  <!--#endif -->
+  <base href="/">
+
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato:400,700,900">
+
+  <script type="text/javascript">
+    var analyticsConfig = {
+      kalturaServer: {
+        uri : "www.kaltura.com",
+        "previewUIConf": 12345678,
+        "previewUIConfV7":12345678
+      },
+      cdnServers: {
+        serverUri: "http://cdnapi.kaltura.com",
+        securedServerUri: "https://cdnapisec.kaltura.com"
+      },
+      externalServices: {
+        appRegistryEndpoint: {
+          uri: "https://app-registry.nvp1.ovp.kaltura.com/api/v1/app-registry"
+        },
+        userReportsEndpoint: {
+          uri: "https://user.nvp1.ovp.kaltura.com/api/v1/reports"
+        },
+        chatAnalyticsEndpoint: {
+          uri: "https://chat.nvp1.ovp.kaltura.com"
+        }
+      },
+      ks: "djJ8NTcxMzg4MnywdUEU9cG2-Jko8eE0Q-GKQ5K7mOx3FSpEOzMztmxTsyPEsCgLc0nLekM2TyNbJi0vCaveCstDK31JX-hTo0lCE2nDPmRKcjfnbgfGS6sKtZQIuW67tJj0MLlvsNFoYa3YXWjWRhWrHViukhJxsMiG",
+      pid: "5713882",
+      locale: "en",
+      multiAccount: false,
+      live: {
+        "pollInterval": 30,
+        "healthNotificationsCount": 50,
+      },
+      customData: {
+        "eventContentCategoryFullName": "ep_media_account>ep_media_event_2329652",
+        "eventSessionEntries": "1_nn66i07z|1_ustfe393|1_1ax3ouhh|1_l2cdor5n|1_cwa907hl|1_k3kj19wm|1_e8uh72cl|1_3fwm09qx|1_ke01wt14|1_p0rn0bix|1_7tvrs1i9|1_envjrly2|1_a8ilemrr|1_2mrb80pi|1_voz3pcsn"
+      }
+    }
+  </script>
+
 </head>
-<body class="kOverrideFAIcons" style="overflow-y: hidden">
+<body class="kOverrideFAIcons" style="overflow-y: auto">
 <app-root></app-root>
 </body>
 </html>

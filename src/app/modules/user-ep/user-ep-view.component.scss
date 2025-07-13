@@ -58,6 +58,15 @@
     display: flex;
     flex-direction: column;
   }
+
+  .kColumnsHalf {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    &:first-child {
+      margin-right: 32px;
+    }
+  }
 }
 .kReport {
   background-color: $appBkgColor;

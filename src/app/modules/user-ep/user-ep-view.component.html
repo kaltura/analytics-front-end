@@ -62,7 +62,7 @@
         </div>
 
         <div [class.kHidden]="!_eventLoaded" class="kReportContainer">
-          <div class="kColumnsWide">
+          <div class="kColumnsHalf">
             <app-ep-user-minutes-viewed
               [eventId]="_eventId"
               [userId]="_userId"
@@ -70,8 +70,14 @@
               [startDate]="_eventStartDate">
             </app-ep-user-minutes-viewed>
           </div>
-          <div class="kColumnsNarrow">
-
+          <div class="kColumnsHalf">
+            <app-event-user-attachments
+              [eventIn]="_eventId"
+              [userId]="_userId"
+              [virtualEventLoaded]="_eventLoaded"
+              [exporting]="_exporting"
+              [startDate]="_eventStartDate">
+            </app-event-user-attachments>
           </div>
         </div>
 

@@ -1,0 +1,48 @@
+<div data-aid="report-event-mini-content" class="kReport kSocialHighlights kOverrideFAIcons">
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="reportContent">
+      <span class="title">{{'app.userEp.attachments' | translate: {'0': totalCount} }}</span>
+      <span class="total">{{'app.userEp.downloads' | translate: {'0': totalCount} }}</span>
+      <p-table dataKey="object_id"
+               [sortField]="'extract_time'"
+               [value]="_tableData"
+               [customSort]="true"
+               [defaultSortOrder]="-1"
+               [sortOrder]="-1">
+        <ng-template pTemplate="header">
+          <tr>
+            <th *ngFor="let col of _columns">
+              <span *ngIf="col !== 'object_id'">{{'app.userEp.attachments' + col | translate}}</span>
+            </th>
+
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-data>
+          <tr>
+            <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
+              <div class="row">
+                <div class="tableCell">
+                  <i *ngIf="i===0" class="icon" [ngClass]="data['extensionClass']"></i>
+                  <span [kTooltip]="data[col]" [showOnEllipsis]="true">{{data[col]}}</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <div class="emptymessage">
+            <div class="kEmptyMessage" *ngIf="!firstTimeLoading">{{'app.common.noResults' | translate}}</div>
+            <div class="kEmptyMessage" *ngIf="firstTimeLoading">&nbsp;</div>
+          </div>
+        </ng-template>
+      </p-table>
+
+      <p-paginator [rows]="_pager.pageSize"
+                   [first]="(_pager.pageIndex -1) * _pager.pageSize"
+                   [totalRecords]="totalCount"
+                   (onPageChange)="_onPaginationChanged($event)"></p-paginator>
+    </div>
+  </k-area-blocker>
+</div>
