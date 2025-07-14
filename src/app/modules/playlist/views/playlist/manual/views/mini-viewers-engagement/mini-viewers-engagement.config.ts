@@ -19,7 +19,7 @@ export class MiniViewersEngagementConfig extends ReportDataBaseConfig {
             tooltip: this._translate.instant(`app.playlist.videosPlayed`),
             sortOrder: 1,
           },
-          'sum_time_viewed': {
+          'sum_view_period': {
             format: value => ReportHelper.integerOrZero(value),
             title: this._translate.instant(`app.playlist.avgTime`),
             tooltip: this._translate.instant(`app.playlist.avgTime`),

@@ -28,6 +28,7 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   @Input() set selectedMetric(value: string) {
     switch (value) {
       case 'avg_time_viewed':
+      case 'sum_view_period':
       case 'sum_time_viewed':
         this._distributionColorScheme = 'default'; // 'time' - color can be changed according to selected metric. Currently decided to keep the default color
         break;
@@ -386,6 +387,6 @@ export abstract class BaseDevicesReportComponent implements OnDestroy {
   }
 
   getColumnData() {
-    return this.isVodFilterSelected() ? this._columns : this._columns.filter(column => column !== 'sum_time_viewed');
+    return this.isVodFilterSelected() ? this._columns : this._columns.filter(column => column !== 'sum_view_period');
   }
 }
