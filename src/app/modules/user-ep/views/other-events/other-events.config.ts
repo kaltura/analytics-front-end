@@ -13,38 +13,13 @@ export class OtherEventsConfig extends ReportDataBaseConfig {
     return {
       [ReportDataSection.table]: {
         fields: {
-          'user_id': {
-            format: value => value,
-            hidden: true,
-          },
-          'user_name': {
+          'event_session_context_id': {
             format: value => value,
             nonComparable: true,
-            sortOrder: 1
-          },
-          'title': {
-            format: value => value,
-            hidden: true,
-          },
-          'company': {
-            format: value => value,
-            hidden: true,
-          },
-          'country': {
-            format: value => value,
-            hidden: true,
-          },
-          'role': {
-            format: value => value,
-            hidden: true,
-          },
-          'industry': {
-            format: value => value,
-            hidden: true,
+            sortOrder: 1,
           }
         }
       }
     };
   }
-
 }

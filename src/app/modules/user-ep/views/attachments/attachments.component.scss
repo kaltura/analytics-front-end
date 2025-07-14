@@ -112,3 +112,10 @@ p-table ::ng-deep .p-datatable-thead > tr > th {
   font-weight: 700;
   color: $kGrayscale3;
 }
+
+p-table ::ng-deep .emptymessage {
+  height: 173px;
+  .kEmptyMessage {
+    top: 0px;
+  }
+}
