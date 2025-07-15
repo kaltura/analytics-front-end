@@ -46,7 +46,7 @@
   display: flex;
 
   .kColumnsWide {
-    width: 70%;
+    width: calc(70% - 18px);
     display: flex;
     flex-direction: column;
     margin-right: 32px;
@@ -54,7 +54,7 @@
   }
 
   .kColumnsNarrow {
-    width: 30%;
+    width: calc(30% - 18px);
     display: flex;
     flex-direction: column;
   }

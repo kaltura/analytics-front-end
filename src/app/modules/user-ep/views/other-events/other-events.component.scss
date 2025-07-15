@@ -1,11 +1,13 @@
 @import '../../../../../styles/variables';
 :host {
   display: block;
-  height: 195px;
+  height: 190px;
   width: 100%;
 }
 .kReport {
   margin-bottom: 0px !important;
+  border-top-right-radius: 0px !important;
+  border-top-left-radius: 0px !important;
   height: 100%;
 }
 

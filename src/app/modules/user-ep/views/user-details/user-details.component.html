@@ -16,7 +16,7 @@
 
       <div class="row" *ngIf="_tableData?.length && (_tableData[0]?.role?.length || _tableData[0]?.title?.length)">
         <span class="label">{{'app.userEp.role' | translate}}</span>
-        <span class="label value" *ngIf="_tableData?.length" [kTooltip]="_tableData[0]?.role || _tableData[0].title" [showOnEllipsis]="true">{{_tableData[0]?.role || _tableData[0].title}}</span>
+        <span class="label value" *ngIf="_tableData?.length" [kTooltip]="_tableData[0]?.role || _tableData[0].title" [showOnEllipsis]="true">{{_tableData[0]?.role || _tableData[0]?.title}}</span>
       </div>
       <div class="row" *ngIf="_tableData?.length && _tableData[0]?.company?.length">
         <span class="label">{{'app.userEp.company' | translate}}</span>
@@ -31,6 +31,7 @@
         <span class="label value" [kTooltip]="_tableData[0]?.country" [showOnEllipsis]="true">{{_tableData[0]?.country}}</span>
       </div>
 
+      <div *ngIf="!_isBusy && !_tableData[0]?.country && !_tableData[0]?.industry && !_tableData[0]?.company && !_tableData[0]?.role && !_tableData[0]?.title" class="kEmptyMessage">{{'app.common.noResults' | translate}}</div>
 
     </div>
 

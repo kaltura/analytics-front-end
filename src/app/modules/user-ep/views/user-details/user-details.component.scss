@@ -6,9 +6,18 @@
 }
 .kReport {
   margin-bottom: 0px !important;
+  border-bottom: none !important;
+  border-bottom-right-radius: 0px !important;
+  border-bottom-left-radius: 0px !important;
   height: 100%;
 }
-
+.kEmptyMessage {
+  font-size: 20px;
+  color: $kGrayscale3;
+  font-weight: 700;
+  width: 100%;
+  text-align: center;
+}
 .reportContent {
   padding: 24px;
   box-sizing: border-box;

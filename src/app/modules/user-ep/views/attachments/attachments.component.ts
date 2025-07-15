@@ -37,7 +37,7 @@ export class UserAttachmentsComponent implements OnDestroy {
   public _columns: string[] = [];
   public totalCount = 0;
   public firstTimeLoading = true;
-  public _pager = new KalturaFilterPager({ pageIndex: 1, pageSize: 3 });
+  public _pager = new KalturaFilterPager({ pageIndex: 1, pageSize: 500 });
   private _filter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false
@@ -60,7 +60,6 @@ export class UserAttachmentsComponent implements OnDestroy {
   private _loadReport(): void {
     this._isBusy = true;
     this._blockerMessage = null;
-    this.totalCount = 0;
     this._filter.virtualEventIdIn = this.eventIn;
     this._filter.userIds = this.userId;
     this._filter.timeZoneOffset = DateFilterUtils.getTimeZoneOffset();
