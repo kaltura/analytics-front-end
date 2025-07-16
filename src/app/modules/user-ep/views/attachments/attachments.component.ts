@@ -104,14 +104,6 @@ export class UserAttachmentsComponent implements OnDestroy {
     this._tableData = tableData.map(extendTableRow);
   }
 
-  public _onPaginationChanged(event: { page: number }): void {
-    if (event.page !== (this._pager.pageIndex - 1)) {
-      this._pager.pageIndex = event.page + 1;
-      this._analytics.trackButtonClickEvent(ButtonType.Filter, 'Events_user_attachment_paginate', this._pager.pageIndex.toString(), 'Event_user_dashboard');
-      this._loadReport();
-    }
-  }
-
   private getExtensionClass(extension: string): string {
     let type = 'default';
     // try to get document type by file extension
