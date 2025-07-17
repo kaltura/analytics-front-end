@@ -301,6 +301,7 @@ export const viewsConfig = {
     otherEvents: {},
     minutesViewed: {},
     sessions: {},
+    polls: {},
     contentOnDemand: {}
   },
   playlist: {

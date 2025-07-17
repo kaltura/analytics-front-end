@@ -21,6 +21,7 @@ import { ExportConfig } from "./export.config";
 import { analyticsConfig } from "configuration/analytics-config";
 import {cancelOnDestroy} from "@kaltura-ng/kaltura-common";
 import {OverlayPanel} from "primeng/overlaypanel";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-ep-viewer-engagement',
@@ -41,6 +42,7 @@ export class EpViewerEngagementComponent implements OnInit, OnDestroy {
   @Input() endDate: Date;
   @Input() duration = 0;
   @Input() isVirtualClassroom: boolean;
+  @Input() eventId: number;
 
   private _order = '-live_view_time';
   public _sortField = 'live_view_time';
@@ -72,6 +74,7 @@ export class EpViewerEngagementComponent implements OnInit, OnDestroy {
               private _reportService: ReportService,
               private _analytics: AppAnalytics,
               private _kalturaClient: KalturaClient,
+              private _router: Router,
               private _errorsManager: ErrorsManagerService,
               _dataConfigService: ViewerEngagementConfig,
               private _authService: AuthService,
@@ -201,13 +204,6 @@ export class EpViewerEngagementComponent implements OnInit, OnDestroy {
     this._ignoreFirstSortEvent = false;
   }
 
-  public _drillDown(row: TableRow): void {
-    if (!row['user_id'] || row['user_id'] === 'Unknown' || row['user_id'] === 'Error') {
-      return; // ignore unknown user drill-down
-    }
-    this._navigationDrillDownService.drilldown('user', row['user_id'], true, this._authService.pid);
-  }
-
   public updateLayout(): void {
     if (analyticsConfig.isHosted) {
       setTimeout(() => {
@@ -271,6 +267,16 @@ export class EpViewerEngagementComponent implements OnInit, OnDestroy {
     if (this._overlay && !analyticsConfig.multiAccount) {
       this._overlay.hide();
       this._userData = null;
+    }
+  }
+
+  public userDrillDown(data: any): void {
+    const userName = encodeURIComponent(data.user_name);
+    if (analyticsConfig.isHosted) {
+      this._frameEventManager.publish(FrameEvents.ScrollTo, '0'); // scroll to top
+      this._frameEventManager.publish(FrameEvents.NavigateTo, `/user-ep/${this.eventId}/${data.user_id}/${userName}?`);
+    } else {
+      this._router.navigate([`/user-ep/${this.eventId}/${data.user_id}/${userName}`]);
     }
   }
 

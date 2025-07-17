@@ -24,6 +24,7 @@ import { SessionsComponent } from "./views/sessions/sessions.component";
 import { UserEngagementComponent } from "./views/sessions/user-engagement/user-engagement.component";
 import { EpUserMinutesViewedComponent } from "./views/minutes-viewed/minutes-viewed.component";
 import { UserAttachmentsComponent } from "./views/attachments/attachments.component";
+import {EpUserPollsComponent} from "./views/polls/polls.component";
 
 @NgModule({
   imports: [
@@ -56,7 +57,8 @@ import { UserAttachmentsComponent } from "./views/attachments/attachments.compon
     SessionsComponent,
     UserEngagementComponent,
     EpUserMinutesViewedComponent,
-    UserAttachmentsComponent
+    UserAttachmentsComponent,
+    EpUserPollsComponent
   ],
   exports: [],
   providers: []

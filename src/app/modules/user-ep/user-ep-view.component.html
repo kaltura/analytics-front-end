@@ -89,6 +89,10 @@
           </app-event-user-sessions>
         </div>
 
+        <div [class.kHidden]="!_eventLoaded || !_viewConfig.polls" class="kReportContainer" id="polls">
+          <app-ep-user-polls [exporting]="_exporting" [startDate]="_eventStartDate" [endDate]="_eventEndDate"></app-ep-user-polls>
+        </div>
+
         <div [class.kHidden]="!_eventLoaded || !_viewConfig.contentOnDemand" class="kReportContainer">
           <app-event-user-content-on-demand [virtualEventLoaded]="_eventLoaded" #contentOnDemand
                                             [exporting]="_exporting"
@@ -97,8 +101,15 @@
                                             [startDate]="_eventStartDate">
           </app-event-user-content-on-demand>
         </div>
+
+        <div *ngIf="_exporting" class="footer">
+          <i></i>
+          <span>{{'app.engagement.footer' | translate}}</span>
+        </div>
+
       </div>
     </div>
   </k-area-blocker>
+
 </div>
 

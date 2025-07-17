@@ -24,17 +24,15 @@ export interface Poll {
 }
 
 @Component({
-  selector: 'app-ep-polls',
+  selector: 'app-ep-user-polls',
   templateUrl: './polls.component.html',
   styleUrls: ['./polls.component.scss'],
   providers: [
-    KalturaLogger.createLogger('EpPollsComponent')
+    KalturaLogger.createLogger('EpUserPollsComponent')
   ]
 })
-export class EpPollsComponent implements OnInit, OnDestroy {
+export class EpUserPollsComponent implements OnInit, OnDestroy {
 
-  @Input() entryId = '';
-  @Input() entryName = '';
   @Input() exporting = false;
   @Input() startDate: Date;
   @Input() endDate: Date;
@@ -55,7 +53,7 @@ export class EpPollsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._loadReport();
+    // this._loadReport();
   }
 
   ngOnDestroy() {
@@ -70,7 +68,7 @@ export class EpPollsComponent implements OnInit, OnDestroy {
       'Content-Type': 'application/json',
     });
 
-    this._http.post(`${analyticsConfig.externalServices.chatAnalyticsEndpoint.uri}/polls/analytics`, {contextId: this.entryId}, {headers}).pipe(cancelOnDestroy(this))
+    this._http.post(`${analyticsConfig.externalServices.chatAnalyticsEndpoint.uri}/polls/analytics`,  {headers}).pipe(cancelOnDestroy(this))
       .subscribe((data: any) => {
           this._polls = data.analytics;
           // update poll type
