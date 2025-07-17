@@ -1,0 +1,48 @@
+@import '../../../../../styles/variables';
+:host {
+  display: block;
+  height: 190px;
+  width: 100%;
+}
+.kReport {
+  margin-bottom: 0px !important;
+  border-top-right-radius: 0px !important;
+  border-top-left-radius: 0px !important;
+  height: 100%;
+}
+
+.reportContent {
+  padding: 24px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  .header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+    .title {
+      font-weight: 700;
+      font-size: 20px;
+      color: $kGrayscale1;
+    }
+  }
+  .row {
+    display: flex;
+    margin-bottom: 16px;
+    i {
+      font-size: 16px;
+      color: #487ADF;
+    }
+    .label {
+      font-size: 16px;
+      color: $kGrayscale1;
+    }
+    .value {
+      font-weight: 700;
+      margin-right: 4px;
+      margin-left: 8px;
+    }
+  }
+}
+

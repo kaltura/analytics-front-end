@@ -36,6 +36,9 @@ export interface AnalyticsConfig {
     userReportsEndpoint?: {
       uri: string;
     },
+    userProfileEndpoint?: {
+      uri: string;
+    },
     chatAnalyticsEndpoint?: {
       uri: string;
     }

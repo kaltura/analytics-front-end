@@ -56,6 +56,7 @@ export class EntryEpViewComponent implements OnInit, OnDestroy {
   public _eventEndDate: Date = null;
   public _now: Date = new Date();
 
+  public _eventId = parseInt(analyticsConfig.customData.eventId) || 0;
   public _liveEntryIds = '';
   public _vodEntryIds = '';
   public _recordingEntryId = '';
