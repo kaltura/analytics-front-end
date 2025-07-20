@@ -4,7 +4,7 @@
 
     <div class="reportContent">
       <span class="title">{{'app.event.content' | translate}}</span>
-
+      <span class="total">{{'app.userEp.totalVvideosViewed' | translate: {'0': totalCount} }}</span>
       <p-table dataKey="object_id"
                [sortField]="'total_completion_rate'"
                [value]="_tableData"

@@ -1236,6 +1236,7 @@
       "avgLiveEngagement_tt": "The percentage, on average, of engagement across all sessions",
       "videosViewed": "Videos viewed",
       "videosViewed_tt": "Number of unique videos viewed on-demand",
+      "totalVvideosViewed": "{{0}} videos viewed",
       "sessionsViewed": "Session views",
       "sessionsViewed_tt": "Number of unique sessions viewed",
       "other": "Other event activity",

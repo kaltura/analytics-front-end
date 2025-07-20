@@ -81,9 +81,8 @@ export class ContentOnDemandComponent implements OnDestroy {
   private _loadReport(): void {
     this._isBusy = true;
     this._blockerMessage = null;
-    this.totalCount = 0;
     this._filter.virtualEventIdIn = this.eventIn;
-    this._filter.userIds = this.userId;
+    //this._filter.userIds = this.userId;
     this._filter.timeZoneOffset = DateFilterUtils.getTimeZoneOffset();
     this._filter.fromDate = Math.floor(this.startDate.getTime() / 1000);
     this._filter.toDate = Math.floor(new Date().getTime() / 1000);
