@@ -33,6 +33,7 @@ export class BroadcastingComponent implements OnInit, OnDestroy {
   public cdnUrl: string;
   public poster = '';
   public _loadThumbnailWithKs = false;
+  public dateFormat = analyticsConfig.dateFormat === 'month-day-year' ? 'H:mm MM/d/yy' : 'H:mm d/MM/yy';
 
   private reportIntervalId = null;
   private timeUpdateIntervalId = null;

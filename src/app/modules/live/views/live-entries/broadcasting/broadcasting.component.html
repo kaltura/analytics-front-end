@@ -54,12 +54,12 @@
                 <div class="row" *ngIf="entry.primaryStreamHealth">
                   <div class="healthIcon" [ngClass]="entry.primaryStreamHealthClassName"></div>
                   <span class="value health">{{entry.primaryStreamHealth}}</span>
-                  <span class="timestamp">{{entry.primaryLastUpdate * 1000 | date:'H:mm MM/d/yy'}}</span>
+                  <span class="timestamp">{{entry.primaryLastUpdate * 1000 | date:dateFormat}}</span>
                 </div>
                 <div class="row" *ngIf="entry.secondaryStreamHealth" [ngStyle]="{'margin-top': '22px'}">
                   <div class="healthIcon" [ngClass]="entry.secondaryStreamHealthClassName"></div>
                   <span class="value health">{{entry.secondaryStreamHealth}}</span>
-                  <span class="timestamp">{{entry.secondaryLastUpdate * 1000 | date:'H:mm MM/d/yy'}}</span>
+                  <span class="timestamp">{{entry.secondaryLastUpdate * 1000 | date:dateFormat}}</span>
                 </div>
               </div>
             </div>
