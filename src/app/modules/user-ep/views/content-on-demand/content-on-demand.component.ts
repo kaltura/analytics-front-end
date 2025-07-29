@@ -175,7 +175,7 @@ export class ContentOnDemandComponent implements OnDestroy {
   public _onPaginationChanged(event: { page: number }): void {
     if (event.page !== (this._pager.pageIndex - 1)) {
       this._pager.pageIndex = event.page + 1;
-      this._analytics.trackButtonClickEvent(ButtonType.Filter, 'Events_event_content_paginate', this._pager.pageIndex.toString(), 'Event_dashboard');
+      this._analytics.trackButtonClickEvent(ButtonType.Filter, 'events_user_dashboard_content_paginate', this._pager.pageIndex.toString(), 'events_user_dashboard');
       this._loadReport();
     }
   }
@@ -184,7 +184,7 @@ export class ContentOnDemandComponent implements OnDestroy {
     if (event.data.length && event.field && event.order) {
       const order = event.order === 1 ? '+' + event.field : '-' + event.field;
       if (order !== this._order) {
-        this._analytics.trackButtonClickEvent(ButtonType.Filter, 'Events_event_content_sort', event.field, 'Event_dashboard');
+        this._analytics.trackButtonClickEvent(ButtonType.Filter, 'events_user_dashboard_content_sort', event.field, 'events_user_dashboard');
         this._order = order;
         this._pager.pageIndex = 1;
         this._loadReport();
@@ -194,7 +194,7 @@ export class ContentOnDemandComponent implements OnDestroy {
 
   public _drillDown(row: TableRow): void {
     if (!row['deleted']) {
-      this._analytics.trackButtonClickEvent(ButtonType.Load, 'Events_event_content_content_click', row['object_id'], 'Event_dashboard');
+      this._analytics.trackButtonClickEvent(ButtonType.Choose, 'events_user_dashboard_content_content_click', row['object_id'], 'events_user_dashboard');
       this._navigationDrillDownService.drilldown('entry', row['object_id'], true, row['partner_id']);
     }
   }

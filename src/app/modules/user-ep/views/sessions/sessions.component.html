@@ -18,8 +18,8 @@
                [customSort]="true"
                [defaultSortOrder]="-1"
                [sortOrder]="-1"
-               (onRowExpand)="updateLayout()"
-               (onRowCollapse)="updateLayout()"
+               (onRowExpand)="expandRow()"
+               (onRowCollapse)="collapseRow()"
                (sortFunction)="_onSortChanged($event)">
         <ng-template pTemplate="header">
           <tr>

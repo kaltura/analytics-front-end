@@ -119,6 +119,10 @@ export class UserAttachmentsComponent implements OnDestroy {
     return type;
   }
 
+  public onPageChange(event): void {
+    this._analytics.trackButtonClickEvent(ButtonType.Browse, 'events_user_dashboard_attachments_paginate', null, 'events_user_dashboard');
+  }
+
 }
 
 

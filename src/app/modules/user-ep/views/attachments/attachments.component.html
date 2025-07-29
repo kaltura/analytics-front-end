@@ -11,6 +11,7 @@
                [defaultSortOrder]="-1"
                [paginator]="true"
                [rows]="3"
+               (onPage)="onPageChange($event)"
                [sortOrder]="-1">
         <ng-template pTemplate="header">
           <tr>

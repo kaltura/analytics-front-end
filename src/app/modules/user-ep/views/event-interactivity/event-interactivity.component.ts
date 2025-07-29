@@ -3,6 +3,7 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import {analyticsConfig} from "configuration/analytics-config";
 import {FrameEventManagerService, FrameEvents} from "shared/modules/frame-event-manager/frame-event-manager.service";
 import {PageScrollConfig, PageScrollInstance, PageScrollService} from "ngx-page-scroll";
+import {AppAnalytics, ButtonType} from "shared/services";
 
 @Component({
   selector: 'app-event-interactivity',
@@ -25,11 +26,13 @@ export class EventInteractivityComponent {
 
   constructor(private pageScrollService: PageScrollService,
               private _logger: KalturaLogger,
+              private _analytics: AppAnalytics,
               private _frameEventManager: FrameEventManagerService) {
   }
 
   public scrollTo(target: string): void {
     this._logger.trace('Handle scroll to details report action by user', { target });
+    this._analytics.trackButtonClickEvent(ButtonType.Browse, 'events_user_dashboard_polls_see_details', null, 'events_user_dashboard');
     if (analyticsConfig.isHosted) {
       const targetEl = document.getElementById(target.substr(1)) as HTMLElement;
       if (targetEl) {
