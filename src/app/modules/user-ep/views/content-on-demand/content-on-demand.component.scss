@@ -1,5 +1,10 @@
 @import '../../../../../styles/variables';
-
+:host {
+  .emptymessage .kEmptyMessage {
+    height: 150px;
+    line-height: 120px;
+  }
+}
 k-area-blocker {
   display: block;
 }

@@ -50,11 +50,11 @@
                                        [endDate]="_eventEndDate"
                                        *ngIf="_viewConfig.userDetails">
             </app-event-user-details>
-            <app-other-events          [virtualEventLoaded]="_eventLoaded"
-                                       [exporting]="_exporting"
-                                       [userId]="_userId"
-                                       *ngIf="_viewConfig.otherEvents">
-            </app-other-events>
+<!--            <app-other-events          [virtualEventLoaded]="_eventLoaded"-->
+<!--                                       [exporting]="_exporting"-->
+<!--                                       [userId]="_userId"-->
+<!--                                       *ngIf="_viewConfig.otherEvents">-->
+<!--            </app-other-events>-->
           </div>
         </div>
 
@@ -89,9 +89,9 @@
           </app-event-user-sessions>
         </div>
 
-        <div [class.kHidden]="!_eventLoaded || !_viewConfig.polls" class="kReportContainer" id="polls">
-          <app-ep-user-polls [exporting]="_exporting" [startDate]="_eventStartDate" [endDate]="_eventEndDate"></app-ep-user-polls>
-        </div>
+<!--        <div [class.kHidden]="!_eventLoaded || !_viewConfig.polls" class="kReportContainer" id="polls">-->
+<!--          <app-ep-user-polls [exporting]="_exporting" [startDate]="_eventStartDate" [endDate]="_eventEndDate"></app-ep-user-polls>-->
+<!--        </div>-->
 
         <div [class.kHidden]="!_eventLoaded || !_viewConfig.contentOnDemand" class="kReportContainer">
           <app-event-user-content-on-demand [virtualEventLoaded]="_eventLoaded" #contentOnDemand

@@ -1,4 +1,4 @@
-<div data-aid="report-event-mini-content" class="kReport kSocialHighlights kOverrideFAIcons" [ngStyle]="{height: exporting ? '420px' : 'auto'}">
+<div data-aid="report-event-mini-content" class="kReport kSocialHighlights kOverrideFAIcons">
 
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
 
@@ -51,7 +51,7 @@
         </ng-template>
       </p-table>
 
-      <p-paginator [rows]="_pager.pageSize"
+      <p-paginator [rows]="_pager.pageSize" *ngIf="totalCount > 0"
                    [first]="(_pager.pageIndex -1) * _pager.pageSize"
                    [totalRecords]="totalCount"
                    (onPageChange)="_onPaginationChanged($event)"></p-paginator>

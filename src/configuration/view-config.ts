@@ -298,10 +298,10 @@ export const viewsConfig = {
     metricsCards: {},
     eventInteractivity: {},
     userDetails: {},
-    otherEvents: {},
+    // otherEvents: {},
     minutesViewed: {},
     sessions: {},
-    polls: {},
+    // polls: {},
     contentOnDemand: {}
   },
   playlist: {

@@ -2,6 +2,10 @@
 
 :host {
   width: 100%;
+  .emptymessage .kEmptyMessage {
+    height: 150px;
+    line-height: 120px;
+  }
 }
 .kReport {
   margin-bottom: 0px !important;

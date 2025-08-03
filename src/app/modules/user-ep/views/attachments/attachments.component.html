@@ -9,7 +9,7 @@
                [sortField]="'extract_time'"
                [value]="_tableData"
                [defaultSortOrder]="-1"
-               [paginator]="true"
+               [paginator]="_tableData?.length > 0"
                [rows]="3"
                (onPage)="onPageChange($event)"
                [sortOrder]="-1">

@@ -77,7 +77,7 @@
         </ng-template>
       </p-table>
 
-      <p-paginator [rows]="_pager.pageSize" *ngIf="_displaySessions && _eventSessionEntries !== ''"
+      <p-paginator [rows]="_pager.pageSize" *ngIf="_displaySessions && _eventSessionEntries !== '' && totalCount > 0"
                    [first]="(_pager.pageIndex -1) * _pager.pageSize"
                    [totalRecords]="totalCount"
                    (onPageChange)="_onPaginationChanged($event)"></p-paginator>
