@@ -152,6 +152,9 @@ export class AppAnalytics {
                     case route.startsWith('/event/'):
                         this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_events_event', null, 'Event_dashboard');
                         break;
+                    case route.startsWith('/user-ep/'):
+                        this.trackEvent(EventType.PageLoad, PageType.Analytics, 'Analytics_events_event', null, 'events_user_dashboard');
+                        break;
                 }
             });
     }

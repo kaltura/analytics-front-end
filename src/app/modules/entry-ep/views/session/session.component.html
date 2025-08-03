@@ -61,7 +61,7 @@
       <div [class.kHidden]="exporting" class="kTableContainer">
         <ng-container *ngIf="_currentTab === _reportTabs.viewer">
           <div class="kReportContainer">
-            <app-ep-viewer-engagement [isVirtualClassroom]="isVirtualClassroom" [startDate]="_startDate" [actualStartDate]="actualStartDate" [endDate]="endDate" [entryIdIn]="entryIdIn" [duration]="_duration"></app-ep-viewer-engagement>
+            <app-ep-viewer-engagement [eventId]="eventId" [isVirtualClassroom]="isVirtualClassroom" [startDate]="_startDate" [actualStartDate]="actualStartDate" [endDate]="endDate" [entryIdIn]="entryIdIn" [duration]="_duration"></app-ep-viewer-engagement>
           </div>
         </ng-container>
 

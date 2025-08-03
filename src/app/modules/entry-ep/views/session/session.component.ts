@@ -43,6 +43,7 @@ export class EpSessionComponent implements OnInit, OnDestroy {
   @Input() isVirtualClassroom: boolean;
   @Input() isSimulive: boolean;
   @Input() isExplicitLive: boolean;
+  @Input() eventId: number;
 
   private _order = '-date_id';
   private _reportType = KalturaReportType.epWebcastEngagementTimeline;

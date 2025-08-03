@@ -1,0 +1,40 @@
+<div data-aid="report-event-user-details" class="kReport kSocialHighlights kOverrideFAIcons">
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+
+    <div class="reportContent">
+      <div class="header">
+        <div class="icons">
+          <div class="kMiniIcon blue"><i class="icon-viewer-contributor"></i></div>
+        </div>
+        <span class="title">{{'app.userEp.userDetails' | translate}}</span>
+        <kInputHelper>
+          <span>{{'app.userEp.userDetails_tt' | translate}}</span>
+        </kInputHelper>
+      </div>
+
+      <div class="row" *ngIf="_tableData?.length && (_tableData[0]?.role?.length || _tableData[0]?.title?.length)">
+        <span class="label">{{'app.userEp.role' | translate}}</span>
+        <span class="label value" *ngIf="_tableData?.length" [kTooltip]="_tableData[0]?.role || _tableData[0].title" [showOnEllipsis]="true">{{_tableData[0]?.role || _tableData[0]?.title}}</span>
+      </div>
+      <div class="row" *ngIf="_tableData?.length && _tableData[0]?.company?.length">
+        <span class="label">{{'app.userEp.company' | translate}}</span>
+        <span class="label value" *ngIf="_tableData?.length" [kTooltip]="_tableData[0]?.company" [showOnEllipsis]="true">{{_tableData[0]?.company}}</span>
+      </div>
+      <div class="row" *ngIf="_tableData?.length && _tableData[0]?.industry?.length">
+        <span class="label">{{'app.userEp.industry' | translate}}</span>
+        <span class="label value" *ngIf="_tableData?.length" [kTooltip]="_tableData[0]?.industry" [showOnEllipsis]="true">{{_tableData[0]?.industry}}</span>
+      </div>
+      <div class="row" *ngIf="_tableData?.length && _tableData[0]?.country?.length">
+        <span class="label">{{'app.userEp.country' | translate}}</span>
+        <span class="label value" [kTooltip]="_tableData[0]?.country" [showOnEllipsis]="true">{{_tableData[0]?.country}}</span>
+      </div>
+
+      <div *ngIf="!_isBusy && !_tableData[0]?.country && !_tableData[0]?.industry && !_tableData[0]?.company && !_tableData[0]?.role && !_tableData[0]?.title" class="kEmptyMessage">{{'app.common.noResults' | translate}}</div>
+
+    </div>
+
+  </k-area-blocker>
+</div>
+

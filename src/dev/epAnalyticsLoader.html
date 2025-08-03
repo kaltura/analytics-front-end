@@ -23,7 +23,8 @@
       position: absolute;
       top: 0px;
       left: 280px;
-      width: calc(100% - 280px);
+      right: 16px;
+      width: calc(100% - 300px);
       height: 100vh;
       border: 0;
       transition: height 0.3s;
@@ -40,6 +41,7 @@
   <sapn onclick="handleClick(event, 'user')">User</sapn>
   <sapn onclick="handleClick(event, 've')">Virtual Event</sapn>
   <sapn onclick="handleClick(event, 'event')">Event</sapn>
+  <sapn onclick="handleClick(event, 'userEp')">Event User</sapn>
 </div>
 <iframe id="analytics" src="http://localhost:4200"></iframe>
 <script>
@@ -82,6 +84,10 @@
           sendMessage({ messageType: 'navigate', payload: { url: '/user/amir.chervinsky@kaltura.com' } });
            sendMessage({messageType: 'updateFilters', payload: {queryParams: {dateBy: 'last12months'}}});
           break;
+         case 'userEp':
+          sendMessage({ messageType: 'navigate', payload: { url: '/user-ep/2390762/43033a9e223e1d6f212553a70802a69c337165d5db33c922e665385bc67400ab/Mor%20Saar%20Herzberg' } });
+           sendMessage({messageType: 'updateFilters', payload: {queryParams: {dateBy: 'last12months'}}});
+          break;
         }
     }
     const config = {
@@ -95,13 +101,16 @@
         },
         externalServices: {
           appRegistryEndpoint: {
-            "uri": "https://app-registry.nvp1.ovp.kaltura.com/api/v1/app-registry"
+            uri: "https://app-registry.nvp1.ovp.kaltura.com/api/v1/app-registry"
           },
           userReportsEndpoint: {
             uri: "https://user.nvp1.ovp.kaltura.com/api/v1/reports"
           },
+          userProfileEndpoint: {
+            uri: "https://user.nvp1.ovp.kaltura.com/api/v1/user-profile"
+          },
           chatAnalyticsEndpoint: {
-            uri: "https://chat.nvp1.ovp.kaltura.com/api_v3/polls/analytics"
+            uri: "https://chat.nvp1.ovp.kaltura.com"
           }
         },
         ks: "",
