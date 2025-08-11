@@ -22,11 +22,9 @@
   }
 }
 .reportContent {
-  padding: 24px;
   box-sizing: border-box;
   display: flex;
   width: 100%;
-  gap: 16px;
   .icons {
     margin-right: 12px;
   }
@@ -57,11 +55,19 @@
       color: #E1962E;
     }
   }
+  .divider {
+    width: 1px;
+    height: 100%;
+    background-color: $kGrayscale4;
+  }
   .metric {
     display: flex;
     flex-direction: column;
     gap: 8px;
     width: 25%;
+    margin-top: 24px;
+    margin-bottom: 24px;
+    padding-left: 24px;
     .label {
       font-size: 16px;
       line-height: 18px;

@@ -13,7 +13,7 @@
           </kInputHelper>
         </div>
         <div class="kBulletContainer">
-          <div class="bulletContainer">
+          <div class="bulletBkg">
             <div class="kBullet" [style.width]="_livePercent + '%'"></div>
           </div>
           <span class="graphValue">{{_tabsData[0]?.value}}</span>
@@ -27,7 +27,9 @@
         </div>
         <div class="kBulletContainer">
           <div class="bulletContainer">
-            <div class="kBullet"[style.width]="_recordingPercent + '%'"></div>
+            <div class="bulletBkg">
+              <div class="kBullet"[style.width]="_recordingPercent + '%'"></div>
+            </div>
           </div>
           <span class="graphValue">{{_tabsData[1]?.value}}</span>
         </div>
@@ -40,7 +42,9 @@
         </div>
         <div class="kBulletContainer">
           <div class="bulletContainer">
-            <div class="kBullet"[style.width]="_codPercent + '%'"></div>
+            <div class="bulletBkg">
+              <div class="kBullet"[style.width]="_codPercent + '%'"></div>
+            </div>
           </div>
           <span class="graphValue">{{_codTabsData[1]?.value}}</span>
         </div>

@@ -25,12 +25,12 @@ export class SessionsConfig extends ReportDataBaseConfig {
           },
           'union_live_meeting_vod_view_time': {
             format: value => ReportHelper.numberOrZero(value),
-            sortOrder: 6,
+            sortOrder: 3,
           },
           'combined_live_engaged_users_play_time_ratio': {
-            format: value => ReportHelper.percents(value, false, true),
+            format: value => parseInt((value * 100).toString()),
             sortOrder: 4,
-          },
+          }
         }
       },
       [ReportDataSection.totals]: {
