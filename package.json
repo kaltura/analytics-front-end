@@ -1,6 +1,6 @@
 {
   "name": "analytics-front-end",
-  "version": "3.8.7",
+  "version": "3.8.8",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
