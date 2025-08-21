@@ -107,15 +107,36 @@ k-area-blocker {
 p-paginator ::ng-deep.p-paginator {
   margin-top: 2px;
 }
-p-table ::ng-deep .p-datatable-thead > tr > th {
+:host ::ng-deep p-table ::ng-deep .p-datatable-thead > tr > th {
   font-size: 14px;
   font-weight: 700;
   color: $kGrayscale3;
 }
 
-p-table ::ng-deep .emptymessage {
+:host ::ng-deep p-table ::ng-deep .emptymessage {
   height: 173px;
   .kEmptyMessage {
     top: 0px;
   }
+}
+
+:host ::ng-deep p-table {
+  display: block;
+  height: 208px;
+}
+
+:host ::ng-deep p-table .p-datatable {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+:host ::ng-deep p-table .p-datatable > * {
+  flex: 0 0 auto; /* Header, footer, etc. should not grow */
+  height: 100%;
+}
+
+:host ::ng-deep p-table .p-datatable-scrollable-wrapper {
+  flex: 1 1 auto; /* The scrollable body wrapper should take remaining space */
+  overflow: hidden;
 }

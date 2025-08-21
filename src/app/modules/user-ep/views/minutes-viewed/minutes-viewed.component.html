@@ -12,14 +12,17 @@
             <span>{{'app.userEp.liveMinutesViewed_tt' | translate}}</span>
           </kInputHelper>
         </div>
+
         <div class="kBulletContainer">
-          <div class="bulletBkg">
-            <div class="kBullet" [style.width]="_livePercent + '%'"></div>
+          <div class="bulletContainer">
+            <div class="bulletBkg">
+              <div class="kBullet" [style.width]="_livePercent + '%'"></div>
+            </div>
           </div>
-          <span class="graphValue">{{_tabsData[0]?.value}}</span>
+          <span class="graphValue">{{formatMinutesToTime(_tabsData[0]?.value)}}</span>
         </div>
 
-        <div class="labelHolder" *ngIf="_tabsData.length > 0">
+        <div class="labelHolder" *ngIf="_tabsData.length > 1">
           <span class="label">{{_tabsData[1]?.title}}</span>
           <kInputHelper>
             <span>{{'app.userEp.vodMinutesViewed_tt' | translate}}</span>
@@ -31,10 +34,10 @@
               <div class="kBullet"[style.width]="_recordingPercent + '%'"></div>
             </div>
           </div>
-          <span class="graphValue">{{_tabsData[1]?.value}}</span>
+          <span class="graphValue">{{formatMinutesToTime(_tabsData[1]?.value)}}</span>
         </div>
 
-        <div class="labelHolder" *ngIf="_codTabsData.length > 0">
+        <div class="labelHolder" *ngIf="_codTabsData.length > 2">
           <span class="label">{{'app.event.content' | translate}}</span>
           <kInputHelper>
             <span>{{'app.userEp.codMinutesViewed_tt' | translate}}</span>
@@ -46,7 +49,7 @@
               <div class="kBullet"[style.width]="_codPercent + '%'"></div>
             </div>
           </div>
-          <span class="graphValue">{{_codTabsData[1]?.value}}</span>
+          <span class="graphValue">{{formatMinutesToTime(_codTabsData[2]?.value)}}</span>
         </div>
       </div>
 

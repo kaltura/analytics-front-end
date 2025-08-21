@@ -14,17 +14,17 @@ export class MinutesViewedConfig extends ReportDataBaseConfig {
       [ReportDataSection.totals]: {
         fields: {
           'combined_live_avg_play_time': {
-            format: value => ReportHelper.numberOrZero(value, false),
+            format: value => ReportHelper.numberOrZero(value, false, 2),
             title: this._translate.instant(`app.entryEp.highlights.live`),
             sortOrder: 1,
           },
           'vod_avg_play_time': {
-            format: value => ReportHelper.numberOrZero(value, false),
+            format: value => ReportHelper.numberOrZero(value, false, 2),
             title: this._translate.instant(`app.entryEp.highlights.recordings`),
             sortOrder: 2,
           },
           'vod_live_avg_view_time': {
-            format: value => ReportHelper.numberOrZero(value, false),
+            format: value => ReportHelper.numberOrZero(value, false, 2),
             sortOrder: 3,
           }
         }

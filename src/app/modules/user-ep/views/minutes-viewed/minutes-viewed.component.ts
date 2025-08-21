@@ -147,4 +147,23 @@ export class EpUserMinutesViewedComponent implements OnInit {
 
   }
 
+  public formatMinutesToTime(minutesStr: string): string {
+    if (!minutesStr || isNaN(parseFloat(minutesStr))) {
+      return '00:00'; // Return default format if input is invalid
+    }
+    const minutes = parseFloat(minutesStr);
+    // Convert minutes to total seconds
+    const totalSeconds = Math.round(minutes * 60);
+
+    // Calculate hours, minutes, seconds
+    const hours = Math.floor(totalSeconds / 3600);
+    const mins = Math.floor((totalSeconds % 3600) / 60);
+    const secs = totalSeconds % 60;
+
+    // Helper to pad with leading zeros
+    const pad = (num) => String(num).padStart(2, '0');
+
+    return hours > 0 ? `${pad(hours)}:${pad(mins)}:${pad(secs)}` : `${pad(mins)}:${pad(secs)}`;
+  }
+
 }

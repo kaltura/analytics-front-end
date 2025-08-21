@@ -3,9 +3,9 @@
   <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
 
     <div class="reportContent">
-      <span class="title">{{'app.userEp.attachments' | translate: {'0': totalCount} }}</span>
-      <span class="total">{{'app.userEp.downloads' | translate: {'0': totalCount} }}</span>
-      <p-table dataKey="object_id"
+      <span class="title">{{'app.userEp.attachments' | translate}}</span>
+      <span class="total">{{'app.userEp.attachmentDownloads' | translate: {'0': totalCount} }}</span>
+      <p-table dataKey="object_id" scrollHeight="flex"
                [sortField]="'extract_time'"
                [value]="_tableData"
                [defaultSortOrder]="-1"
