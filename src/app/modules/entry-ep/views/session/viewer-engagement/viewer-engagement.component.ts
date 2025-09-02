@@ -274,9 +274,9 @@ export class EpViewerEngagementComponent implements OnInit, OnDestroy {
     const userName = encodeURIComponent(data.user_name);
     if (analyticsConfig.isHosted) {
       this._frameEventManager.publish(FrameEvents.ScrollTo, '0'); // scroll to top
-      this._frameEventManager.publish(FrameEvents.NavigateTo, `/user-ep/${this.eventId}/${data.user_id}/${userName}?`);
+      this._frameEventManager.publish(FrameEvents.NavigateTo, `/user-ep/${data.user_id}/${this.eventId}/${userName}?`);
     } else {
-      this._router.navigate([`/user-ep/${this.eventId}/${data.user_id}/${userName}`]);
+      this._router.navigate([`/user-ep/${data.user_id}/${this.eventId}/${userName}`]);
     }
   }
 
