@@ -16,11 +16,16 @@ export interface Option {
 export interface Poll {
   pollId: string;
   question: string;
+  contextId: string;
+  groupPollId?: string;
+  groupPollName?: string;
   type: 'OpenAnswers' | 'single' | 'multiple' | 'correct' | 'open' | 'RatingScale' | 'CrowdVote';
   nvoted: number;
+  vote?: number[];
+  openAnswer?: string;
   isAcceptingMultipleVotes: boolean;
   options: Option[];
-  visualization?: {type: string, icon: string};
+  pollVisualization?: {type: string, icon: string};
 }
 
 @Component({
@@ -36,11 +41,11 @@ export class EpUserPollsComponent implements OnInit, OnDestroy {
   @Input() exporting = false;
   @Input() startDate: Date;
   @Input() endDate: Date;
+  @Input() userId = '';
 
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
   public _polls: Poll[] = [];
-  public _exportPolls: Poll[] = [];
   public _selectedPoll: Poll | null = null;
   public _columns: string[] = ['pollId', 'question', 'type', 'nvoted'];
   public _questionColumns: string[] = ['option', 'nvoted', 'rate'];
@@ -53,13 +58,13 @@ export class EpUserPollsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // this._loadReport();
+    this._loadReport();
   }
 
   ngOnDestroy() {
   }
 
-  private _loadReport(): void {
+  private _loadReport(contextId = null): void {
     this._isBusy = true;
     this._blockerMessage = null;
 
@@ -68,17 +73,20 @@ export class EpUserPollsComponent implements OnInit, OnDestroy {
       'Content-Type': 'application/json',
     });
 
-    this._http.post(`${analyticsConfig.externalServices.chatAnalyticsEndpoint.uri}/polls/analytics`,  {headers}).pipe(cancelOnDestroy(this))
+    const body = contextId ? {userId: this.userId, contextId} : {userId: this.userId};
+
+    this._http.post(`${analyticsConfig.externalServices.chatAnalyticsEndpoint.uri}/polls/userAnalytics`, body, {headers}).pipe(cancelOnDestroy(this))
       .subscribe((data: any) => {
-          this._polls = data.analytics;
+          this._polls = data?.analytics?.interactions || [];
           // update poll type
           this._polls.forEach(poll => {
+            console.log("groupPollId: " + poll.groupPollId);
             if (poll.type === 'OpenAnswers') {
               poll.type = 'open';
             } else {
               poll.type = poll.isAcceptingMultipleVotes ? 'multiple' : 'single';
-              if (poll.visualization) {
-                poll.type = poll.visualization.type === 'rating scale' ? 'RatingScale' : poll.visualization.type === 'crowd vote' ? 'CrowdVote' : poll.type;
+              if (poll.pollVisualization) {
+                poll.type = poll.pollVisualization.type === 'rating scale' ? 'RatingScale' : poll.pollVisualization.type === 'crowd vote' ? 'CrowdVote' : poll.type;
               }
               poll.options.forEach(option => {
                 if (option.isCorrect) {
@@ -94,11 +102,10 @@ export class EpUserPollsComponent implements OnInit, OnDestroy {
             poll.options.forEach(option => {
               option.rate = pollTotalVotes > 0 ? Math.round(option.nvoted / pollTotalVotes * 10000 ) / 100  : 0;
             });
-            if (poll.visualization) {
+            if (poll.pollVisualization) {
               console.log(poll);
             }
           });
-          this._exportPolls = this._polls.slice(0, 10); // for export use the first 10 polls
           this._isBusy = false;
         },
         error => {

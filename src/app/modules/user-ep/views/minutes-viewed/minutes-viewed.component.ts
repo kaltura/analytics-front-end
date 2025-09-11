@@ -79,7 +79,7 @@ export class EpUserMinutesViewedComponent implements OnInit {
     this._filter.toDate = Math.floor(this.endDate.getTime() / 1000);
     this._filter.interval = KalturaReportInterval.days;
     this._filter.userIds = this.userId;
-    this._filter.eventSessionContextIdIn = analyticsConfig.customData?.eventSessionEntries || '';
+    this._filter.eventSessionContextIdIn = analyticsConfig.customData?.eventSessionEntries?.split(',').join(analyticsConfig.valueSeparator) || '';
 
     this._codFilter.virtualEventIdIn = this.eventId;
     this._codFilter.timeZoneOffset = DateFilterUtils.getTimeZoneOffset(),
