@@ -1,0 +1,117 @@
+<div #reportToExport data-aid="report-group-user-ep" class="kMain">
+  <k-area-blocker [showLoader]="_loadingEvent" [message]="_blockerMessage">
+    <div class="kReportView">
+      <div class="kReport kContent kOverrideFAIcons">
+        <div class="kReportHeader" [class.noTitle]="!_viewConfig.title">
+          <h1 *ngIf="_viewConfig.title" class="kTitle kTruncateTitle"
+              [kTooltip]="_userName" [showOnEllipsis]="true"
+              [placement]="'bottom'">{{ _userName }}</h1>
+          <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title" [class.exporting]="_exporting">
+            <app-pdf-export *ngIf="_viewConfig.download"
+                            [eventName]="'Events_event_pdf_download'"
+                            [feature]="'Event'"
+                            [elementToExport]="reportToExport" [filename]="exportFilename"
+                            (preExport)="preExportHandler()" (postExport)="postExportHandler()"
+                            (exporting)="onExporting($event)"></app-pdf-export>
+
+          </div>
+        </div>
+
+        <div [class.kHidden]="!_eventLoaded" class="kReportContainer">
+          <div class="kColumnsWide">
+            <app-metrics-cards #metrics  [virtualEventLoaded]="_eventLoaded"
+                                         [exporting]="_exporting"
+                                         [eventIn]="_eventId"
+                                         [userId]="_userId"
+                                         [startDate]="_eventStartDate"
+                                         [endDate]="_eventEndDate"
+                                         [contentOnDemandLoading]="contentOnDemand._isBusy"
+                                         [sessionsLoading]="sessions._isBusy"
+                                         [_videosViewed]="contentOnDemand.totalCount.toString()"
+                                         [_sessionViewed]="sessions.totalCount.toString()"
+                                         [class.kHidden]="!_viewConfig.metricsCards">
+            </app-metrics-cards>
+            <app-event-interactivity   [_isBusy]="metrics._isBusy"
+                                       [exporting]="_exporting"
+                                       [_downloadCount]="metrics._downloadCount"
+                                       [_messagesCount]="metrics._messagesCount"
+                                       [_pollsCount]="metrics._pollsCount"
+                                       [_questionsCount]="metrics._questionsCount"
+                                       [_reactionsCount]="metrics._reactionsCount"
+                                       *ngIf="_viewConfig.eventInteractivity">
+            </app-event-interactivity>
+          </div>
+          <div class="kColumnsNarrow">
+            <app-event-user-details    [virtualEventLoaded]="_eventLoaded"
+                                       [exporting]="_exporting"
+                                       [eventIn]="_eventId"
+                                       [userId]="_userId"
+                                       [startDate]="_eventStartDate"
+                                       [endDate]="_eventEndDate"
+                                       *ngIf="_viewConfig.userDetails">
+            </app-event-user-details>
+<!--            <app-other-events          [virtualEventLoaded]="_eventLoaded"-->
+<!--                                       [exporting]="_exporting"-->
+<!--                                       [userId]="_userId"-->
+<!--                                       *ngIf="_viewConfig.otherEvents">-->
+<!--            </app-other-events>-->
+          </div>
+        </div>
+
+        <div [class.kHidden]="!_eventLoaded" class="kReportContainer">
+          <div class="kColumnsHalf">
+            <app-ep-user-minutes-viewed
+              [eventId]="_eventId"
+              [userId]="_userId"
+              [endDate]="_eventEndDate"
+              [startDate]="_eventStartDate">
+            </app-ep-user-minutes-viewed>
+          </div>
+          <div class="kColumnsHalf">
+            <app-event-user-attachments
+              [eventIn]="_eventId"
+              [userId]="_userId"
+              [virtualEventLoaded]="_eventLoaded"
+              [exporting]="_exporting"
+              [startDate]="_eventStartDate">
+            </app-event-user-attachments>
+          </div>
+        </div>
+
+        <div [class.kHidden]="!_eventLoaded || !_viewConfig.sessions" class="kReportContainer">
+          <app-event-user-sessions [virtualEventLoaded]="_eventLoaded" #sessions
+                              [exporting]="_exporting"
+                              [eventIn]="_eventId"
+                              [userId]="_userId"
+                              [endDate]="_eventEndDate"
+                              [totalAttachments]="metrics._downloadCount"
+                              [startDate]="_eventStartDate">
+          </app-event-user-sessions>
+        </div>
+
+        <div [class.kHidden]="!_eventLoaded || !_viewConfig.polls" class="kReportContainer" id="polls">
+          <app-ep-user-polls [exporting]="_exporting"
+                             [userId]="_userId"
+                             [startDate]="_eventStartDate" [endDate]="_eventEndDate"></app-ep-user-polls>
+        </div>
+
+        <div [class.kHidden]="!_eventLoaded || !_viewConfig.contentOnDemand" class="kReportContainer">
+          <app-event-user-content-on-demand [virtualEventLoaded]="_eventLoaded" #contentOnDemand
+                                            [exporting]="_exporting"
+                                            [eventIn]="_eventId"
+                                            [userId]="_userId"
+                                            [startDate]="_eventStartDate">
+          </app-event-user-content-on-demand>
+        </div>
+
+        <div *ngIf="_exporting" class="footer">
+          <i></i>
+          <span>{{'app.engagement.footer' | translate}}</span>
+        </div>
+
+      </div>
+    </div>
+  </k-area-blocker>
+
+</div>
+

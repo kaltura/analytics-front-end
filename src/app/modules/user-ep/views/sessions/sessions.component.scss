@@ -1,0 +1,82 @@
+@import '../../../../../styles/variables';
+
+:host {
+  width: 100%;
+  .emptymessage .kEmptyMessage {
+    height: 150px;
+    line-height: 120px;
+  }
+}
+.kReport {
+  margin-bottom: 0px !important;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+k-area-blocker {
+  display: block;
+}
+.reportContent {
+  .header {
+    display: flex;
+    align-items: center;
+    .title {
+      font-weight: 700;
+      font-size: 20px;
+      color: $kGrayscale1;
+      display: block;
+      margin: 24px;
+    }
+    .disclaimer {
+      margin-left: auto;
+      margin-right: 24px;
+      background-color: $kGrayscale7;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      padding: 4px 8px;
+      gap: 4px;
+      .span {
+        color: $kGrayscale1;
+        font-size: 14px;
+      }
+      i {
+        color: $kPrimary;
+      }
+    }
+  }
+  .row {
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    .tableCell {
+      display: flex;
+      align-items: center;
+      span {
+        margin-right: 8px;
+        min-width: 28px;
+        flex: 0 0 auto;
+      }
+    }
+    .kEntryLink {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      white-space: normal;
+    }
+  }
+  .noSessions {
+    width: 100%;
+    display: block;
+    text-align: center;
+    font-size: 20px;
+    line-height: 380px;
+    padding-bottom: 24px;
+    font-weight: 700;
+    color: $kGrayscale3;
+  }
+}
+::ng-deep p-table .tableHeader {
+  white-space: normal;
+}

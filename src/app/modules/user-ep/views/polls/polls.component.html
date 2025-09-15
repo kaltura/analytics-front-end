@@ -1,0 +1,111 @@
+<div data-aid="report-devices" class="kReport kOverrideFAIcons">
+
+  <div class="kFilters">
+    <span class="kTitle" (click)="drillUp()" [class.drilled]="_survey.length !== 0">{{'app.entryEp.polls.interactions' | translate}}</span>
+    <span class="title slash" *ngIf="_survey.length !== 0">/</span>
+    <span class="title" *ngIf="_survey.length !== 0">{{'app.userEp.survey' | translate}}</span>
+  </div>
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kReportContent" aria-labelledby="kPolls">
+
+      <span class="kTotalCount" *ngIf="_survey.length === 0">
+          {{'app.entryEp.polls.totalPolls' | translate: { '0': _polls.length } }}
+      </span>
+
+      <div class="kTotalCount" *ngIf="_survey.length !== 0">
+        <span>{{'app.userEp.surveyQuestionsAnswered' | translate: {'0': _surveyQuestionsAnswered, '1': _survey.length} }}</span>
+      </div>
+
+
+    <div class="kTable">
+      <div class="kTableContainer">
+        <p-table aria-label="Polls Table" [class.kHidden]="_survey.length !== 0"
+                 [value]="_polls"
+                 [paginator]="true"
+                 (onPage)="onPage($event)"
+                 [rows]="5">
+          <ng-template pTemplate="header">
+            <tr>
+              <th *ngFor="let col of _columns" [ngStyle]="{'width': col === 'id' ? '50px' : col === 'question' ? '50%' : '25%'}">
+                <div class="kColumnHeader">
+                  {{col === 'id' ? '' : 'app.userEp.' + col | translate}}
+                </div>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-data>
+            <tr>
+              <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0">
+                <ng-container>
+                  <div class="tableCell">
+                    <svg *ngIf="col === 'id' && data['isSurvey']" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M6 2H18C19.1046 2 20 2.89543 20 4V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V4C4 2.89543 4.89543 2 6 2ZM13 16C13 15.4477 12.5523 15 12 15H8C7.44772 15 7 15.4477 7 16C7 16.5523 7.44772 17 8 17H12C12.5523 17 13 16.5523 13 16ZM17 12C17 11.4477 16.5523 11 16 11H8C7.44772 11 7 11.4477 7 12C7 12.5523 7.44772 13 8 13H16C16.5523 13 17 12.5523 17 12ZM17 8C17 7.44772 16.5523 7 16 7H8C7.44772 7 7 7.44772 7 8C7 8.55228 7.44772 9 8 9H16C16.5523 9 17 8.55228 17 8Z" fill="#888888"/>
+                    </svg>
+                    <svg *ngIf="col === 'id' && data['type'] !== 'OpenAnswers' && !data['isSurvey']" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9974 3.56161C13.4494 3.49276 13 3.94691 13 4.49919V10.4992C13 11.0515 13.4477 11.4992 14 11.4992L20 11.4992C20.5523 11.4992 21.0064 11.0498 20.9376 10.5018C20.8486 9.79392 20.6652 9.09962 20.391 8.43773C19.989 7.46712 19.3997 6.58521 18.6569 5.84234C17.914 5.09947 17.0321 4.5102 16.0615 4.10816C15.3996 3.83399 14.7053 3.65056 13.9974 3.56161ZM18.9376 14.4966C19.0064 13.9486 18.5523 13.4992 18 13.4992H12C11.4477 13.4992 11 13.0515 11 12.4992V6.49919C11 5.94691 10.5506 5.49275 10.0026 5.56161C8.77376 5.71602 7.59276 6.15432 6.55544 6.84744C5.23985 7.72649 4.21447 8.97592 3.60897 10.4377C3.00347 11.8995 2.84504 13.5081 3.15372 15.0599C3.4624 16.6118 4.22433 18.0372 5.34315 19.156C6.46197 20.2749 7.88743 21.0368 9.43928 21.3455C10.9911 21.6542 12.5997 21.4957 14.0615 20.8902C15.5233 20.2847 16.7727 19.2593 17.6518 17.9438C18.3449 16.9064 18.7832 15.7254 18.9376 14.4966Z" fill="#888888"/>
+                    </svg>
+                    <svg *ngIf="col === 'id' && data['type'] === 'OpenAnswers' && !data['isSurvey']" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M20 12.5C20 13.9511 19.6137 15.3119 18.9382 16.4853L19.7501 19.5153C19.8697 19.9614 19.4614 20.3697 19.0153 20.2502L15.9852 19.4383C14.8119 20.1137 13.4511 20.5 12 20.5C7.58172 20.5 4 16.9183 4 12.5C4 8.08172 7.58172 4.5 12 4.5C16.4183 4.5 20 8.08172 20 12.5ZM12.4632 13.8978C12.6711 13.8978 12.8395 13.7367 12.8395 13.538V13.4276C12.8735 13.1801 12.9564 12.9738 13.0881 12.8088C13.2198 12.6438 13.3707 12.4974 13.5406 12.3695C13.7106 12.2416 13.8912 12.1138 14.0824 11.9859C14.2736 11.858 14.4478 11.7033 14.605 11.5218C14.7623 11.3403 14.894 11.1217 15.0002 10.866C15.1064 10.6102 15.1596 10.2843 15.1596 9.88835C15.1596 9.6491 15.1064 9.39129 15.0002 9.11492C14.894 8.83855 14.7177 8.58074 14.4712 8.34149C14.2248 8.10224 13.8997 7.90218 13.496 7.74131C13.0924 7.58044 12.5888 7.5 11.9855 7.5C11.5181 7.5 11.0953 7.57631 10.7171 7.72893C10.3389 7.88156 10.016 8.09399 9.74829 8.36624C9.48059 8.63849 9.27238 8.96023 9.12366 9.33148C9.01659 9.59875 8.94586 9.88527 8.91147 10.191C8.88897 10.3911 9.06055 10.5566 9.27107 10.5566H10.6363C10.7055 10.5566 10.7614 10.5029 10.7642 10.4367C10.7718 10.2587 10.7965 10.0903 10.8382 9.93166C10.8892 9.73778 10.9678 9.56866 11.074 9.42429C11.1802 9.27992 11.3162 9.16442 11.4819 9.07779C11.6477 8.99117 11.8452 8.94786 12.0747 8.94786C12.4146 8.94786 12.6802 9.03861 12.8714 9.2201C13.0626 9.4016 13.1582 9.6821 13.1582 10.0616C13.1667 10.2843 13.1263 10.47 13.0371 10.6185C12.9479 10.767 12.831 10.9031 12.6866 11.0268C12.5421 11.1506 12.3849 11.2743 12.2149 11.3981C12.0449 11.5218 11.8835 11.6683 11.7305 11.8374C11.5775 12.0065 11.4437 12.2107 11.329 12.4499C11.2142 12.6892 11.1441 12.9862 11.1186 13.3409V13.538C11.1186 13.7367 11.2871 13.8978 11.4949 13.8978H12.4632ZM11.9408 17.5001C12.4913 17.5001 12.9415 17.0735 12.9415 16.5473C12.9415 16.021 12.4913 15.5944 11.9408 15.5944C11.3904 15.5944 10.9402 16.021 10.9402 16.5473C10.9402 17.0735 11.3904 17.5001 11.9408 17.5001Z" fill="#888888"/>
+                    </svg>
+                    <div *ngIf="data.pollVisualization?.type === 'rating scale' && col === 'answer' && data['hasAnswered']" class="icon {{data.pollVisualization.icon.split(' ').join('').toLowerCase()}}"></div>
+                    <div *ngIf="data.pollVisualization?.type === 'crowd vote' && col === 'answer' && data['hasAnswered']" class="icon {{data[col].split(' ').join('').toLowerCase()}}"></div>
+                    <span *ngIf="col !== 'id'" class="bulletValue" [class.link]="data['isSurvey'] && col === 'question'" (click)="drillDown(data, col)">{{col === 'type' ? ('app.entryEp.polls.' + data[col] | translate) : data[col]}}</span>
+                  </div>
+                </ng-container>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <div class="emptymessage" aria-label="Empty Results Message">
+              <div class="kEmptyMessage" *ngIf="!_isBusy">{{'app.common.noResults' | translate}}</div>
+              <div class="kEmptyMessage" *ngIf="_isBusy">&nbsp;</div>
+            </div>
+          </ng-template>
+        </p-table>
+
+        <p-table *ngIf="_survey.length !== 0" aria-label="Polls Table"
+                 [value]="_survey">
+          <ng-template pTemplate="header">
+            <tr>
+              <th *ngFor="let col of _questionColumns" [ngStyle]="{'width': col === 'id' ? '50px' : '50%'}">
+                <div class="kColumnHeader">
+                  {{col === 'id' ? '' : 'app.userEp.' + col | translate}}
+                </div>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-data>
+            <tr>
+              <td *ngFor="let col of _questionColumns; let i = index" [class.kHighlight]="i===0">
+                <ng-container>
+                  <div class="tableCell">
+                    <svg *ngIf="col === 'id' && data['type'] !== 'OpenAnswers' && !data['isSurvey']" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9974 3.56161C13.4494 3.49276 13 3.94691 13 4.49919V10.4992C13 11.0515 13.4477 11.4992 14 11.4992L20 11.4992C20.5523 11.4992 21.0064 11.0498 20.9376 10.5018C20.8486 9.79392 20.6652 9.09962 20.391 8.43773C19.989 7.46712 19.3997 6.58521 18.6569 5.84234C17.914 5.09947 17.0321 4.5102 16.0615 4.10816C15.3996 3.83399 14.7053 3.65056 13.9974 3.56161ZM18.9376 14.4966C19.0064 13.9486 18.5523 13.4992 18 13.4992H12C11.4477 13.4992 11 13.0515 11 12.4992V6.49919C11 5.94691 10.5506 5.49275 10.0026 5.56161C8.77376 5.71602 7.59276 6.15432 6.55544 6.84744C5.23985 7.72649 4.21447 8.97592 3.60897 10.4377C3.00347 11.8995 2.84504 13.5081 3.15372 15.0599C3.4624 16.6118 4.22433 18.0372 5.34315 19.156C6.46197 20.2749 7.88743 21.0368 9.43928 21.3455C10.9911 21.6542 12.5997 21.4957 14.0615 20.8902C15.5233 20.2847 16.7727 19.2593 17.6518 17.9438C18.3449 16.9064 18.7832 15.7254 18.9376 14.4966Z" fill="#888888"/>
+                    </svg>
+                    <svg *ngIf="col === 'id' && data['type'] === 'OpenAnswers' && !data['isSurvey']" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M20 12.5C20 13.9511 19.6137 15.3119 18.9382 16.4853L19.7501 19.5153C19.8697 19.9614 19.4614 20.3697 19.0153 20.2502L15.9852 19.4383C14.8119 20.1137 13.4511 20.5 12 20.5C7.58172 20.5 4 16.9183 4 12.5C4 8.08172 7.58172 4.5 12 4.5C16.4183 4.5 20 8.08172 20 12.5ZM12.4632 13.8978C12.6711 13.8978 12.8395 13.7367 12.8395 13.538V13.4276C12.8735 13.1801 12.9564 12.9738 13.0881 12.8088C13.2198 12.6438 13.3707 12.4974 13.5406 12.3695C13.7106 12.2416 13.8912 12.1138 14.0824 11.9859C14.2736 11.858 14.4478 11.7033 14.605 11.5218C14.7623 11.3403 14.894 11.1217 15.0002 10.866C15.1064 10.6102 15.1596 10.2843 15.1596 9.88835C15.1596 9.6491 15.1064 9.39129 15.0002 9.11492C14.894 8.83855 14.7177 8.58074 14.4712 8.34149C14.2248 8.10224 13.8997 7.90218 13.496 7.74131C13.0924 7.58044 12.5888 7.5 11.9855 7.5C11.5181 7.5 11.0953 7.57631 10.7171 7.72893C10.3389 7.88156 10.016 8.09399 9.74829 8.36624C9.48059 8.63849 9.27238 8.96023 9.12366 9.33148C9.01659 9.59875 8.94586 9.88527 8.91147 10.191C8.88897 10.3911 9.06055 10.5566 9.27107 10.5566H10.6363C10.7055 10.5566 10.7614 10.5029 10.7642 10.4367C10.7718 10.2587 10.7965 10.0903 10.8382 9.93166C10.8892 9.73778 10.9678 9.56866 11.074 9.42429C11.1802 9.27992 11.3162 9.16442 11.4819 9.07779C11.6477 8.99117 11.8452 8.94786 12.0747 8.94786C12.4146 8.94786 12.6802 9.03861 12.8714 9.2201C13.0626 9.4016 13.1582 9.6821 13.1582 10.0616C13.1667 10.2843 13.1263 10.47 13.0371 10.6185C12.9479 10.767 12.831 10.9031 12.6866 11.0268C12.5421 11.1506 12.3849 11.2743 12.2149 11.3981C12.0449 11.5218 11.8835 11.6683 11.7305 11.8374C11.5775 12.0065 11.4437 12.2107 11.329 12.4499C11.2142 12.6892 11.1441 12.9862 11.1186 13.3409V13.538C11.1186 13.7367 11.2871 13.8978 11.4949 13.8978H12.4632ZM11.9408 17.5001C12.4913 17.5001 12.9415 17.0735 12.9415 16.5473C12.9415 16.021 12.4913 15.5944 11.9408 15.5944C11.3904 15.5944 10.9402 16.021 10.9402 16.5473C10.9402 17.0735 11.3904 17.5001 11.9408 17.5001Z" fill="#888888"/>
+                    </svg>
+                    <div *ngIf="data.pollVisualization?.type === 'rating scale' && i===2 && data['hasAnswered']" class="icon {{data.pollVisualization.icon.split(' ').join('').toLowerCase()}}"></div>
+                    <div *ngIf="data.pollVisualization?.type === 'crowd vote' && i===2 && data['hasAnswered']" class="icon {{data[col].split(' ').join('').toLowerCase()}}"></div>
+                    <span *ngIf="data.pollVisualization?.type === 'crowd vote' && i ===2 && data['hasAnswered']" class="bulletValue">{{'app.entryEp.polls.' + data[col] | translate}}</span>
+                    <span *ngIf="col !== 'id' && (data.pollVisualization?.type !== 'crowd vote' || i === 1 || (i===2 && !data['hasAnswered']))" class="bulletValue">{{data[col]}}</span>
+                  </div>
+                </ng-container>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <div class="emptymessage" aria-label="Empty Results Message">
+              <div class="kEmptyMessage" *ngIf="!_isBusy">{{'app.common.noResults' | translate}}</div>
+              <div class="kEmptyMessage" *ngIf="_isBusy">&nbsp;</div>
+            </div>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+    </div>
+  </k-area-blocker>
+
+</div>
+

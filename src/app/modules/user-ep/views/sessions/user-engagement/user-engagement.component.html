@@ -1,0 +1,38 @@
+<div data-aid="report-event-user-engagement" class="kOverrideFAIcons">
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+
+    <div class="engagement">
+      <div class="row">
+        <div class="metric">
+          <i class="icon-small-like"></i>
+          <span class="label">{{'app.userEp.reactions1' | translate: {'0': _reactionsCount} }}</span>
+        </div>
+        <div class="metric">
+          <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7.21689 1.19521C7.21689 0.764875 7.56575 0.416016 7.99609 0.416016C8.42643 0.416016 8.77529 0.764875 8.77529 1.19521V7.81841C8.77529 8.03358 8.94972 8.20801 9.16489 8.20801C9.38006 8.20801 9.55449 8.03358 9.55449 7.81841V2.75361C9.55449 2.32327 9.90334 1.97441 10.3337 1.97441C10.764 1.97441 11.1129 2.32327 11.1129 2.75361V9.92226L11.952 7.90833C12.1175 7.51109 12.5737 7.32325 12.971 7.48876C13.3682 7.65428 13.5561 8.11048 13.3905 8.50771C12.1443 11.4987 11.2438 16 7.21689 16C4.63485 16 2.54169 13.9068 2.54169 11.3248V4.31201C2.54169 3.88167 2.89055 3.53281 3.32089 3.53281C3.75123 3.53281 4.10009 3.88167 4.10009 4.31201V7.81841C4.10009 8.03358 4.27452 8.20801 4.48969 8.20801C4.70486 8.20801 4.87929 8.03358 4.87929 7.81841V2.75361C4.87929 2.32327 5.22815 1.97441 5.65849 1.97441C6.08883 1.97441 6.43769 2.32327 6.43769 2.75361V7.23401C6.43769 7.44918 6.61212 7.62361 6.82729 7.62361C7.04246 7.62361 7.21689 7.44918 7.21689 7.23401V1.19521Z" fill="#888888"/>
+          </svg>
+          <span class="label">{{'app.userEp.raisedHand' | translate: {'0': _raisedHandCount} }}</span>
+        </div>
+        <div class="metric">
+          <i class="icon-download"></i>
+          <span class="label">{{'app.userEp.downloads1' | translate: {'0': _downloadCount + '/' + totalAttachments} }}</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="metric">
+          <i class="icon-captions"></i>
+          <span class="label">{{'app.userEp.chat1' | translate: {'0': _messagesCount} }}</span>
+        </div>
+        <div class="metric">
+          <i class="icon-ic_poll"></i>
+          <span class="label">{{'app.userEp.polls1' | translate: {'0': _pollsCount} }}</span>
+        </div>
+      </div>
+    </div>
+
+  </k-area-blocker>
+</div>
+

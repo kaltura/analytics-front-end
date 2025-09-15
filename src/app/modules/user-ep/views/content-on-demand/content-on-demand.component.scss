@@ -1,0 +1,57 @@
+@import '../../../../../styles/variables';
+:host {
+  .emptymessage .kEmptyMessage {
+    height: 150px;
+    line-height: 120px;
+  }
+}
+k-area-blocker {
+  display: block;
+}
+.kReport {
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.reportContent {
+  .title {
+    font-weight: 700;
+    font-size: 20px;
+    color: $kGrayscale1;
+    margin-bottom: 24px;
+    display: block;
+    margin: 24px;
+    margin-bottom: 8px;
+  }
+  .total {
+    font-size: 16px;
+    color: $kGrayscale2;
+    margin-left: 24px;
+    display: block;
+    margin-bottom: 24px;
+  }
+  .row {
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    .tableCell {
+      display: flex;
+      align-items: center;
+      span {
+        margin-right: 8px;
+        min-width: 28px;
+        flex: 0 0 auto;
+      }
+    }
+    .deleted {
+      font-size: 13px;
+      font-weight: 700;
+      margin-top: 8px;
+      color: $kGrayscale3;
+    }
+    .kName {
+      color: $kGrayscale1;
+      font-weight: bold;
+    }
+  }
+}

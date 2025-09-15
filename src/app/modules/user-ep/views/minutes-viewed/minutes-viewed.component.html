@@ -1,0 +1,60 @@
+<div data-aid="report-engagement-mini-highlights" class="kReport kSocialHighlights kOverrideFAIcons">
+
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+
+    <div class="reportContent">
+      <div class="dataContainer">
+        <span class="title">{{'app.event.minutes' | translate}}</span>
+
+        <div class="labelHolder" *ngIf="_tabsData.length > 0">
+          <span class="label">{{_tabsData[0]?.title}}</span>
+          <kInputHelper>
+            <span>{{'app.userEp.liveMinutesViewed_tt' | translate}}</span>
+          </kInputHelper>
+        </div>
+
+        <div class="kBulletContainer">
+          <div class="bulletContainer">
+            <div class="bulletBkg">
+              <div class="kBullet" [style.width]="_livePercent + '%'"></div>
+            </div>
+          </div>
+          <span class="graphValue">{{formatMinutesToTime(_tabsData[0]?.value)}}</span>
+        </div>
+
+        <div class="labelHolder" *ngIf="_tabsData.length > 1">
+          <span class="label">{{_tabsData[1]?.title}}</span>
+          <kInputHelper>
+            <span>{{'app.userEp.vodMinutesViewed_tt' | translate}}</span>
+          </kInputHelper>
+        </div>
+        <div class="kBulletContainer">
+          <div class="bulletContainer">
+            <div class="bulletBkg">
+              <div class="kBullet"[style.width]="_recordingPercent + '%'"></div>
+            </div>
+          </div>
+          <span class="graphValue">{{formatMinutesToTime(_tabsData[1]?.value)}}</span>
+        </div>
+
+        <div class="labelHolder" *ngIf="_codTabsData.length > 2">
+          <span class="label">{{'app.event.content' | translate}}</span>
+          <kInputHelper>
+            <span>{{'app.userEp.codMinutesViewed_tt' | translate}}</span>
+          </kInputHelper>
+        </div>
+        <div class="kBulletContainer">
+          <div class="bulletContainer">
+            <div class="bulletBkg">
+              <div class="kBullet"[style.width]="_codPercent + '%'"></div>
+            </div>
+          </div>
+          <span class="graphValue">{{formatMinutesToTime(_codTabsData[2]?.value)}}</span>
+        </div>
+      </div>
+
+    </div>
+
+  </k-area-blocker>
+</div>
+

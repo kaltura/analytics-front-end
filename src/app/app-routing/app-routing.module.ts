@@ -3,7 +3,6 @@ import { LocationStrategy, PathLocationStrategy, PlatformLocation } from '@angul
 import { VoidPathLocationStrategy } from './void-path-location-strategy';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from '../dashboard/dashboard.component';
-import {EntryEpModule} from "../modules/entry-ep/entry-ep.module";
 
 const routes: Routes = [
   {
@@ -89,6 +88,14 @@ const routes: Routes = [
       {
         path: 'entry-ep',
         loadChildren: () => import('../modules/entry-ep/entry-ep.module').then(m => m.EntryEpModule)
+      },
+      {
+        path: 'user-ep/:userId/:eventId/:userName',
+        loadChildren: () => import('../modules/user-ep/user-ep.module').then(m => m.UserEpModule)
+      },
+      {
+        path: 'user-ep',
+        loadChildren: () => import('../modules/user-ep/user-ep.module').then(m => m.UserEpModule)
       },
       {
         path: 'audience',

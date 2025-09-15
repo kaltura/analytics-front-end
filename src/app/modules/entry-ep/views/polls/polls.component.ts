@@ -28,7 +28,7 @@ export interface Poll {
   templateUrl: './polls.component.html',
   styleUrls: ['./polls.component.scss'],
   providers: [
-    KalturaLogger.createLogger('EpDevicesComponent')
+    KalturaLogger.createLogger('EpPollsComponent')
   ]
 })
 export class EpPollsComponent implements OnInit, OnDestroy {
