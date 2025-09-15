@@ -1261,7 +1261,12 @@
       "attachments": "Attachments",
       "attachmentDownloads": "{{0}} attachments downloaded",
       "attachmentsattachment_name": "Name",
-      "attachmentsentry_name": "Source"
+      "attachmentsentry_name": "Source",
+      "question": "Question",
+      "survey": "Survey",
+      "answer": "Answer",
+      "session": "Session",
+      "surveyQuestionsAnswered": "{{0}} / {{1}} questions answered"
     },
     "event": {
       "attendeeProfile": "Registrants profile",

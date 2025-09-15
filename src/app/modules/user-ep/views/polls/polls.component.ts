@@ -5,11 +5,11 @@ import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { analyticsConfig } from "configuration/analytics-config";
 import { AreaBlockerMessage } from "@kaltura-ng/kaltura-ui";
+import {TranslateService} from "@ngx-translate/core";
+import {BaseEntryListAction, KalturaBaseEntryFilter, KalturaBaseEntryListResponse, KalturaClient, KalturaDetachedResponseProfile, KalturaEntryStatus, KalturaFilterPager, KalturaResponseProfileType} from "kaltura-ngx-client";
 
 export interface Option {
   option: string;
-  nvoted: number;
-  rate: number;
   isCorrect: boolean;
 }
 
@@ -19,12 +19,23 @@ export interface Poll {
   contextId: string;
   groupPollId?: string;
   groupPollName?: string;
-  type: 'OpenAnswers' | 'single' | 'multiple' | 'correct' | 'open' | 'RatingScale' | 'CrowdVote';
-  nvoted: number;
+  pollType: 'OpenAnswers' | 'single' | 'multiple' | 'correct' | 'open' | 'RatingScale' | 'CrowdVote';
+  votedAt: string;
   vote?: number[];
   openAnswer?: string;
+  hasAnswered: boolean;
   isAcceptingMultipleVotes: boolean;
   options: Option[];
+  pollVisualization?: {type: string, icon: string};
+}
+
+export interface PollRow {
+  id: string;
+  isSurvey: boolean;
+  type: 'OpenAnswers' | 'single' | 'multiple' | 'correct' | 'open' | 'RatingScale' | 'CrowdVote';
+  question: string;
+  answer: string;
+  session: string;
   pollVisualization?: {type: string, icon: string};
 }
 
@@ -45,14 +56,19 @@ export class EpUserPollsComponent implements OnInit, OnDestroy {
 
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
-  public _polls: Poll[] = [];
-  public _selectedPoll: Poll | null = null;
-  public _columns: string[] = ['pollId', 'question', 'type', 'nvoted'];
-  public _questionColumns: string[] = ['option', 'nvoted', 'rate'];
+  private pollsAndSurveys: Poll[] = [];
+  public _polls: PollRow[] = [];
+  public _survey: PollRow[] = [];
+  public _surveyQuestionsAnswered = 0;
+  public _selectedPoll: PollRow = null;
+  public _columns: string[] = ['id', 'question', 'answer', 'session'];
+  public _questionColumns: string[] = ['question', 'answer'];
   public _exporting = false;
 
   constructor(private _errorsManager: ErrorsManagerService,
               private _http: HttpClient,
+              private _kalturaClient: KalturaClient,
+              private _translate: TranslateService,
               private _authService: AuthService,
               private _analytics: AppAnalytics) {
   }
@@ -77,36 +93,67 @@ export class EpUserPollsComponent implements OnInit, OnDestroy {
 
     this._http.post(`${analyticsConfig.externalServices.chatAnalyticsEndpoint.uri}/polls/userAnalytics`, body, {headers}).pipe(cancelOnDestroy(this))
       .subscribe((data: any) => {
-          this._polls = data?.analytics?.interactions || [];
-          // update poll type
-          this._polls.forEach(poll => {
-            console.log("groupPollId: " + poll.groupPollId);
-            if (poll.type === 'OpenAnswers') {
-              poll.type = 'open';
-            } else {
-              poll.type = poll.isAcceptingMultipleVotes ? 'multiple' : 'single';
-              if (poll.pollVisualization) {
-                poll.type = poll.pollVisualization.type === 'rating scale' ? 'RatingScale' : poll.pollVisualization.type === 'crowd vote' ? 'CrowdVote' : poll.type;
-              }
-              poll.options.forEach(option => {
-                if (option.isCorrect) {
-                  poll.type = 'correct';
+        this.pollsAndSurveys = data?.analytics?.interactions || [];
+        const sessionIds = [];
+
+        this.pollsAndSurveys.forEach(poll => {
+          if (poll.contextId && sessionIds.indexOf(poll.contextId) === -1) {
+            sessionIds.push(poll.contextId);
+          }
+          if (poll.groupPollId && this._polls.findIndex(p => p.id === poll.groupPollId) === -1) {
+            this._polls.push({
+              id: poll.groupPollId,
+              isSurvey: true,
+              question: this._translate.instant('app.userEp.survey'),
+              type: poll.pollType,
+              answer: '',
+              session: poll.contextId
+            });
+          } else if (!poll.groupPollId && poll.hasAnswered) {
+            this._polls.push({
+              id: poll.pollId,
+              isSurvey: false,
+              question: poll.question,
+              type: poll.pollType,
+              answer: poll.openAnswer ? poll.openAnswer : poll.vote ? poll.vote.map(v => poll.options[v] ? poll.options[v].option : '').join(', ') : '',
+              session: poll.contextId
+            });
+          }
+        });
+
+        // load session names
+        if (sessionIds.length > 0) {
+          const request = new BaseEntryListAction({
+            pager: new KalturaFilterPager({pageIndex: 1, pageSize: 500}),
+            filter: new KalturaBaseEntryFilter({idIn: sessionIds.join(','), statusIn: '0,1,2,3,4,5,6,7'})
+          })
+            .setRequestOptions({
+              responseProfile: new KalturaDetachedResponseProfile({
+                type: KalturaResponseProfileType.includeFields,
+                fields: 'id,name'
+              })
+            });
+
+          this._kalturaClient
+            .request(request)
+            .pipe(cancelOnDestroy(this))
+            .subscribe((response: KalturaBaseEntryListResponse) => {
+                if (response.objects.length) {
+                  // update polls with session names
+                  this._polls.forEach(poll => {
+                    const entry = response.objects.find(e => e.id === poll.session);
+                    if (entry) {
+                      poll.session = entry.name;
+                    }
+                  });
                 }
+                this._isBusy = false;
+              },
+              error => {
+                console.error(error);
+                this._isBusy = false;
               });
-            }
-            // for poll options, add rate
-            let pollTotalVotes = 0;
-            poll.options.forEach(option => {
-              pollTotalVotes += option.nvoted;
-            });
-            poll.options.forEach(option => {
-              option.rate = pollTotalVotes > 0 ? Math.round(option.nvoted / pollTotalVotes * 10000 ) / 100  : 0;
-            });
-            if (poll.pollVisualization) {
-              console.log(poll);
-            }
-          });
-          this._isBusy = false;
+          }
         },
         error => {
           this._isBusy = false;
@@ -120,31 +167,37 @@ export class EpUserPollsComponent implements OnInit, OnDestroy {
           };
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
-
   }
 
-  public drillDown(poll: Poll): void {
-    if (poll.type !== 'open') {
-      this._analytics.trackButtonClickEvent(ButtonType.Navigate, 'Events_session_polls_question_click', poll.type, 'session_dashboard');
-      this._selectedPoll = poll;
+  public drillDown(poll: PollRow, col: string): void {
+    if (col === 'question') {
+      this._survey = [];
+      this._surveyQuestionsAnswered = 0;
+      this.pollsAndSurveys.forEach(p => {
+        if (p.groupPollId === poll.id) {
+          this._survey.push({
+            id: p.pollId,
+            isSurvey: false,
+            question: p.question,
+            type: p.pollType,
+            answer: p.openAnswer ? p.openAnswer : p.vote ? p.vote.map(v => p.options[v] ? p.options[v].option : '').join(', ') : '',
+            session: p.contextId,
+            pollVisualization: p.pollVisualization
+          });
+          if (p.hasAnswered) {
+            this._surveyQuestionsAnswered++;
+          }
+        }
+      });
     }
   }
 
   public drillUp(): void {
-    this._analytics.trackButtonClickEvent(ButtonType.Navigate, 'Events_session_polls_all_polls', null, 'session_dashboard');
-    this._selectedPoll = null;
-  }
-
-  public preExportHandler(): void {
-    this._analytics.trackButtonClickEvent(ButtonType.Navigate, 'Events_session_polls_download_pdf', null, 'session_dashboard');
+    this._survey = [];
   }
 
   public onPage(event: any): void {
     this._analytics.trackButtonClickEvent(ButtonType.Browse, 'Events_session_polls_paginate', event.page, 'session_dashboard');
-  }
-
-  public onExporting(exporting: boolean): void {
-    this._exporting = exporting;
   }
 
 }
