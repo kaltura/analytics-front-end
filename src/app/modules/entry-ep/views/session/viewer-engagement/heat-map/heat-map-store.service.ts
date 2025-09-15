@@ -88,6 +88,7 @@ export class HeatMapStoreService {
               })
               Object.keys(positions).forEach(key => dataPoints.push(positions[key]));
             }
+            dataPoints.pop(); // remove last point, it is always 'Offline' and not relevant for heat map
             return dataPoints;
           }),
           publishReplay(1),

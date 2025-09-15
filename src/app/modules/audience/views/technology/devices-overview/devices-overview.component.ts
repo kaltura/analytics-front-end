@@ -69,7 +69,7 @@ export class TechDevicesOverviewComponent implements OnDestroy {
       if (this._filter.playbackTypeIn === '') {
         delete this._filter.playbackTypeIn;
       }
-      if (!this.isVodFilterSelected() && (this._selectedMetrics === 'sum_time_viewed' || this._selectedMetrics === 'avg_time_viewed')) {
+      if (!this.isVodFilterSelected() && (this._selectedMetrics === 'sum_view_period' || this._selectedMetrics === 'avg_time_viewed')) {
         this._onTabChange(this._tabsData[0]);
       }
       this._pager.pageIndex = 1;
@@ -383,6 +383,6 @@ export class TechDevicesOverviewComponent implements OnDestroy {
   }
 
   getTabsData() {
-    return this.isVodFilterSelected() ? this._tabsData : this._tabsData.filter(tab => tab.key !== 'sum_time_viewed' && tab.key !== 'avg_time_viewed');
+    return this.isVodFilterSelected() ? this._tabsData : this._tabsData.filter(tab => tab.key !== 'sum_view_period' && tab.key !== 'avg_time_viewed');
   }
 }

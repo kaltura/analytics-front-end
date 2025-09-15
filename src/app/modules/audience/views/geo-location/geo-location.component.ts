@@ -181,7 +181,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
 
     this._currentTableLevel = this._tableMode = GeoTableModes.countries;
 
-    if (!this.isVodFilterSelected() && this._selectedTab.key === 'avg_view_drop_off') {
+    if (!this.isVodFilterSelected() && this._selectedTab.key === 'avg_completion_rate') {
       this._onTabChange(this._tabsData[0]);
     }
 
@@ -438,14 +438,14 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
             this._setPlaysTrend(row, 'count_plays', compareValue, currentPeriodTitle, comparePeriodTitle);
             compareValue = relevantCompareRow ? relevantCompareRow['unique_known_users'] : 0;
             this._setPlaysTrend(row, 'unique_known_users', compareValue, currentPeriodTitle, comparePeriodTitle);
-            compareValue = relevantCompareRow ? relevantCompareRow['avg_view_drop_off'] : 0;
-            this._setPlaysTrend(row, 'avg_view_drop_off', compareValue, currentPeriodTitle, comparePeriodTitle, '%');
+            compareValue = relevantCompareRow ? relevantCompareRow['avg_completion_rate'] : 0;
+            this._setPlaysTrend(row, 'avg_completion_rate', compareValue, currentPeriodTitle, comparePeriodTitle, '%');
           });
         } else {
           this._tableData.forEach(row => {
             this._setPlaysTrend(row, 'count_plays', 0, currentPeriodTitle, comparePeriodTitle);
             this._setPlaysTrend(row, 'unique_known_users', 0, currentPeriodTitle, comparePeriodTitle);
-            this._setPlaysTrend(row, 'avg_view_drop_off', 0, currentPeriodTitle, comparePeriodTitle, '%');
+            this._setPlaysTrend(row, 'avg_completion_rate', 0, currentPeriodTitle, comparePeriodTitle, '%');
           });
         }
       }, error => {
@@ -466,7 +466,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
           this._tableData.forEach(row => {
             row['count_plays_trend'] = { trend: 'N/A' };
             row['count_unique_known_users'] = { trend: 'N/A' };
-            row['count_avg_view_drop_off'] = { trend: 'N/A' };
+            row['count_avg_completion_rate'] = { trend: 'N/A' };
           });
         }
       });
@@ -555,6 +555,6 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
 
   getTabsData() {
-    return this.isVodFilterSelected() ? this._tabsData : this._tabsData.filter(tab => tab.key !== 'avg_view_drop_off');
+    return this.isVodFilterSelected() ? this._tabsData : this._tabsData.filter(tab => tab.key !== 'avg_completion_rate');
   }
 }

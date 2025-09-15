@@ -30,10 +30,10 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
             colors: [getPrimaryColor(), getSecondaryColor()],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.topDomainsReport.load_play_ratio`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}%</span>`
           },
-          'sum_time_viewed': {
+          'sum_view_period': {
             format: value => value,
             colors: [getPrimaryColor('time'), getSecondaryColor('time')],
-            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.topDomainsReport.sum_time_viewed`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)} Min</span>`
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.topDomainsReport.sum_view_period`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)} Min</span>`
           },
           'avg_completion_rate': {
             format: value => Math.min(value, 100),
@@ -72,7 +72,7 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
             format: value => value,
             sortOrder: 4,
           },
-          'sum_time_viewed': {
+          'sum_view_period': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 5,
           },
@@ -101,9 +101,9 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
             sortOrder: 3,
             units: value => '%',
           },
-          'sum_time_viewed': {
+          'sum_view_period': {
             format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.engagement.topDomainsReport.sum_time_viewed`),
+            title: this._translate.instant(`app.engagement.topDomainsReport.sum_view_period`),
             units: value => 'Min',
             sortOrder: 4,
           },

@@ -31,10 +31,10 @@ export class MiniHighlightsConfig extends ReportDataBaseConfig {
             tooltip: this._translate.instant(`app.engagement.highlightsReport.count_plays_tt`),
             sortOrder: 2,
           },
-          'sum_time_viewed': {
+          'sum_view_period': {
             format: value => ReportHelper.integerOrZero(value),
-            title: this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed`),
-            tooltip: this._translate.instant(`app.engagement.highlightsReport.sum_time_viewed_tt`),
+            title: this._translate.instant(`app.engagement.highlightsReport.sum_view_period`),
+            tooltip: this._translate.instant(`app.engagement.highlightsReport.sum_view_period_tt`),
             units: value => 'min',
             sortOrder: 5,
           },

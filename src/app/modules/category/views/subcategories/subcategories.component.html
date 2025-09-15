@@ -30,9 +30,9 @@
                 {{'app.entry.unique_viewers' | translate}}
                 <p-sortIcon [field]="'unique_viewers'" *ngIf="!_isCompareMode"></p-sortIcon>
               </th>
-              <th [pSortableColumn]="_isCompareMode ? null : 'sum_time_viewed'" [class.nonSortable]="_isCompareMode">
-                {{'app.entry.sum_time_viewed' | translate}}
-                <p-sortIcon [field]="'sum_time_viewed'" *ngIf="!_isCompareMode"></p-sortIcon>
+              <th [pSortableColumn]="_isCompareMode ? null : 'sum_view_period'" [class.nonSortable]="_isCompareMode">
+                {{'app.entry.sum_view_period' | translate}}
+                <p-sortIcon [field]="'sum_view_period'" *ngIf="!_isCompareMode"></p-sortIcon>
               </th>
 
             </tr>
@@ -76,13 +76,13 @@
 
               <td>
                 <span *ngIf="_isCompareMode" class="kTrend">
-                  <span [kTooltip]="data['sum_time_viewed'].tooltip" [escape]="false" [maxWidth]="500">
-                    <app-trend-value [value]="data['sum_time_viewed'].value"
-                                     [units]="data['sum_time_viewed'].units"
-                                     [trend]="data['sum_time_viewed'].trend"></app-trend-value>
+                  <span [kTooltip]="data['sum_view_period'].tooltip" [escape]="false" [maxWidth]="500">
+                    <app-trend-value [value]="data['sum_view_period'].value"
+                                     [units]="data['sum_view_period'].units"
+                                     [trend]="data['sum_view_period'].trend"></app-trend-value>
                   </span>
                 </span>
-                <span *ngIf="!_isCompareMode">{{data['sum_time_viewed']}}</span>
+                <span *ngIf="!_isCompareMode">{{data['sum_view_period']}}</span>
               </td>
 
             </tr>
