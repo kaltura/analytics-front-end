@@ -19,7 +19,7 @@ export interface Poll {
   contextId: string;
   groupPollId?: string;
   groupPollName?: string;
-  pollType: 'OpenAnswers' | 'single' | 'multiple' | 'correct' | 'open' | 'RatingScale' | 'CrowdVote';
+  pollType: 'OpenAnswers' | 'OptionsPoll';
   votedAt: string;
   vote?: number[];
   openAnswer?: string;
@@ -32,10 +32,11 @@ export interface Poll {
 export interface PollRow {
   id: string;
   isSurvey: boolean;
-  type: 'OpenAnswers' | 'single' | 'multiple' | 'correct' | 'open' | 'RatingScale' | 'CrowdVote';
+  type: 'OpenAnswers' | 'OptionsPoll';
   question: string;
   answer: string;
   session: string;
+  hasAnswered: boolean;
   pollVisualization?: {type: string, icon: string};
 }
 
@@ -62,7 +63,7 @@ export class EpUserPollsComponent implements OnInit, OnDestroy {
   public _surveyQuestionsAnswered = 0;
   public _selectedPoll: PollRow = null;
   public _columns: string[] = ['id', 'question', 'answer', 'session'];
-  public _questionColumns: string[] = ['question', 'answer'];
+  public _questionColumns: string[] = ['id', 'question', 'answer'];
   public _exporting = false;
 
   constructor(private _errorsManager: ErrorsManagerService,
@@ -106,8 +107,10 @@ export class EpUserPollsComponent implements OnInit, OnDestroy {
               isSurvey: true,
               question: this._translate.instant('app.userEp.survey'),
               type: poll.pollType,
+              hasAnswered: poll.hasAnswered,
               answer: '',
-              session: poll.contextId
+              session: poll.contextId,
+              pollVisualization: poll.pollVisualization
             });
           } else if (!poll.groupPollId && poll.hasAnswered) {
             this._polls.push({
@@ -115,8 +118,10 @@ export class EpUserPollsComponent implements OnInit, OnDestroy {
               isSurvey: false,
               question: poll.question,
               type: poll.pollType,
+              hasAnswered: poll.hasAnswered,
               answer: poll.openAnswer ? poll.openAnswer : poll.vote ? poll.vote.map(v => poll.options[v] ? poll.options[v].option : '').join(', ') : '',
-              session: poll.contextId
+              session: poll.contextId,
+              pollVisualization: poll.pollVisualization
             });
           }
         });
@@ -180,7 +185,8 @@ export class EpUserPollsComponent implements OnInit, OnDestroy {
             isSurvey: false,
             question: p.question,
             type: p.pollType,
-            answer: p.openAnswer ? p.openAnswer : p.vote ? p.vote.map(v => p.options[v] ? p.options[v].option : '').join(', ') : '',
+            hasAnswered: p.hasAnswered,
+            answer: p.openAnswer ? p.openAnswer : p.vote ? p.vote.map(v => p.options[v] ? p.options[v].option : '').join(', ') : this._translate.instant('app.userEp.noAnswer'),
             session: p.contextId,
             pollVisualization: p.pollVisualization
           });

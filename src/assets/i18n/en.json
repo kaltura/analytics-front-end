@@ -1266,7 +1266,8 @@
       "survey": "Survey",
       "answer": "Answer",
       "session": "Session",
-      "surveyQuestionsAnswered": "{{0}} / {{1}} questions answered"
+      "surveyQuestionsAnswered": "{{0}} / {{1}} questions answered",
+      "noAnswer": "No answer"
     },
     "event": {
       "attendeeProfile": "Registrants profile",
