@@ -23,6 +23,7 @@
         <p-table aria-label="Polls Table" [class.kHidden]="_survey.length !== 0"
                  [value]="_polls"
                  [paginator]="true"
+                 [totalRecords]="_polls.length"
                  (onPage)="onPage($event)"
                  [rows]="5">
           <ng-template pTemplate="header">
