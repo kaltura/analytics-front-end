@@ -158,6 +158,8 @@ export class EpUserPollsComponent implements OnInit, OnDestroy {
                 console.error(error);
                 this._isBusy = false;
               });
+          } else {
+            this._isBusy = false;
           }
         },
         error => {
