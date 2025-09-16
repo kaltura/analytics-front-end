@@ -11,7 +11,7 @@
         <span class="value">{{_totalMinutesViewed}}</span>
         <div class="labelHolder">
           <span class="label">{{'app.userEp.totalMinViewed' | translate}}</span>
-          <kInputHelper>
+          <kInputHelper *ngIf="!exporting">
             <span>{{'app.userEp.totalMinViewed_tt' | translate}}</span>
           </kInputHelper>
         </div>
@@ -26,7 +26,7 @@
         <span class="value">{{_sessionViewed}}</span>
         <div class="labelHolder">
           <span class="label">{{'app.userEp.sessionsViewed' | translate}}</span>
-          <kInputHelper>
+          <kInputHelper *ngIf="!exporting">
             <span>{{'app.userEp.sessionsViewed_tt' | translate}}</span>
           </kInputHelper>
         </div>
@@ -41,7 +41,7 @@
         <span class="value">{{_avgLiveEngagement}}</span>
         <div class="labelHolder">
           <span class="label">{{'app.userEp.avgLiveEngagement' | translate}}</span>
-          <kInputHelper>
+          <kInputHelper *ngIf="!exporting">
             <span>{{'app.userEp.avgLiveEngagement_tt' | translate}}</span>
           </kInputHelper>
         </div>
@@ -56,7 +56,7 @@
         <span class="value">{{_videosViewed}}</span>
         <div class="labelHolder">
           <span class="label">{{'app.userEp.videosViewed' | translate}}</span>
-          <kInputHelper>
+          <kInputHelper *ngIf="!exporting">
             <span>{{'app.userEp.videosViewed_tt' | translate}}</span>
           </kInputHelper>
         </div>

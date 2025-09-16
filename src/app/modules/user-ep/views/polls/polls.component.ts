@@ -1,12 +1,12 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import {AppAnalytics, AuthService, ButtonType, ErrorsManagerService} from 'shared/services';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AppAnalytics, AuthService, ButtonType, ErrorsManagerService } from 'shared/services';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { KalturaLogger } from '@kaltura-ng/kaltura-logger';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { analyticsConfig } from "configuration/analytics-config";
 import { AreaBlockerMessage } from "@kaltura-ng/kaltura-ui";
-import {TranslateService} from "@ngx-translate/core";
-import {BaseEntryListAction, KalturaBaseEntryFilter, KalturaBaseEntryListResponse, KalturaClient, KalturaDetachedResponseProfile, KalturaEntryStatus, KalturaFilterPager, KalturaResponseProfileType} from "kaltura-ngx-client";
+import { TranslateService } from "@ngx-translate/core";
+import { BaseEntryListAction, KalturaBaseEntryFilter, KalturaBaseEntryListResponse, KalturaClient, KalturaDetachedResponseProfile, KalturaFilterPager, KalturaResponseProfileType } from "kaltura-ngx-client";
 
 export interface Option {
   option: string;
@@ -54,6 +54,8 @@ export class EpUserPollsComponent implements OnInit, OnDestroy {
   @Input() startDate: Date;
   @Input() endDate: Date;
   @Input() userId = '';
+
+  @Output() onPollsLoaded = new EventEmitter<number>();
 
   public _isBusy = false;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -124,6 +126,7 @@ export class EpUserPollsComponent implements OnInit, OnDestroy {
               pollVisualization: poll.pollVisualization
             });
           }
+          this.onPollsLoaded.emit(this._polls.length);
         });
 
         // load session names

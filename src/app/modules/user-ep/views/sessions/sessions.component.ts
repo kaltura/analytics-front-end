@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType} from 'kaltura-ngx-client';
 import { ReportDataConfig } from 'shared/services/storage-data-base.config';
 import { TableRow } from 'shared/utils/table-local-sort-handler';
@@ -34,6 +34,8 @@ export class SessionsComponent implements OnDestroy {
   @Input() startDate: Date;
   @Input() endDate: Date;
   @Input() totalAttachments = '0';
+
+  @Output() onSessionLoaded = new EventEmitter<number>();
 
   private _reportType = reportTypeMap(KalturaReportType.epTopSessions);
   private _dataConfig: ReportDataConfig;
@@ -100,6 +102,7 @@ export class SessionsComponent implements OnDestroy {
               this._handleTotals(report.totals); // handle totals
             }
             if (report.table && report.table.data && report.table.header) {
+              this.onSessionLoaded.emit(report.table.totalCount);
               this._handleTable(report.table); // handle table
             }
             this._isBusy = false;

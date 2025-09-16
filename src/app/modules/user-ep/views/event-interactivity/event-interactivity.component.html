@@ -28,7 +28,7 @@
             </div>
             <span class="value">{{_reactionsCount}}</span>
             <span class="label">{{'app.userEp.reactions' | translate}}</span>
-            <kInputHelper>
+            <kInputHelper *ngIf="!exporting">
               <span>{{'app.userEp.reactions_tt' | translate}}</span>
             </kInputHelper>
           </div>
@@ -39,7 +39,7 @@
             </div>
             <span class="value">{{_messagesCount}}</span>
             <span class="label">{{'app.userEp.chat' | translate}}</span>
-            <kInputHelper>
+            <kInputHelper *ngIf="!exporting">
               <span>{{'app.userEp.chat_tt' | translate}}</span>
             </kInputHelper>
           </div>
@@ -50,7 +50,7 @@
             </div>
             <span class="value">{{_pollsCount}}</span>
             <span class="label">{{'app.userEp.polls' | translate}}</span>
-            <kInputHelper>
+            <kInputHelper *ngIf="!exporting">
               <span>{{'app.userEp.polls_tt' | translate}}</span>
             </kInputHelper>
 <!--            <a class="kLink" *ngIf="!exporting" (click)="scrollTo('#polls')">{{'app.userEp.details' | translate}}</a>-->
@@ -64,7 +64,7 @@
             </div>
             <span class="value">{{_questionsCount}}</span>
             <span class="label">{{'app.userEp.qna' | translate}}</span>
-            <kInputHelper>
+            <kInputHelper *ngIf="!exporting">
               <span>{{'app.userEp.qna_tt' | translate}}</span>
             </kInputHelper>
           </div>
@@ -75,7 +75,7 @@
             </div>
             <span class="value">{{_downloadCount}}</span>
             <span class="label">{{'app.userEp.downloads' | translate}}</span>
-            <kInputHelper>
+            <kInputHelper *ngIf="!exporting">
               <span>{{'app.userEp.downloads_tt' | translate}}</span>
             </kInputHelper>
           </div>

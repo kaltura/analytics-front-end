@@ -8,7 +8,7 @@
 
         <div class="labelHolder" *ngIf="_tabsData.length > 0">
           <span class="label">{{_tabsData[0]?.title}}</span>
-          <kInputHelper>
+          <kInputHelper *ngIf="!exporting">
             <span>{{'app.userEp.liveMinutesViewed_tt' | translate}}</span>
           </kInputHelper>
         </div>
@@ -24,7 +24,7 @@
 
         <div class="labelHolder" *ngIf="_tabsData.length > 1">
           <span class="label">{{_tabsData[1]?.title}}</span>
-          <kInputHelper>
+          <kInputHelper *ngIf="!exporting">
             <span>{{'app.userEp.vodMinutesViewed_tt' | translate}}</span>
           </kInputHelper>
         </div>
@@ -39,7 +39,7 @@
 
         <div class="labelHolder" *ngIf="_codTabsData.length > 2">
           <span class="label">{{'app.event.content' | translate}}</span>
-          <kInputHelper>
+          <kInputHelper *ngIf="!exporting">
             <span>{{'app.userEp.codMinutesViewed_tt' | translate}}</span>
           </kInputHelper>
         </div>

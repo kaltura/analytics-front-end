@@ -34,6 +34,7 @@ export class EpUserMinutesViewedComponent implements OnInit {
     }
   }
   @Input() endDate: Date;
+  @Input() exporting = false;
 
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;

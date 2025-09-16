@@ -1,14 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {KalturaClient, KalturaReportInterval, VirtualEventGetAction, KalturaVirtualEvent, ScheduleEventGetAction} from 'kaltura-ngx-client';
 import {cancelOnDestroy} from '@kaltura-ng/kaltura-common';
-import {FrameEventManagerService, FrameEvents} from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import {analyticsConfig} from 'configuration/analytics-config';
 import {AreaBlockerMessage} from '@kaltura-ng/kaltura-ui';
-import {AppAnalytics, ButtonType, ErrorsManagerService, NavigationDrillDownService} from 'shared/services';
+import {ErrorsManagerService} from 'shared/services';
 import {DateChangeEvent} from "shared/components/date-filter/date-filter.service";
-import {DateFilterUtils, DateRanges} from "shared/components/date-filter/date-filter-utils";
-import {PageScrollConfig, PageScrollInstance, PageScrollService} from "ngx-page-scroll";
+import {DateRanges} from "shared/components/date-filter/date-filter-utils";
 import {KalturaLogger} from "@kaltura-ng/kaltura-logger";
 
 
@@ -38,15 +36,13 @@ export class UserEpViewComponent implements OnInit, OnDestroy {
   public _eventStartDate: Date = null;
   public _eventEndDate: Date = null;
 
-  constructor(private _router: Router,
-              private _analytics: AppAnalytics,
-              private _route: ActivatedRoute,
+  private totalSessions = 0;
+  private totalPolls = 0;
+
+  constructor(private _route: ActivatedRoute,
               private _kalturaClient: KalturaClient,
               protected _logger: KalturaLogger,
-              private _errorsManager: ErrorsManagerService,
-              private pageScrollService: PageScrollService,
-              private _frameEventManager: FrameEventManagerService,
-              private _navigationDrillDownService: NavigationDrillDownService) {
+              private _errorsManager: ErrorsManagerService) {
     this._logger = _logger.subLogger('UserEpViewComponent');
   }
 
@@ -117,9 +113,13 @@ export class UserEpViewComponent implements OnInit, OnDestroy {
   }
 
   public preExportHandler(): void {
+    if (this.totalSessions > 3 && this.totalPolls > 3) {
+      this._viewConfig.contentOnDemand = null;
+    }
   }
 
   public postExportHandler(): void {
+    this._viewConfig.contentOnDemand = {};
   }
 
   public onExporting(exporting: boolean): void {
@@ -133,7 +133,12 @@ export class UserEpViewComponent implements OnInit, OnDestroy {
     this._dateFilter = event;
   }
 
+  public updateTotalSessions(total: number): void {
+    this.totalSessions = total;
+  }
 
-
+  public updateTotalPolls(total: number): void {
+    this.totalPolls = total;
+  }
 
 }
