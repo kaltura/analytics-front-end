@@ -208,7 +208,7 @@ export class EpUserPollsComponent implements OnInit, OnDestroy {
   }
 
   public onPage(event: any): void {
-    this._analytics.trackButtonClickEvent(ButtonType.Browse, 'Events_session_polls_paginate', event.page, 'session_dashboard');
+    this._analytics.trackButtonClickEvent(ButtonType.Browse, 'Events_user_dashboard_polls_paginate', event.page, 'events_user_dashboard');
   }
 
 }

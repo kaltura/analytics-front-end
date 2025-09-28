@@ -8,8 +8,8 @@
               [placement]="'bottom'">{{ _userName }}</h1>
           <div class="kHeaderRight" [class.noTitle]="!_viewConfig.title" [class.exporting]="_exporting">
             <app-pdf-export *ngIf="_viewConfig.download"
-                            [eventName]="'Events_event_pdf_download'"
-                            [feature]="'Event'"
+                            [eventName]="'Events_user_dashboard_pdf_download'"
+                            [feature]="'Events_user_dashboard'"
                             [elementToExport]="reportToExport" [filename]="exportFilename"
                             (preExport)="preExportHandler()" (postExport)="postExportHandler()"
                             (exporting)="onExporting($event)"></app-pdf-export>
