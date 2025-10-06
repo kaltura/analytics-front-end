@@ -122,7 +122,16 @@ export class AppService implements OnDestroy {
 
     this._frameEventManager.listen(FrameEvents.UpdateConfig)
       .pipe(cancelOnDestroy(this), filter(Boolean))
-      .subscribe((config: any) => setConfig(config, true));
+      .subscribe((config: any) => {
+        setConfig(config, true);
+        if (config.ks) {
+          // update client
+          this._authService.ks = config.ks;
+          this._kalturaServerClient.setDefaultRequestOptions({
+            ks: this._authService.ks
+          });
+        }
+      });
 
     this._frameEventManager.listen(FrameEvents.Navigate)
       .pipe(cancelOnDestroy(this), filter(Boolean))
@@ -320,7 +329,7 @@ export class AppService implements OnDestroy {
     const refresh = () => {
       // refresh current route to invoke data reloading using the new multi account settings
       const url = this._router.url;
-      this._router.navigateByUrl('/',{skipLocationChange: true}).then(() => {
+      this._router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
         this._router.navigate([`/${url}`]).then(() => {
         });
       });
