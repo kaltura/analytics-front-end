@@ -44,6 +44,7 @@ export class EpViewerEngagementComponent implements OnInit, OnDestroy {
   @Input() isVirtualClassroom: boolean;
   @Input() eventId: number;
 
+  public _viewConfig = analyticsConfig.viewsConfig.entryEP;
   private _order = '-live_view_time';
   public _sortField = 'live_view_time';
   private _reportType = reportTypeMap(KalturaReportType.epWebcastLiveUserEngagement);

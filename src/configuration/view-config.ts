@@ -289,6 +289,7 @@ export const viewsConfig = {
     recordings: {},
     polls: {},
     session: {},
+    userDrilldown: {},
     geo: {},
     devices: {}
   },

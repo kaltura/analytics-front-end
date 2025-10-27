@@ -80,7 +80,8 @@
               </td>
               <td *ngFor="let col of _columns; let i = index" [class.kHighlight]="i===0" [ngStyle]="{'paddingRight': col === 'combined_live_engaged_users_play_time_ratio' ? '24px' : '0px'}">
                 <ng-container>
-                  <a *ngIf="col === 'user_name'" (mouseleave)="_hideOverlay()" (mouseenter)="_showOverlay($event, data)" (click)="userDrillDown(data)">{{data[col]}}</a>
+                  <a *ngIf="col === 'user_name' && _viewConfig.userDrilldown !== null" (mouseleave)="_hideOverlay()" (mouseenter)="_showOverlay($event, data)" (click)="userDrillDown(data)">{{data[col]}}</a>
+                  <span *ngIf="col === 'user_name' && _viewConfig.userDrilldown === null"  (mouseleave)="_hideOverlay()" (mouseenter)="_showOverlay($event, data)">{{data[col]}}</span>
                   <span *ngIf="col !== 'combined_live_engaged_users_play_time_ratio' && col !== 'user_name'">{{data[col]}}</span>
                   <app-bullet *ngIf="col === 'combined_live_engaged_users_play_time_ratio'" colorScheme="dropoff" [value]="data[col]"></app-bullet>
                 </ng-container>
