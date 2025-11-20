@@ -54,7 +54,7 @@
           </div>
           <div class="kNarrowColumn">
             <app-live-status [entry]="_entry" [manualLiveOnline]="_manualLiveOnline"></app-live-status>
-            <app-live-player [entryId]="_entry?.id" [thumbnailUrl]="_entry?.thumbnailUrl" (liveStatusChange)="onLiveStatusChange($event)"></app-live-player>
+            <app-live-player [entryId]="_entry?.id" [thumbnailUrl]="_entry?.thumbnailUrl || ''" (liveStatusChange)="onLiveStatusChange($event)"></app-live-player>
             <app-live-stream-health *ngIf="!_isManual"></app-live-stream-health>
             <div *ngIf="_isManual" class="manual">
               <span>{{'app.entryLive.manual' | translate}}</span>

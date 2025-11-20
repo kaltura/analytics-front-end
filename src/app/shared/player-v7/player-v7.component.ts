@@ -137,7 +137,7 @@ export class KalturaPlayerV7Component implements AfterViewInit, OnDestroy {
       if (this.plugins) {
         playerConfig.plugins = Object.assign(playerConfig.plugins, this.plugins);
       }
-      if (this.loadThumbnailWithKs && this.poster.length) {
+      if (this.loadThumbnailWithKs && this.poster?.length) {
         playerConfig = Object.assign(playerConfig, {sources: {poster: `${this.poster}/ks/${this.ks}`}});
       }
       const kalturaPlayer = window["KalturaPlayer"].setup(playerConfig);
