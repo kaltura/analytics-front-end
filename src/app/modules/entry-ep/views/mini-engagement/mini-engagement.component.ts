@@ -149,11 +149,12 @@ export class EpMiniEngagementComponent implements OnInit {
       if (tabsData[1].rawValue !== '') {
         this._reactionsCount = ReportHelper.numberOrZero(tabsData[1].rawValue as number); // update reactions count
       }*/
-      this._messagesRate = tabsData[2].rawValue !== '' ? ReportHelper.precisionRound(tabsData[2].rawValue as number / this.uniqueViewersCount * 100, 1) : 0;
+      const uniqueLoggedInUsers = tabsData[7].rawValue !== '' ? parseInt(tabsData[7].rawValue.toString()) : 0;
+      this._messagesRate = tabsData[2].rawValue !== '' ? ReportHelper.precisionRound(tabsData[2].rawValue as number / uniqueLoggedInUsers * 100, 1) : 0;
       this._messagesCount = tabsData[3].rawValue !== '' ? ReportHelper.numberOrZero(tabsData[3].rawValue as number) : '0';
-      this._questionsRate = tabsData[4].rawValue !== '' ? ReportHelper.precisionRound(tabsData[4].rawValue as number / this.uniqueViewersCount * 100, 1) : 0;
+      this._questionsRate = tabsData[4].rawValue !== '' ? ReportHelper.precisionRound(tabsData[4].rawValue as number / uniqueLoggedInUsers * 100, 1) : 0;
       this._questionsCount = tabsData[5].rawValue !== '' ? ReportHelper.numberOrZero(tabsData[5].rawValue as number) : '0';
-      this._pollsRate = tabsData[6].rawValue !== '' ? ReportHelper.precisionRound(tabsData[6].rawValue as number / this.uniqueViewersCount * 100, 1) : 0;
+      this._pollsRate = tabsData[6].rawValue !== '' ? ReportHelper.precisionRound(tabsData[6].rawValue as number / uniqueLoggedInUsers * 100, 1) : 0;
     }
   }
 
