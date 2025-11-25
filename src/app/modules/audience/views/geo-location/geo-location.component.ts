@@ -330,7 +330,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
   }
 
   private _handleTable(table: KalturaReportTable): void {
-    const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
+    let { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     this._totalCount = table.totalCount;
     this._columns = columns;
     this._columns[0] = this._columns.splice(1, 1, this._columns[0])[0]; // switch places between the first 2 columns
@@ -338,6 +338,7 @@ export class GeoLocationComponent implements OnInit, OnDestroy {
     let tmp = this._columns.pop();
     this._columns.push('distribution'); // add distribution column at the end
     this._columns.push(tmp);
+    tableData = tableData.filter(row => parseFormattedValue(row['count_plays']) > 0);
 
     this._tableData = tableData.map((row, index) => {
       const calculateDistribution = (key: string): number => {
