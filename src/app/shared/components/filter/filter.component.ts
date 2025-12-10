@@ -354,9 +354,9 @@ export class FilterComponent {
 
   protected _updateLayout(): void {
     if (analyticsConfig.isHosted) {
-      const height = document.getElementById('analyticsApp').getBoundingClientRect().height;
-      this._logger.info('Send update layout event to the host app', { height });
       setTimeout(() => {
+        const height = document.getElementById('analyticsApp').getBoundingClientRect().height;
+        this._logger.info('Send update layout event to the host app', { height });
         this._frameEventManager.publish(FrameEvents.UpdateLayout, { height });
       }, 350);
     }
