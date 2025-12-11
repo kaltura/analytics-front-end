@@ -6,11 +6,16 @@ on:
 
 jobs:
   trigger-workflow:
-    runs-on: ubuntu-latest
+    runs-on: codebuild-ovp-lightweight-runner-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
+      - name: Register Access Token
+        id: register-access-token
+        run: |
+          echo "::add-mask::${ACCESS_TOKEN}"
+          echo "ACCESS_TOKEN=${ACCESS_TOKEN}" >> $GITHUB_ENV
       - name: Trigger workflow in private repository
         env:
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          ACCESS_TOKEN: ${{ env.ACCESS_TOKEN }}
           TAG: ${{ github.ref_name }}
           ASSET: ${{ github.event.repository.name }}
         run: |
