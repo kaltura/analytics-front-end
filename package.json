@@ -45,7 +45,7 @@
     "jquery": "^3.5.1",
     "jsnlog": "^2.29.0",
     "kaltura-ngx-client": "file:libs/kaltura-ngx-client-12.0.0-v20250710-120111.tgz",
-    "moment": "^2.24.0",
+    "moment": "2.30.1",
     "ngx-echarts": "^4.2.1",
     "ngx-page-scroll": "^5.0.1",
     "normalize.css": "^8.0.1",
@@ -75,5 +75,8 @@
     "ts-node": "~5.0.1",
     "tslint": "~6.1.0",
     "typescript": "4.0.7"
+  },
+  "overrides": {
+    "moment": "2.30.1"
   }
 }
