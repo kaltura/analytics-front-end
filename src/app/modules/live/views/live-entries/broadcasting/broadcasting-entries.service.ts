@@ -1,15 +1,15 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { AuthService, ReportService } from 'shared/services';
+import { ReportService } from 'shared/services';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { analyticsConfig } from 'configuration/analytics-config';
 import { BehaviorSubject } from 'rxjs';
-import { BaseEntryListAction, KalturaAPIException, KalturaBaseEntryFilter, KalturaBaseEntryListResponse, KalturaClient,
+import { BaseEntryListAction, KalturaAPIException, KalturaBaseEntryListResponse, KalturaClient,
   KalturaDVRStatus, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaLiveStreamAdminEntry, KalturaLiveStreamDetails,
   KalturaMultiRequest, KalturaMultiResponse, KalturaRecordingStatus, KalturaReportResponseOptions, KalturaReportTable,
   KalturaReportType, LiveStreamGetDetailsAction, ReportGetTableAction, ReportGetTableActionArgs, KalturaLiveStreamBroadcastStatus,
   EntryServerNodeListAction, KalturaLiveEntryServerNodeFilter, KalturaLiveEntryServerNode, KalturaEntryServerNodeStatus,
   ConversionProfileAssetParamsListAction, KalturaConversionProfileAssetParamsFilter, KalturaConversionProfileAssetParams,
-  KalturaAssetParamsOrigin, BeaconListAction, KalturaBeaconFilter, KalturaBeaconIndexType, KalturaBeacon, KalturaBeaconObjectTypes, KalturaRecordStatus
+  KalturaAssetParamsOrigin, BeaconListAction, KalturaBeaconFilter, KalturaBeaconIndexType, KalturaBeacon, KalturaBeaconObjectTypes,KalturaRecordStatus,KalturaLiveEntryFilter, KalturaBaseEntry, UserListAction, KalturaUserFilter,
 } from 'kaltura-ngx-client';
 import { BroadcastingEntriesDataConfig } from './broadcasting-entries-data.config';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
@@ -18,6 +18,8 @@ import { DateFilterUtils } from 'shared/components/date-filter/date-filter-utils
 import { ISubscription } from "rxjs/Subscription";
 import { TranslateService } from "@ngx-translate/core";
 import * as moment from "moment";
+import { map } from "rxjs/operators";
+import { KalturaLiveEntryFilterArgs } from "kaltura-ngx-client/lib/api/types/KalturaLiveEntryFilter";
 
 export interface BroadcastingEntries {
   id?: string;
@@ -49,13 +51,14 @@ export interface BroadcastingEntries {
 export class BroadcastingEntriesService implements OnDestroy {
   private readonly _dataConfig: ReportDataConfig;
   private _broadcastingEntries: BroadcastingEntries[] = [];
-  private _broadcastingEntriesIDs = '';
+  private _fetchedUsers: Record<string, string> = {};
   private _data = new BehaviorSubject<{entries: BroadcastingEntries[], totalCount: number, update: boolean, forceReload: boolean}>({entries: this._broadcastingEntries, totalCount: 0, update: false, forceReload: false});
   private _state = new BehaviorSubject<{ isBusy: boolean, error?: KalturaAPIException, forceRefresh?: boolean }>({ isBusy: false });
   private _firstTimeLoading = true;
   private _forceRefresh = false;
   private _totalCount = 0;
   private _pageIndex = 1;
+  private _pageSize = 5;
 
   private reportSubscription: ISubscription = null;
   private baseEntryListSubscription: ISubscription = null;
@@ -69,7 +72,6 @@ export class BroadcastingEntriesService implements OnDestroy {
 
   constructor(private _reportService: ReportService,
               private _kalturaClient: KalturaClient,
-              private _authService: AuthService,
               private _translate: TranslateService,
               private _dataConfigService: BroadcastingEntriesDataConfig) {
     this._dataConfig = this._dataConfigService.getConfig();
@@ -102,21 +104,89 @@ export class BroadcastingEntriesService implements OnDestroy {
         skipEmptyDates: analyticsConfig.skipEmptyBuckets
       })
     };
-    this.reportSubscription = this._kalturaClient.request(new ReportGetTableAction(tableActionArgs))
-      .pipe(cancelOnDestroy(this))
-      .subscribe((table: KalturaReportTable) => {
+
+    const baseEntryArgs: KalturaLiveEntryFilterArgs = {
+      isLive: 1,
+    }
+
+    const request = new KalturaMultiRequest(
+        new ReportGetTableAction(tableActionArgs),
+        new BaseEntryListAction({
+              filter: new KalturaLiveEntryFilter(baseEntryArgs),
+              pager: new KalturaFilterPager({ pageSize: 500, pageIndex: 1 })},
+    ));
+
+    this.reportSubscription = this._kalturaClient.multiRequest(request)
+      .pipe(cancelOnDestroy(this),
+      map((responses: KalturaMultiResponse) => {
+      if (responses.hasErrors()) {
+        const err: KalturaAPIException = responses.getFirstError();
+        throw err;
+      }
+      return [
+        responses[0].result,
+        responses[1].result
+      ] as [KalturaReportTable, KalturaBaseEntryListResponse];
+    }))
+      .subscribe(([table, entries]) => {
           let refresh = true;
           this._totalCount = 0;
-          if (table && table.header && table.data) {
-            this._totalCount = table.totalCount;
+          const entryListResponse: KalturaBaseEntry[] = entries.objects || null;
+
+          if ((table && table.header && table.data) || (entryListResponse && entryListResponse.length > 0)) {
             const { tableData, columns } = this._reportService.parseTableData(table, this._dataConfig[ReportDataSection.table]);
-            refresh = this.shouldRefreshEntries(tableData);
-            this.mapReportResultToEntries(tableData, refresh);
+            const mappedIds = tableData.map(entry => entry.entry_id);
+
+            const missingItemsFromTable = tableData.length === 0
+                ? entryListResponse.map(({ id, creatorId }) => ({ entry_id: id, creator_id: creatorId  }))
+                : entryListResponse
+                    .filter(entry => !mappedIds.includes(entry.id))
+                    .map(entry => ({ entry_id: entry.id, creator_id: entry.creatorId }));
+
+            const mergedData = [...tableData, ...missingItemsFromTable];
+
+            this._totalCount = mergedData.length;
+
+            const start = (this._pageIndex - 1) * this._pageSize;
+            const endIndex = Math.min(start + this._pageSize, mergedData.length);
+
+            const slicedData = mergedData.slice(start, endIndex);
+
+            refresh = this.shouldRefreshEntries(mergedData);
+            this.mapReportResultToEntries(slicedData, refresh);
 
             if (refresh) { // no need to reload entries data if entries returned from the report were not changed
               this._state.next({ isBusy: true }); // show spinner if we need to reload all the data (changed entries returned from report)
-              this.loadAdditionalEntriesData();
-            } else {
+              const idIn = entryListResponse.map(entry => entry.creatorId).join(',');
+              this._kalturaClient.request(new UserListAction({filter: new KalturaUserFilter({ idIn: idIn })}))
+                  .pipe(
+                      cancelOnDestroy(this),
+                      map((result) => {
+                        const users = (result.objects || []).reduce((acc, user) => {
+                          acc[user.id] = `${user.firstName} ${user.lastName}`;
+                          return acc;
+                        }, {} as Record<string, string>);
+                        this._fetchedUsers = users;
+                        return { table, entries };
+                      })
+                  )
+                  .subscribe(result => {
+                        mergedData.forEach((entry, index) => {
+                              this._broadcastingEntries.forEach((broadCastingEntry) => {
+                                if(!broadCastingEntry.owner){
+                                  broadCastingEntry.owner = this._fetchedUsers[entry.creator_id];
+                                }
+                              });
+                            },
+                            error => {
+                              this._state.next({ isBusy: false });
+                              this._data.next({entries: this._broadcastingEntries, totalCount: this._totalCount, update: false, forceReload: false});
+                            });
+                        this.loadAdditionalEntriesData(entryListResponse);
+                      }
+                  );
+            }
+            else {
               this._state.next({ isBusy: false });
             }
 
@@ -124,12 +194,14 @@ export class BroadcastingEntriesService implements OnDestroy {
             this.loadRedundancy();
             this.loadStreamHealth();
           } else {
-            if (this._pageIndex > 1) {
-              // no entries on this page - go to previous page
-              this.paginationChange(this._pageIndex - 1, false);
+            if (this._pageIndex > 1 && this._totalCount > 0) {
+              // No entries on this page but there are entries on previous pages
+              this.paginationChange(Math.ceil(this._totalCount / this._pageSize), false);
               this._state.next({ isBusy: false, error: null, forceRefresh: true });
             } else {
+              // No entries at all
               this._broadcastingEntries = [];
+              this._totalCount = 0;
               this._state.next({ isBusy: false, error: null });
               this._data.next({entries: this._broadcastingEntries, totalCount: this._totalCount, update: false, forceReload: false});
             }
@@ -141,31 +213,28 @@ export class BroadcastingEntriesService implements OnDestroy {
   }
 
   private mapReportResultToEntries(entries: any[], refresh: boolean): void {
+    // When refreshing, create a new array of broadcasting entries
     if (refresh) {
       this._broadcastingEntries = [];
-      this._broadcastingEntriesIDs = '';
-      entries.forEach((entry, index) => {
+      entries.forEach((entry) => {
+        // For each entry in the current page, create a BroadcastingEntry object
         this._broadcastingEntries.push({
           id: entry.entry_id,
-          activeUsers: entry.views,
-          owner: entry.creator_name,
-          engagedUsers: entry.avg_view_engagement,
-          buffering: entry.avg_view_buffering,
-          downstream: entry.avg_view_downstream_bandwidth
+          activeUsers: entry.views ?? 0,
+          owner: entry.creator_name ?? this._fetchedUsers[entry.creator_id],
+          engagedUsers: entry.avg_view_engagement ?? 0,
+          buffering: entry.avg_view_buffering ?? 0,
+          downstream: entry.avg_view_downstream_bandwidth ?? 0
         });
-        this._broadcastingEntriesIDs += entry.entry_id;
-        if (index < entries.length - 1) {
-          this._broadcastingEntriesIDs += ',';
-        }
       });
     } else {
-      entries.forEach((entry, index) => {
+      entries.forEach((entry) => {
         this._broadcastingEntries.forEach(broadcastingEntry => {
           if (broadcastingEntry.id === entry.entry_id) {
-            broadcastingEntry.activeUsers = entry.views;
-            broadcastingEntry.engagedUsers = entry.avg_view_engagement;
-            broadcastingEntry.buffering = entry.avg_view_buffering;
-            broadcastingEntry.downstream = entry.avg_view_downstream_bandwidth;
+            broadcastingEntry.activeUsers = entry.views ?? 0;
+            broadcastingEntry.engagedUsers = entry.avg_view_engagement ?? 0;
+            broadcastingEntry.buffering = entry.avg_view_buffering ?? 0;
+            broadcastingEntry.downstream = entry.avg_view_downstream_bandwidth ?? 0;
           }
         });
       });
@@ -198,32 +267,28 @@ export class BroadcastingEntriesService implements OnDestroy {
     return refresh;
   }
 
-  private loadAdditionalEntriesData(): void {
-    const filter = new KalturaBaseEntryFilter({ idIn: this._broadcastingEntriesIDs });
-    this.baseEntryListSubscription = this._kalturaClient.request(new BaseEntryListAction({filter}))
-      .pipe(cancelOnDestroy(this))
-      .subscribe((entries: KalturaBaseEntryListResponse) => {
-          entries.objects.forEach((entry: KalturaLiveStreamAdminEntry) => {
-            this._broadcastingEntries.forEach((broadcastingEntry: BroadcastingEntries) => {
-              if (broadcastingEntry.id === entry.id) {
-                broadcastingEntry.name = entry.name;
-                broadcastingEntry.dvr = entry.dvrStatus;
-                broadcastingEntry.thumbnailUrl = entry.thumbnailUrl;
-                broadcastingEntry.currentBroadcastStartTime = entry.currentBroadcastStartTime;
-                broadcastingEntry.recording = entry.recordingStatus === KalturaRecordingStatus.active && entry.recordStatus !== KalturaRecordStatus.disabled;
-                broadcastingEntry.conversionProfileId = entry.conversionProfileId;
-                broadcastingEntry.partnerId = entry.partnerId.toString();
-              }
-            });
-            this._data.next({entries: this._broadcastingEntries, totalCount: this._totalCount, update: false, forceReload: this._forceRefresh});
-          });
-          this._state.next({ isBusy: false, error: null });
-          this.loadTranscodingData(); // we load transcoding data after we get entry data since we need the conversionProfileId for each entry. Not using multi-request for better user experience as this data load only once
-        },
-        error => {
-          this._state.next({ isBusy: false });
-          console.log("LiveEntries::Error loading additional entries data: " + error.message);
-        });
+  private loadAdditionalEntriesData(entries: KalturaBaseEntry[]): void {
+    const relevantEntries = entries.filter(entry =>
+      this._broadcastingEntries.some(broadcastingEntry => broadcastingEntry.id === entry.id)
+    );
+
+    relevantEntries.forEach((entry: KalturaLiveStreamAdminEntry) => {
+      this._broadcastingEntries.forEach((broadcastingEntry: BroadcastingEntries) => {
+        if (broadcastingEntry.id === entry.id) {
+          broadcastingEntry.name = entry.name;
+          broadcastingEntry.dvr = entry.dvrStatus;
+          broadcastingEntry.thumbnailUrl = entry.thumbnailUrl;
+          broadcastingEntry.currentBroadcastStartTime = entry.currentBroadcastStartTime;
+          broadcastingEntry.recording = entry.recordingStatus === KalturaRecordingStatus.active && entry.recordStatus !== KalturaRecordStatus.disabled;
+          broadcastingEntry.conversionProfileId = entry.conversionProfileId;
+          broadcastingEntry.partnerId = entry.partnerId.toString();
+        }
+      });
+    });
+
+    this._data.next({entries: this._broadcastingEntries, totalCount: this._totalCount, update: false, forceReload: this._forceRefresh});
+    this._state.next({ isBusy: false, error: null });
+    this.loadTranscodingData();
   }
 
   private loadStreamDetails(): void {
