@@ -81,8 +81,7 @@
                 <td *ngIf="!exporting" [ngStyle]="{'padding': '0', 'width': exporting ? '0px' : '30px'}">
                   <div *ngIf="!_drillDown" class="kDomainIcon" #holder>
                     <img [src]="'//' + data['domain_name'] + '/favicon.ico'"
-                         onError="this.onerror=null;this.style.display='none'"
-                         (error)="holder.classList.add('kIconfile-small')">
+                         (error)="onIconLoadError($event)">
                   </div>
                   <a *ngIf="_drillDown" tabindex="0"
                      class="kOpenLink"

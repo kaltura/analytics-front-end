@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { AuthService, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
@@ -31,6 +31,7 @@ export class WebcastDomainsComponent extends WebcastBaseReportComponent implemen
 
   @Input() entryIdIn = '';
   @Input() exporting = false;
+  @ViewChild('holder') iconHolder: any;
 
   protected _componentId = 'webcast-domains';
   private _dataConfig: ReportDataConfig;
@@ -171,6 +172,14 @@ export class WebcastDomainsComponent extends WebcastBaseReportComponent implemen
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
     if (this._tabsData.length) {
       this._totalPlaysCount = Number(this._tabsData[0].rawValue);
+    }
+  }
+
+  public onIconLoadError(event): void {
+    event.stopImmediatePropagation();
+    event.currentTarget.style.display = 'none';
+    if (this.iconHolder) {
+      this.iconHolder.nativeElement.classList.add('kIconfile-small');
     }
   }
 

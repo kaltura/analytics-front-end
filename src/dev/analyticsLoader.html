@@ -29,22 +29,35 @@
 <script>
   const config = {
     kalturaServer: {
-      uri: 'www.kaltura.com',
-      previewUIConf: 38524931,
+      uri : "www.kaltura.com",
+      "previewUIConf": 12345678,
+      "previewUIConfV7":12345678
     },
     cdnServers: {
-      serverUri: 'http://cdnapi.kaltura.com',
-      securedServerUri: 'https://cdnapisec.kaltura.com'
+      serverUri: "http://cdnapi.kaltura.com",
+      securedServerUri: "https://cdnapisec.kaltura.com"
     },
-    ks: '', // provide ks
-    pid: '', // provide partnerId
-    locale: 'en',
+    externalServices: {
+      appRegistryEndpoint: {
+        uri: "https://app-registry.nvp1.ovp.kaltura.com/api/v1/app-registry"
+      },
+      userReportsEndpoint: {
+        uri: "https://user.nvp1.ovp.kaltura.com/api/v1/reports"
+      },
+      userProfileEndpoint: {
+        uri: "https://user.nvp1.ovp.kaltura.com/api/v1/user-profile"
+      },
+      chatAnalyticsEndpoint: {
+        uri: "https://chat.nvp1.ovp.kaltura.com"
+      }
+    },
+    ks: "djJ8MTY0NTE2MXweEOD1GW68Ys_EUsdy6IDE_fgcsFVyWzCpFBZaOmrRUXHuRUGaYE_hwobAoHETPl6sjInvDM0oayrpHmaoIoegq4iIauddJP1tRmXF0sHdbGdBaQ1yNEBA-AJ-0yWKb4JEaqpfLKGrn-_1_A7yU1wWlSPo7too_TQShe3h1NJmrA==",
+    pid: "1645161",
+    locale: "en",
+    multiAccount: false,
     live: {
-      pollInterval: 30,
-      healthNotificationsCount: 50,
-    },
-    menuConfig: {
-      showMenu: true,
+      "pollInterval": 30,
+      "healthNotificationsCount": 50,
     },
   };
 

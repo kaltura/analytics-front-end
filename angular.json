@@ -21,7 +21,6 @@
             "preserveSymlinks": true,
             "allowedCommonJsDependencies": [
               "seamless-immutable",
-              "jquery",
               "html2pdf.js"
             ],
             "tsConfig": "src/tsconfig.app.json",

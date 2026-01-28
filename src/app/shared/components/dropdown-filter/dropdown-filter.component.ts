@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, IterableChangeRecord, IterableDiffer, IterableDiffers, Output, TemplateRef } from '@angular/core';
+import {Component, EventEmitter, Input, Output, TemplateRef, ViewChild} from '@angular/core';
 import { OptionItem } from '../filter/filter.component';
 
 @Component({
@@ -12,7 +12,7 @@ export class DropdownFilterComponent {
       this._selectedValue = value;
     }
   }
-  
+
   @Input() isLoading: boolean;
   @Input() label: string;
   @Input() options: OptionItem[] = [];
@@ -22,12 +22,21 @@ export class DropdownFilterComponent {
   @Input() disabled: boolean;
   @Input() template: TemplateRef<any>;
   @Input() templateType: string;
-  
+
   @Output() itemSelected = new EventEmitter();
-  
+  @ViewChild('holder') iconHolder: any;
+
   public _selectedValue = null;
 
   public _onSelectionChange(): void {
     this.itemSelected.emit(this._selectedValue);
+  }
+
+  public onIconLoadError(event): void {
+    event.stopImmediatePropagation();
+    event.currentTarget.style.display = 'none';
+    if (this.iconHolder) {
+      this.iconHolder.nativeElement.classList.add('kIconfile-small');
+    }
   }
 }
