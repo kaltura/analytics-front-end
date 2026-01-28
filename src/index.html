@@ -3,51 +3,16 @@
 <head>
   <meta charset="utf-8">
   <title>Analytics</title>
-  <base href="/">
-<!--  <meta http-equiv="Content-Security-Policy" content="default-src 'self' *.kaltura.com 'nonce-72772334'; script-src 'self' *.kaltura.com 'nonce-72772334' *.youtube.com; font-src fonts.gstatic.com fonts.googleapis.com *.kaltura.com; img-src * data:; style-src 'self' 'unsafe-inline'; media-src data: blob: *; frame-src 'self' blob: *.kaltura.com *.youtube.com; worker-src blob:">-->
-
+  <!--#if expr="$base_url" -->
+  <!--# echo var="base_url" encoding="none"-->
+  <!--#else -->
+  <base href="./">
+  <!--#endif -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato:400,700,900">
-
-  <script type="text/javascript">
-    var analyticsConfig = {
-      kalturaServer: {
-        uri : "api.nvq2.ovp.kaltura.com",
-        "previewUIConf": 24690822,
-        "previewUIConfV7":24690822
-      },
-      cdnServers: {
-        serverUri: "http://api.nvq2.ovp.kaltura.comm",
-        securedServerUri: "https://api.nvq2.ovp.kaltura.com"
-      },
-      externalServices: {
-        appRegistryEndpoint: {
-          uri: "https://app-registry.nvq2.ovp.kaltura.com/api/v1/app-registry"
-        },
-        userReportsEndpoint: {
-          uri: "https://user.nvq2.ovp.kaltura.com/api/v1/reports"
-        },
-        userProfileEndpoint: {
-          uri: "https://user.nvq2.ovp.kaltura.com/api/v1/user-profile"
-        },
-        chatAnalyticsEndpoint: {
-          uri: "https://chat.nvq2.ovp.kaltura.com"
-        }
-      },
-      ks: "djJ8NzEzfOFXCfoNY3uJPQv8Cz7BQe8lHucli8cytc8EmNA32yenQfZYfkQttNIp6ViVXtGOe3vjrXihAmJu_TdDVHgVgvS-NIy4Rk-KFv47hAAUrkxP76G4JFBVoCoYYJoSfrF5QND_mAzV2i_S5MiMIw7QgTGgoeIMu4HLzcTKvjAThT4g",
-      pid: "713",
-      locale: "en",
-      multiAccount: false,
-      live: {
-        "pollInterval": 30,
-        "healthNotificationsCount": 50,
-      },
-    }
-  </script>
-
 </head>
-<body class="kOverrideFAIcons" style="overflow-y: auto">
+<body class="kOverrideFAIcons" style="overflow-y: hidden">
 <app-root></app-root>
 </body>
 </html>
