@@ -95,6 +95,9 @@ export function buildUrlWithClientProtocol(urlWithoutProtocol) {
 }
 
 export function getKalturaServerUri(suffix: string = ''): string {
+  if (analyticsConfig.kalturaServer?.uri.startsWith('http')) {
+    return analyticsConfig.kalturaServer.uri + suffix;
+  }
   if (analyticsConfig.kalturaServer && analyticsConfig.kalturaServer.uri) {
     const serverEndpoint = analyticsConfig.kalturaServer.uri;
     return buildUrlWithClientProtocol(`${serverEndpoint}${suffix}`);
