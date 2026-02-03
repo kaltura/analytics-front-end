@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import {Component, Input, OnDestroy, ViewChild} from '@angular/core';
 import { of as ObservableOf } from 'rxjs';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
@@ -27,6 +27,9 @@ import { reportTypeMap } from 'shared/utils/report-type-map';
 })
 export class UserInsightDomainComponent extends UserBase implements OnDestroy {
   @Input() userId: string;
+  @ViewChild('holder') iconHolder: any;
+  @ViewChild('holder2') iconHolder2: any;
+  @ViewChild('holder3') iconHolder3: any;
 
   protected _componentId = 'insight-top-domains';
   private _dataConfig: ReportDataConfig;
@@ -196,4 +199,30 @@ export class UserInsightDomainComponent extends UserBase implements OnDestroy {
   public _updateColors(colors: string[]): void {
     this._colors = colors;
   }
+
+  public onIconLoadError(event): void {
+    event.stopImmediatePropagation();
+    event.currentTarget.style.display = 'none';
+    if (this.iconHolder) {
+      this.iconHolder.nativeElement.classList.add('kIconfile-small');
+    }
+  }
+
+  public onIconLoadError2(event): void {
+    event.stopImmediatePropagation();
+    event.currentTarget.style.display = 'none';
+    if (this.iconHolder2) {
+      this.iconHolder2.nativeElement.classList.add('kIconfile-small');
+    }
+  }
+
+  public onIconLoadError3(event): void {
+    event.stopImmediatePropagation();
+    event.currentTarget.style.display = 'none';
+    if (this.iconHolder3) {
+      this.iconHolder3.nativeElement.classList.add('kIconfile-small');
+    }
+  }
+
+
 }

@@ -8,8 +8,7 @@
       <div class="kReportRow">
         <div *ngIf="_topSourceLabel" class="kDomainIcon" #holder>
           <img [src]="'//' + _topSourceLabel + '/favicon.ico'"
-               onError="this.onerror=null;this.style.display='none'"
-               (error)="holder.classList.add('kIconfile-small')">
+               (error)="onIconLoadError($event)">
         </div>
         <a class="topDomain" [href]="'http://' + _topSourceLabel" target="_blank">{{_topSourceLabel}}</a>
       </div>
@@ -30,10 +29,9 @@
       <span class="kPeriod">{{_compareDates}}</span>
 
       <div class="kReportRow kDomain" *ngIf="_compareTopSourceLabel">
-        <div *ngIf="_compareTopSourceLabel" class="kDomainIcon" #holder>
+        <div *ngIf="_compareTopSourceLabel" class="kDomainIcon" #holder2>
           <img [src]="'//' + _compareTopSourceLabel + '/favicon.ico'"
-               onError="this.onerror=null;this.style.display='none'"
-               (error)="holder.classList.add('kIconfile-small')">
+               (error)="onIconLoadError2($event)">
         </div>
         <a class="topDomain" [href]="'http://' + _compareTopSourceLabel" target="_blank">{{_compareTopSourceLabel}}</a>
       </div>
@@ -50,10 +48,9 @@
       <span class="kPeriod" style="margin-top: 4px">{{_currentDates}}</span>
 
       <div class="kReportRow kDomain">
-        <div *ngIf="_topSourceLabel" class="kDomainIcon" #holder>
+        <div *ngIf="_topSourceLabel" class="kDomainIcon" #holder3>
           <img [src]="'//' + _topSourceLabel + '/favicon.ico'"
-               onError="this.onerror=null;this.style.display='none'"
-               (error)="holder.classList.add('kIconfile-small')">
+               (error)="onIconLoadError3($event)">
         </div>
         <a class="topDomain" [href]="'http://' + _topSourceLabel" target="_blank">{{_topSourceLabel}}</a>
       </div>

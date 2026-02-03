@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import {Component, Input, OnDestroy, ViewChild} from '@angular/core';
 import { of as ObservableOf } from 'rxjs';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
@@ -28,6 +28,9 @@ import {PageScrollConfig, PageScrollInstance, PageScrollService} from "ngx-page-
 })
 export class ManualPlaylistInsightDomainsComponent extends ManualPlaylistBase implements OnDestroy {
   @Input() playlistId: string = null;
+  @ViewChild('holder') iconHolder: any;
+  @ViewChild('holder2') iconHolder2: any;
+  @ViewChild('holder3') iconHolder3: any;
 
   protected _componentId = 'manual-playlist-insight-top-domains';
   private _dataConfig: ReportDataConfig;
@@ -216,6 +219,30 @@ export class ManualPlaylistInsightDomainsComponent extends ManualPlaylistBase im
       PageScrollConfig.defaultDuration = 500;
       const pageScrollInstance: PageScrollInstance = PageScrollInstance.simpleInstance(document, target);
       this.pageScrollService.start(pageScrollInstance);
+    }
+  }
+
+  public onIconLoadError(event): void {
+    event.stopImmediatePropagation();
+    event.currentTarget.style.display = 'none';
+    if (this.iconHolder) {
+      this.iconHolder.nativeElement.classList.add('kIconfile-small');
+    }
+  }
+
+  public onIconLoadError2(event): void {
+    event.stopImmediatePropagation();
+    event.currentTarget.style.display = 'none';
+    if (this.iconHolder2) {
+      this.iconHolder2.nativeElement.classList.add('kIconfile-small');
+    }
+  }
+
+  public onIconLoadError3(event): void {
+    event.stopImmediatePropagation();
+    event.currentTarget.style.display = 'none';
+    if (this.iconHolder3) {
+      this.iconHolder3.nativeElement.classList.add('kIconfile-small');
     }
   }
 }

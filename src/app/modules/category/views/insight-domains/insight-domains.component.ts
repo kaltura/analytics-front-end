@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import {Component, Input, OnDestroy, ViewChild} from '@angular/core';
 import { of as ObservableOf } from 'rxjs';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
@@ -28,12 +28,15 @@ import {PageScrollConfig, PageScrollInstance, PageScrollService} from "ngx-page-
 })
 export class InsightDomainsComponent extends CategoryBase implements OnDestroy {
   @Input() categoryId: string = null;
-  
+  @ViewChild('holder') iconHolder: any;
+  @ViewChild('holder2') iconHolder2: any;
+  @ViewChild('holder3') iconHolder3: any;
+
   protected _componentId = 'category-insight-top-domains';
   private _dataConfig: ReportDataConfig;
   private _reportType = reportTypeMap(KalturaReportType.topSyndication);
   private _order = '-count_plays';
-  
+
   public _compareFilter: KalturaEndUserReportInputFilter = null;
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
@@ -49,11 +52,11 @@ export class InsightDomainsComponent extends CategoryBase implements OnDestroy {
   public _colors = getColorsBetween(getColorPalette()[0], getColorPalette()[7], 2);
   public _currentTotalPlays = 0;
   public _compareTotalPlays = 0;
-  
+
   public get _isCompareMode(): boolean {
     return this._compareFilter !== null;
   }
-  
+
   constructor(private _frameEventManager: FrameEventManagerService,
               private _translate: TranslateService,
               private _reportService: ReportService,
@@ -63,14 +66,14 @@ export class InsightDomainsComponent extends CategoryBase implements OnDestroy {
     super();
     this._dataConfig = _dataConfigService.getConfig();
   }
-  
+
   ngOnDestroy(): void {
   }
-  
+
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
-    
+
     if (!this._filter.categoriesIdsIn && !this._filter.playbackContextIdsIn) {
       this._filter.categoriesIdsIn = this.categoryId;
     }
@@ -84,7 +87,7 @@ export class InsightDomainsComponent extends CategoryBase implements OnDestroy {
           this._compareFilter.categoriesIdsIn = this.categoryId;
         }
         const compareReportConfig = { reportType: this._reportType, filter: this._compareFilter, order: this._order, pager: this._pager };
-        
+
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
       }))
@@ -93,20 +96,20 @@ export class InsightDomainsComponent extends CategoryBase implements OnDestroy {
           this._compareBulletValues = [];
           this._topSourceLabel = null;
           this._compareTopSourceLabel = null;
-          
+
           if (report.totals) {
             this._handleTotals(report.totals, compare ? compare.totals : null);
-            
+
             if (report.table && report.table.header && report.table.data) {
               this._handleTable(report.table, compare ? compare.table : null); // handle table
             }
           }
-          
+
           if (this._isCompareMode) {
             this._currentDates = DateFilterUtils.getMomentDate(this._dateFilter.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.endDate)).format('MMM DD, YYYY');
             this._compareDates = DateFilterUtils.getMomentDate(this._dateFilter.compare.startDate).format('MMM DD, YYYY') + ' - ' + moment(DateFilterUtils.fromServerDate(this._dateFilter.compare.endDate)).format('MMM DD, YYYY');
           }
-          
+
           this._isBusy = false;
         },
         error => {
@@ -122,7 +125,7 @@ export class InsightDomainsComponent extends CategoryBase implements OnDestroy {
           this._blockerMessage = this._errorsManager.getErrorMessage(error, actions);
         });
   }
-  
+
   protected _updateFilter(): void {
     this._filter.timeZoneOffset = this._dateFilter.timeZoneOffset;
     this._filter.fromDate = this._dateFilter.startDate;
@@ -138,39 +141,39 @@ export class InsightDomainsComponent extends CategoryBase implements OnDestroy {
       this._compareFilter = null;
     }
   }
-  
+
   protected _updateRefineFilter(): void {
     this._pager.pageIndex = 1;
-    
+
     this._refineFilterToServerValue(this._filter);
     if (this._compareFilter) {
       this._refineFilterToServerValue(this._compareFilter);
     }
   }
-  
+
   private _handleTotals(current: KalturaReportTotal, compare?: KalturaReportTotal): void {
     const currentData = this._reportService.parseTotals(current, this._dataConfig[ReportDataSection.totals]);
     if (currentData.length) {
       this._currentTotalPlays = parseInt(currentData[0].value, 10);
     }
-    
+
     if (compare) {
       const compareData = this._reportService.parseTotals(compare, this._dataConfig[ReportDataSection.totals]);
-      
+
       if (compareData) {
         this._compareTotalPlays = parseInt(compareData[0].value, 10);
       }
     }
-    
+
   }
-  
+
   private _handleTable(table: KalturaReportTable, compare?: KalturaReportTable): void {
     const { tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
     if (tableData && tableData.length) {
       const currentTop = tableData[0];
       const topPlays = parseInt(currentTop['count_plays'], 10);
       const othersPlays = this._currentTotalPlays - topPlays;
-      
+
       if (topPlays || othersPlays) {
         this._topSourceLabel = currentTop['domain_name'];
         this._bulletValues = [
@@ -179,7 +182,7 @@ export class InsightDomainsComponent extends CategoryBase implements OnDestroy {
         if (othersPlays) {
           this._bulletValues.push({ value: othersPlays, label: this._translate.instant('app.category.otherDomains') });
         }
-        
+
         if (compare && compare.data && compare.header) {
           const { tableData: compareTableData } = this._reportService.parseTableData(compare, this._dataConfig.table);
           const compareTop = compareTableData[0];
@@ -201,11 +204,35 @@ export class InsightDomainsComponent extends CategoryBase implements OnDestroy {
       }
     }
   }
-  
+
   public _updateColors(colors: string[]): void {
     this._colors = colors;
   }
-  
+
+  public onIconLoadError(event): void {
+    event.stopImmediatePropagation();
+    event.currentTarget.style.display = 'none';
+    if (this.iconHolder) {
+      this.iconHolder.nativeElement.classList.add('kIconfile-small');
+    }
+  }
+
+  public onIconLoadError2(event): void {
+    event.stopImmediatePropagation();
+    event.currentTarget.style.display = 'none';
+    if (this.iconHolder2) {
+      this.iconHolder2.nativeElement.classList.add('kIconfile-small');
+    }
+  }
+
+  public onIconLoadError3(event): void {
+    event.stopImmediatePropagation();
+    event.currentTarget.style.display = 'none';
+    if (this.iconHolder3) {
+      this.iconHolder3.nativeElement.classList.add('kIconfile-small');
+    }
+  }
+
   public scrollTo(target: string): void {
     if (analyticsConfig.isHosted) {
       const targetEl = document.getElementById(target.substr(1)) as HTMLElement;

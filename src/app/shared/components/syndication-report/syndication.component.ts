@@ -69,13 +69,14 @@ export class SyndicationComponent implements OnDestroy {
   @Input() categoryId: string;
   @Input() playlistId: string;
   @Input() dateFilterComponent: DateFilterComponent;
-  @Input() set reportDataConfig(value: ReportDataConfig){
+  @Input() set reportDataConfig(value: ReportDataConfig) {
     this._dataConfig = value;
     this._selectedMetrics = this._dataConfig.totals.preSelected;
-  };
+  }
   @Input() exporting = false;
   @Input() virtualEventId: string;
   @Output() onDrillDown = new EventEmitter<string>();
+  @ViewChild('holder') iconHolder: any;
 
   private _dateFilter: DateChangeEvent;
   private _refineFilter: RefineFilter = [];
@@ -408,5 +409,13 @@ export class SyndicationComponent implements OnDestroy {
     this._pager.pageIndex = 1;
     this.onDrillDown.emit(this._drillDown);
     this._loadReport();
+  }
+
+  public onIconLoadError(event): void {
+    event.stopImmediatePropagation();
+    event.currentTarget.style.display = 'none';
+    if (this.iconHolder) {
+      this.iconHolder.nativeElement.classList.add('kIconfile-small');
+    }
   }
 }
