@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output, TemplateRef, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, Output, TemplateRef} from '@angular/core';
 import { OptionItem } from '../filter/filter.component';
 
 @Component({
@@ -24,7 +24,6 @@ export class DropdownFilterComponent {
   @Input() templateType: string;
 
   @Output() itemSelected = new EventEmitter();
-  @ViewChild('holder') iconHolder: any;
 
   public _selectedValue = null;
 
@@ -32,11 +31,11 @@ export class DropdownFilterComponent {
     this.itemSelected.emit(this._selectedValue);
   }
 
-  public onIconLoadError(event): void {
+  public onIconLoadError(event, id): void {
     event.stopImmediatePropagation();
     event.currentTarget.style.display = 'none';
-    if (this.iconHolder) {
-      this.iconHolder.nativeElement.classList.add('kIconfile-small');
+    if (id) {
+      document.getElementById(id).classList.add('kIconfile-small');
     }
   }
 }

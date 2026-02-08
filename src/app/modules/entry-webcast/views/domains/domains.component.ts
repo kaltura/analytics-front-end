@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { AuthService, ErrorsManagerService, ReportConfig, ReportHelper, ReportService } from 'shared/services';
@@ -31,7 +31,6 @@ export class WebcastDomainsComponent extends WebcastBaseReportComponent implemen
 
   @Input() entryIdIn = '';
   @Input() exporting = false;
-  @ViewChild('holder') iconHolder: any;
 
   protected _componentId = 'webcast-domains';
   private _dataConfig: ReportDataConfig;
@@ -175,11 +174,11 @@ export class WebcastDomainsComponent extends WebcastBaseReportComponent implemen
     }
   }
 
-  public onIconLoadError(event): void {
+  public onIconLoadError(event, id): void {
     event.stopImmediatePropagation();
     event.currentTarget.style.display = 'none';
-    if (this.iconHolder) {
-      this.iconHolder.nativeElement.classList.add('kIconfile-small');
+    if (id) {
+      document.getElementById(id).classList.add('kIconfile-small');
     }
   }
 

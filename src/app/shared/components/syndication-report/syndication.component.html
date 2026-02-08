@@ -79,9 +79,9 @@
               <tr>
                 <td><span>{{data['index']}}</span></td>
                 <td *ngIf="!exporting" [ngStyle]="{'padding': '0', 'width': exporting ? '0px' : '30px'}">
-                  <div *ngIf="!_drillDown" class="kDomainIcon" #holder>
+                  <div *ngIf="!_drillDown" class="kDomainIcon" [id]="'favicon-' + data['index']">
                     <img [src]="'//' + data['domain_name'] + '/favicon.ico'"
-                         (error)="onIconLoadError($event)">
+                         (error)="onIconLoadError($event, 'favicon-' + data['index'])">
                   </div>
                   <a *ngIf="_drillDown" tabindex="0"
                      class="kOpenLink"

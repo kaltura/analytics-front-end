@@ -65,8 +65,6 @@ export class ImageSyndicationComponent implements OnDestroy {
 
   @Output() onDrillDown = new EventEmitter<string>();
 
-  @ViewChild('holder') iconHolder: any;
-
   private _dateFilter: DateChangeEvent;
   private _refineFilter: RefineFilter = [];
   private _totalPlaysCount = 0;
@@ -364,11 +362,11 @@ export class ImageSyndicationComponent implements OnDestroy {
     this._loadReport();
   }
 
-  public onIconLoadError(event): void {
+  public onIconLoadError(event, id): void {
     event.stopImmediatePropagation();
     event.currentTarget.style.display = 'none';
-    if (this.iconHolder) {
-      this.iconHolder.nativeElement.classList.add('kIconfile-small');
+    if (id) {
+      document.getElementById(id).classList.add('kIconfile-small');
     }
   }
 }
