@@ -120,6 +120,10 @@ export class ExportCsvComponent implements OnDestroy {
       filter.rootEntryIdIn = this.rootEntryIdIn;
     }
 
+    if (this.virtualEventId) {
+      filter.virtualEventIdIn = this.virtualEventId;
+    }
+
     if (this.userId) {
       filter.userIds = this.userId;
     }
