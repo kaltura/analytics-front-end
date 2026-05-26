@@ -1,0 +1,7 @@
+<div data-aid="report-entry-preview" class="kEntryPreview">
+  <div class="kImageThumbnailHolder" #holder>
+    <img *ngIf="_imgUrl" [src]="_imgUrl" (error)="onFirstLoadError($event)" alt="Image entry">
+    <img #thumbks (error)="onIconLoadError($event)">
+  </div>
+</div>
+

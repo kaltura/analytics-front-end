@@ -1,21 +1,33 @@
 <div data-aid="report-group-entry" class="kMain">
   <k-area-blocker [showLoader]="_loadingEntry" [message]="_blockerMessage">
-    <ng-container [ngSwitch]="_entry?.mediaType">
-      <app-image-entry *ngSwitchCase="_mediaTypes.image"
-                       [isChildAccount]="_isChildAccount"
-                       [viewConfig]="_entryViewConfig"
-                       [entry]="_entry"
-                       [owner]="_owner"
-                       (back)="_back()"
-                       (navigateToEntry)="_navigateToEntry()"></app-image-entry>
 
-      <app-video-entry *ngSwitchDefault
-                       [isChildAccount]="_isChildAccount"
-                       [viewConfig]="_entryViewConfig"
-                       [entry]="_entry"
-                       [owner]="_owner"
-                       (back)="_back()"
-                       (navigateToEntry)="_navigateToEntry()"></app-video-entry>
-    </ng-container>
+    <app-image-entry *ngIf="_entry?.mediaType === _mediaTypes.image && _entry?.type !== '10'"
+                     [isChildAccount]="_isChildAccount"
+                     [viewConfig]="_entryViewConfig"
+                     [entry]="_entry"
+                     [owner]="_owner"
+                     [comments]="_comments"
+                     (back)="_back()"
+                     (navigateToEntry)="_navigateToEntry()"></app-image-entry>
+
+    <app-video-entry *ngIf="_entry?.mediaType === _mediaTypes.video && _entry?.type !== '10'"
+                     [isChildAccount]="_isChildAccount"
+                     [viewConfig]="_entryViewConfig"
+                     [entry]="_entry"
+                     [owner]="_owner"
+                     [comments]="_comments"
+                     (back)="_back()"
+                     (navigateToEntry)="_navigateToEntry()"></app-video-entry>
+
+    <app-document-entry *ngIf="_entry?.type === '10'"
+                     [isChildAccount]="_isChildAccount"
+                     [viewConfig]="_entryViewConfig"
+                     [entry]="_entry"
+                     [owner]="_owner"
+                     [comments]="_comments"
+                     (back)="_back()"
+                     (navigateToEntry)="_navigateToDocument()"></app-document-entry>
+
+
   </k-area-blocker>
 </div>

@@ -28,6 +28,7 @@ export class BaseEntryTotalsComponent extends EntryBase {
   @Input() entryId = '';
   @Input() comments: number = null;
   @Input() likes: number = null;
+  @Input() isDocument = false;
 
   private _order = '-month_id';
   private _reportType = reportTypeMap(KalturaReportType.userTopContent);
@@ -69,6 +70,9 @@ export class BaseEntryTotalsComponent extends EntryBase {
     this._isBusy = true;
     this._blockerMessage = null;
     this._filter.entryIdIn = this.entryId;
+    if (this.isDocument) {
+      this._reportType = reportTypeMap(KalturaReportType.documentEntryHighlights);
+    }
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, pager: this._pager, order: this._order };
     if (reportConfig['objectIds__null']) {
       delete reportConfig['objectIds__null'];

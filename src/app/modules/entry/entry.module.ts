@@ -18,6 +18,7 @@ import { AutoCompleteModule } from '@kaltura-ng/kaltura-primeng-ui';
 import { declarations as sharedEntryDeclarations } from './views/shared/declaration';
 import { declarations as imageEntryDeclarations } from './views/image/declaration';
 import { declarations as videoEntryDeclarations } from './views/video/declaration';
+import { declarations as documentEntryDeclarations } from './views/document/declaration';
 
 @NgModule({
   imports: [
@@ -44,6 +45,7 @@ import { declarations as videoEntryDeclarations } from './views/video/declaratio
     ...sharedEntryDeclarations,
     ...videoEntryDeclarations,
     ...imageEntryDeclarations,
+    ...documentEntryDeclarations,
   ],
   exports: [],
   providers: []
