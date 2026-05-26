@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { AuthService, BrowserService, ErrorsManagerService, Report, ReportConfig, ReportHelper, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
-import { of as ObservableOf } from 'rxjs';
+import { BehaviorSubject, of as ObservableOf } from 'rxjs';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import {
   KalturaReportInputFilter,
@@ -106,6 +106,7 @@ export class SyndicationComponent implements OnDestroy {
   public _totalCount: number;
   public _pager = new KalturaFilterPager({ pageIndex: 1, pageSize: 5 });
   public _distributionColorScheme: string;
+  public uniquePlayedVideos$: BehaviorSubject<number> = new BehaviorSubject(0);
 
   @ViewChild(NgxEchartsDirective) _chart: NgxEchartsDirective;
 
@@ -126,7 +127,7 @@ export class SyndicationComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-
+    this.uniquePlayedVideos$.complete();
   }
 
   private _toggleChartTheme(isContrast: boolean): void {
@@ -201,6 +202,7 @@ export class SyndicationComponent implements OnDestroy {
       .subscribe(({ report, compare }) => {
           this._totalUsers = null;
           this._totalCount = 0;
+          this.uniquePlayedVideos$.next(0);
 
           if (compare) {
             this._handleCompare(report, compare);
@@ -264,6 +266,8 @@ export class SyndicationComponent implements OnDestroy {
     if (this._tabsData.length) {
       this._totalPlaysCount = Number(this._tabsData[0].rawValue);
     }
+    const uniquePlayedTab = this._tabsData.find(tab => tab.key === 'unique_played_videos');
+    this.uniquePlayedVideos$.next(uniquePlayedTab ? parseInt(String(uniquePlayedTab.rawValue), 10) || 0 : 0);
   }
 
   private _handleGraphs(graphs: KalturaReportGraph[]): void {
