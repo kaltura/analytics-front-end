@@ -46,7 +46,7 @@
         <div *ngIf="_engagementViewConfig.miniHighlights"
              class="kMiniReportContainer" [class.exporting]="_exporting">
           <app-engagement-mini-highlights [highlights$]="highlights.highlights$"
-                                          [videosCount$]="topVideos.totalCount$"
+                                          [videosCount$]="syndication.uniquePlayedVideos$"
                                           [dateFilter]="_dateFilter"
                                           [exporting]="_exporting"
                                           [refineFilter]="_refineFilter"></app-engagement-mini-highlights>
@@ -104,9 +104,10 @@
         </div-->
       </div>
 
-      <div *ngIf="_engagementViewConfig.syndication"
+      <div [class.kHidden]="!_engagementViewConfig.syndication"
            class="kReportContainer">
-        <app-syndication [dateFilterComponent]="dateFilter"
+        <app-syndication #syndication
+                         [dateFilterComponent]="dateFilter"
                          [dateFilter]="_dateFilter"
                          [exporting]="_exporting"
                          [virtualEventId]="_virtualEventId"

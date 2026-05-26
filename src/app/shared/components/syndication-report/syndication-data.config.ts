@@ -112,6 +112,10 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
             title: this._translate.instant(`app.engagement.topDomainsReport.avg_completion_rate`),
             tooltip: this._translate.instant('app.entry.watched_tt'),
             sortOrder: 5,
+          },
+          'unique_played_videos': {
+            format: value => ReportHelper.integerOrZero(value),
+            hidden: true,
           }
         }
       },
