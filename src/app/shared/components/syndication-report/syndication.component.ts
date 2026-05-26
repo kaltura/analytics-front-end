@@ -26,7 +26,6 @@ import { DateChangeEvent } from 'shared/components/date-filter/date-filter.servi
 import { RefineFilter } from 'shared/components/filter/filter.component';
 import { refineFilterToServerValue } from 'shared/components/filter/filter-to-server-value.util';
 import { reportTypeMap } from 'shared/utils/report-type-map';
-import { analyticsConfig } from 'configuration/analytics-config';
 import { NgxEchartsDirective } from 'shared/ngx-echarts/ngx-echarts.directive';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 
@@ -267,11 +266,8 @@ export class SyndicationComponent implements OnDestroy {
     if (this._tabsData.length) {
       this._totalPlaysCount = Number(this._tabsData[0].rawValue);
     }
-    const sep = analyticsConfig.valueSeparator;
-    const headers = totals.header ? totals.header.split(sep) : [];
-    const values = totals.data ? totals.data.split(sep) : [];
-    const idx = headers.indexOf('unique_played_videos');
-    this.uniquePlayedVideos$.next(idx >= 0 ? parseInt(values[idx], 10) || 0 : 0);
+    const uniquePlayedTab = this._tabsData.find(tab => tab.key === 'unique_played_videos');
+    this.uniquePlayedVideos$.next(uniquePlayedTab ? parseInt(String(uniquePlayedTab.rawValue), 10) || 0 : 0);
   }
 
   private _handleGraphs(graphs: KalturaReportGraph[]): void {
