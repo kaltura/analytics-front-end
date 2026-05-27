@@ -74,25 +74,25 @@
     </div>
 
     <div *ngIf="_viewConfig.geo" class="kReportContainer">
-      <app-top-countries [dateFilter]="_dateFilter"
+      <app-document-top-countries [dateFilter]="_dateFilter"
                          [refineFilter]="_refineFilter"
                          [entryId]="_entryId"
-                         (onDrillDown)="_onGeoDrillDown($event)"></app-top-countries>
+                         (onDrillDown)="_onGeoDrillDown($event)"></app-document-top-countries>
     </div>
 
     <div *ngIf="_viewConfig.devices" class="kReportContainer">
-      <app-devices-overview [dateFilter]="_dateFilter"
-                                  [refineFilter]="_refineFilter"
-                                  [colorScheme]="'impressions'"
-                                  [entryId]="_entryId"></app-devices-overview>
+      <app-document-devices [dateFilter]="_dateFilter"
+                            [refineFilter]="_refineFilter"
+                            [colorScheme]="'impressions'"
+                            [entryId]="_entryId"></app-document-devices>
     </div>
 
     <div *ngIf="_viewConfig.syndication" class="kReportContainer">
-      <app-image-syndication [entryId]="_entryId"
+      <app-document-syndication [entryId]="_entryId"
                        [dateFilterComponent]="dateFilter"
                        [dateFilter]="_dateFilter"
                        [refineFilter]="_refineFilter"
-                       (onDrillDown)="_onSyndicationDrillDown($event)"></app-image-syndication>
+                       (onDrillDown)="_onSyndicationDrillDown($event)"></app-document-syndication>
     </div>
   </div>
 </div>

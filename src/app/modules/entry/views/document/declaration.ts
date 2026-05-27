@@ -3,6 +3,9 @@ import {DocumentEntryTotalsComponent} from "./entry-totals/entry-totals.componen
 import {DocumentEntryPerformanceComponent} from "./document-performance/document-performance.component";
 import {DocumentSyndicationComponent} from "./syndication/syndication.component";
 import {DocumentEntryViewComponent} from "./entry-view.component";
+import {DocumentDevicesComponent} from "./devices/devices-overview.component";
+import {DocumentGeoComponent} from "./top-countries/geo/geo.component";
+import {DocumentTopCountriesComponent} from "./top-countries/top-countries.component";
 
 
 export const declarations = [
@@ -10,5 +13,8 @@ export const declarations = [
   DocumentEntryTotalsComponent,
   DocumentEntryPerformanceComponent,
   DocumentSyndicationComponent,
-  DocumentEntryViewComponent
+  DocumentEntryViewComponent,
+  DocumentDevicesComponent,
+  DocumentGeoComponent,
+  DocumentTopCountriesComponent
 ];

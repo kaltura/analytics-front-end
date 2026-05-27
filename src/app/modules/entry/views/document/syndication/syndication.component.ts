@@ -86,7 +86,7 @@ export class DocumentSyndicationComponent implements OnDestroy {
   public _selectedMetrics: string;
   public _isCompareMode: boolean;
   public _columns: string[] = [];
-  public _reportType = reportTypeMap(KalturaReportType.topSyndication);
+  public _reportType = reportTypeMap(KalturaReportType.documentEntryDomains);
   public _lineChartData: any = {};
   public _totalUsers = null;
   public _tableData: any[] = [];
@@ -164,7 +164,7 @@ export class DocumentSyndicationComponent implements OnDestroy {
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
       }))
-      .subscribe(({ report, compare }) => {
+      .subscribe(({ report, compare }) => {debugger;
           this._totalUsers = null;
           this._totalCount = 0;
 
