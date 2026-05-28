@@ -70,7 +70,7 @@ export class DocumentSyndicationComponent implements OnDestroy {
   private _totalPlaysCount = 0;
   private _compareFilter: KalturaReportInputFilter = null;
   private _dataConfig: ReportDataConfig;
-  private _order = '-count_loads';
+  private _order = '-count_document_impression';
   private _filter = new KalturaReportInputFilter({
     searchInTags: true,
     searchInAdminTags: false,
@@ -164,7 +164,7 @@ export class DocumentSyndicationComponent implements OnDestroy {
         return this._reportService.getReport(compareReportConfig, sections)
           .pipe(map(compare => ({ report, compare })));
       }))
-      .subscribe(({ report, compare }) => {debugger;
+      .subscribe(({ report, compare }) => {
           this._totalUsers = null;
           this._totalCount = 0;
 
@@ -290,18 +290,18 @@ export class DocumentSyndicationComponent implements OnDestroy {
 
   private _handleTable(table: KalturaReportTable): void {
     const { columns, tableData } = this._reportService.parseTableData(table, this._dataConfig.table);
-    this._insertColumnAfter('loads_distribution', 'count_loads', columns);
+    this._insertColumnAfter('loads_distribution', 'count_document_impression', columns);
     this._totalCount = table.totalCount;
     this._columns = columns;
     this._tableData = tableData.map((row, index) => {
       let playsDistribution = 0;
       if (this._totalPlaysCount !== 0) {
-        const countPlays = parseFloat(row['count_loads']) || 0;
+        const countPlays = parseFloat(row['count_document_impression']) || 0;
         playsDistribution = (countPlays / this._totalPlaysCount) * 100;
       }
       playsDistribution = significantDigits(playsDistribution);
       row['index'] = String(1 + index + (this._pager.pageIndex - 1) * this._pager.pageSize);
-      row['count_loads'] = ReportHelper.numberOrZero(row['count_loads']);
+      row['count_document_impression'] = ReportHelper.numberOrZero(row['count_document_impression']);
       row['loads_distribution'] = ReportHelper.numberWithCommas(playsDistribution);
 
       return row;
@@ -342,7 +342,7 @@ export class DocumentSyndicationComponent implements OnDestroy {
   }
 
   public _onSortChanged(event) {
-    const field = event.field === 'loads_distribution' ? 'count_loads' : event.field;
+    const field = event.field === 'loads_distribution' ? 'count_document_impression' : event.field;
     if (event.data.length && field && event.order) {
       const order = event.order === 1 ? '+' + field : '-' + field;
       if (order !== this._order) {

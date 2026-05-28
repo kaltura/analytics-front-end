@@ -51,7 +51,7 @@
         <div class="kTableContainer">
           <p-table aria-label="Syndication Table"
                    [value]="_tableData" (sortFunction)="_onSortChanged($event)" [customSort]="true"
-                   sortField="count_loads" [sortOrder]="-1" [defaultSortOrder]="-1">
+                   sortField="count_document_impression" [sortOrder]="-1" [defaultSortOrder]="-1">
             <ng-template pTemplate="header">
               <tr>
                 <th [ngStyle]="{'width': '60px'}">
@@ -63,8 +63,8 @@
                     [class.nonSortable]="_isCompareMode || col === 'loads_distribution'  || col === 'domain_name'"
                     [ngStyle]="{ 'width': '100%' }">
                   <div class="kColumnHeader">
-                    <span [kTooltip]="'app.engagement.topDomainsReport.' + col | translate" [showOnEllipsis]="true">
-                      {{'app.engagement.topDomainsReport.' + col | translate}}
+                    <span [kTooltip]="'app.engagement.topDomainsReport.doc' + col | translate" [showOnEllipsis]="true">
+                      {{'app.engagement.topDomainsReport.doc' + col | translate}}
                     </span>
                     <p-sortIcon [field]="col" *ngIf="!_isCompareMode && col !== 'loads_distribution'"></p-sortIcon>
                   </div>

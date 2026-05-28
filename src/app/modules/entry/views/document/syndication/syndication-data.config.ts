@@ -9,20 +9,21 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
   constructor(_translate: TranslateService) {
     super(_translate);
   }
-  
+
   public getConfig(): ReportDataConfig {
     return {
       [ReportDataSection.graph]: {
+        preSelected: "count_document_impression",
         fields: {
-          'count_plays': {
+          'count_document_impression': {
             format: value => value,
             colors: [getPrimaryColor(), getSecondaryColor()],
-            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.topDomainsReport.count_plays`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.entry.count_doc_loads`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
-          'count_loads': {
+          'unique_known_users': {
             format: value => value,
             colors: [getPrimaryColor('impressions'), getSecondaryColor('impressions')],
-            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.engagement.topDomainsReport.count_loads`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.entry.unique_viewers`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
         }
       },
@@ -38,28 +39,27 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
             nonComparable: true,
             sortOrder: 1,
           },
-          'referrer': {
-            format: value => value,
-            nonComparable: true,
-            sortOrder: 1,
-          },
-          'count_loads': {
+          'count_document_impression': {
             format: value => ReportHelper.numberOrZero(value),
-            sortOrder: 4,
+            sortOrder: 2,
+          },
+          'unique_known_users': {
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 3,
           },
         }
       },
       [ReportDataSection.totals]: {
-        preSelected: 'count_loads',
+        preSelected: "count_document_impression",
         fields: {
-          'count_loads': {
+          'count_document_impression': {
             format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.engagement.topDomainsReport.count_loads`),
+            title: this._translate.instant(`app.entry.count_doc_loads`),
             sortOrder: 1,
           },
-          'count_plays': {
+          'unique_known_users': {
             format: value => ReportHelper.numberOrZero(value),
-            title: this._translate.instant(`app.engagement.topDomainsReport.count_plays`),
+            title: this._translate.instant(`app.entry.unique_viewers`),
             sortOrder: 2,
           },
         }
