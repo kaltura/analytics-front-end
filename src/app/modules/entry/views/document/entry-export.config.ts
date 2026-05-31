@@ -16,14 +16,14 @@ export class EntryExportConfig extends ExportConfigService {
       {
         id: 'userEngagement',
         label: this._translate.instant('app.entry.exportLabels.userEngagement'),
-        reportType: reportTypeMap(KalturaReportType.userTopContent),
+        reportType: reportTypeMap(KalturaReportType.documentEntryHighlights),
         sections: [KalturaReportExportItemType.table],
-        order: '-count_plays',
+        order: '-count_document_impression',
       },
       {
         id: 'performance',
-        label: this._translate.instant('app.entry.exportLabels.imagePerformance'),
-        reportType: reportTypeMap(KalturaReportType.userTopContent),
+        label: this._translate.instant('app.entry.exportLabels.documentPerformance'),
+        reportType: reportTypeMap(KalturaReportType.documentEntryHighlights),
         sections: [KalturaReportExportItemType.graph],
         order: '-date_id',
       },
@@ -37,22 +37,22 @@ export class EntryExportConfig extends ExportConfigService {
       {
         id: 'geo',
         label: this._translate.instant('app.entry.exportLabels.topCountries'),
-        reportType: reportTypeMap(KalturaReportType.mapOverlayCountry),
+        reportType: reportTypeMap(KalturaReportType.documentEntryMapOverlayCountry),
         sections: [KalturaReportExportItemType.table],
-        order: '-count_plays',
+        order: '-count_document_impression',
       },
       {
         id: 'devices',
         label: this._translate.instant('app.entry.exportLabels.devicesOverview'),
-        reportType: reportTypeMap(KalturaReportType.platforms),
+        reportType: reportTypeMap(KalturaReportType.documentEntryPlatforms),
         sections: [KalturaReportExportItemType.table],
       },
       {
         id: 'syndication',
         label: this._translate.instant('app.entry.exportLabels.syndication'),
-        reportType: reportTypeMap(KalturaReportType.topSyndication),
+        reportType: reportTypeMap(KalturaReportType.documentEntryDomains),
         sections: [KalturaReportExportItemType.table],
-        order: '-count_plays',
+        order: '-count_document_impression',
       },
     ];
 

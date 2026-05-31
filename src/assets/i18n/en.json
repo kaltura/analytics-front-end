@@ -1216,6 +1216,7 @@
         "userEngagement": "User Engagement",
         "videoPerformance": "Video Performance",
         "imagePerformance": "Image Performance",
+        "documentPerformance": "Document Performance",
         "impressions": "Impressions",
         "topCountries": "Top Countries",
         "devicesOverview": "Devices Overview",
