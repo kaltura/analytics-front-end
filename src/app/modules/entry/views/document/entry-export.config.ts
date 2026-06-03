@@ -16,7 +16,7 @@ export class EntryExportConfig extends ExportConfigService {
       {
         id: 'userEngagement',
         label: this._translate.instant('app.entry.exportLabels.userEngagement'),
-        reportType: reportTypeMap(KalturaReportType.documentEntryHighlights),
+        reportType: reportTypeMap(KalturaReportType.documentEntryUserEngagement),
         sections: [KalturaReportExportItemType.table],
         order: '-count_document_impression',
       },
@@ -26,13 +26,6 @@ export class EntryExportConfig extends ExportConfigService {
         reportType: reportTypeMap(KalturaReportType.documentEntryHighlights),
         sections: [KalturaReportExportItemType.graph],
         order: '-date_id',
-      },
-      {
-        id: 'impressions',
-        label: this._translate.instant('app.entry.exportLabels.impressions'),
-        reportType: reportTypeMap(KalturaReportType.contentDropoff),
-        sections: [KalturaReportExportItemType.total],
-        order: '-count_plays',
       },
       {
         id: 'geo',

@@ -71,7 +71,7 @@
           </div>
 
 
-          <ng-container *ngIf="_tableMode !== TableMode.context">
+          <ng-container>
             <p-table appScrollTopOnPaging
                      aria-label="Image Performance Table"
                      [sortField]="_customPaginator ? 'full_name' : _columns[0]"
@@ -125,16 +125,6 @@
                          [first]="(_pager.pageIndex -1) * _pager.pageSize"
                          [totalRecords]="_totalCount"
                          (onPageChange)="_onPaginationChange($event)"></p-paginator>
-          </ng-container>
-
-          <ng-container *ngIf="_tableMode === TableMode.context">
-            <app-context-table [entryId]="entryId"
-                               [filterChange]="_filterChange$"
-                               [filter]="_filter"
-                               [compareFilter]="_compareFilter"
-                               [isCompareMode]="_isCompareMode"
-                               [reportInterval]="_reportInterval"
-                               [firstTimeLoading]="_firstTimeLoading"></app-context-table>
           </ng-container>
         </div>
       </div>

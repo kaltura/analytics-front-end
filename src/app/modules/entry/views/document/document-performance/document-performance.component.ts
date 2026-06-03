@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy } from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
-import { AuthService, ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
+import { ErrorsManagerService, Report, ReportConfig, ReportService } from 'shared/services';
 import { map, switchMap } from 'rxjs/operators';
 import { of as ObservableOf, Subject } from 'rxjs';
 import { CompareService } from 'shared/services/compare.service';
@@ -43,7 +43,6 @@ export class DocumentEntryPerformanceComponent extends EntryBase implements OnDe
   protected _componentId = 'image-performance';
 
   public _filterChange$ = this._filterChange.asObservable();
-  public TableMode = TableModes;
   public _tableMode = TableModes.dates;
   public _columns: string[] = [];
   public _usersColumns: string[] = [];
@@ -89,7 +88,6 @@ export class DocumentEntryPerformanceComponent extends EntryBase implements OnDe
               private _reportService: ReportService,
               private _compareService: CompareService,
               private _errorsManager: ErrorsManagerService,
-              private _authService: AuthService,
               private _dataConfigService: DocumentPerformanceConfig) {
     super();
 
@@ -113,30 +111,11 @@ export class DocumentEntryPerformanceComponent extends EntryBase implements OnDe
     this._filterChange.complete();
   }
 
-  private _updateTableData(): void {
-    const tableData = this._tableMode === TableModes.dates ? this._datesTableData : this._usersTableData;
-    const columns = this._tableMode === TableModes.dates ? this._datesColumns : this._usersColumns;
-
-    if (tableData === null) {
-      if (this._tableMode === TableModes.dates && !this._isCompareMode && this._rawGraphData.length) {
-        this._handleDatesTable(this._rawGraphData);
-      } else {
-        let sections: ReportDataConfig = { table: this._dataConfig[ReportDataSection.table] };
-        if (this._isCompareMode || !this._rawGraphData.length) {
-          sections = { ...sections, graph: this._dataConfig[ReportDataSection.graph] };
-        }
-        this._loadReport(sections);
-      }
-    } else {
-      this._tableData = tableData;
-      this._columns = columns;
-    }
-  }
-
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
     this._blockerMessage = null;
     this._filter.entryIdIn = this.entryId;
+    this._reportType = this._tableMode === TableModes.users ? reportTypeMap(KalturaReportType.documentEntryUserEngagement) : reportTypeMap(KalturaReportType.documentEntryHighlights);
     const reportConfig: ReportConfig = { reportType: this._reportType, filter: this._filter, order: this._order };
     if (reportConfig['objectIds__null']) {
       delete reportConfig['objectIds__null'];
@@ -144,9 +123,9 @@ export class DocumentEntryPerformanceComponent extends EntryBase implements OnDe
 
     sections = { ...sections }; // make local copy
 
-    if ([TableModes.dates, TableModes.context].indexOf(this._tableMode) !== -1) {
+    if (this._tableMode === TableModes.dates) {
       delete sections[ReportDataSection.table]; // remove table config to prevent table request
-    } else if (this._tableMode === TableModes.users) {
+    } else {
       reportConfig.pager = this._pager;
     }
 
@@ -441,6 +420,6 @@ export class DocumentEntryPerformanceComponent extends EntryBase implements OnDe
     this._tableMode = mode;
     this._customPaginator = this._ignoreFirstSortEvent = this._tableMode === TableModes.users;
     this._order = this._tableMode === TableModes.users ? '-name' : '-date_id';
-    this._updateTableData();
+    this._loadReport();
   }
 }
