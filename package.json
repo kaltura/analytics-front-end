@@ -1,6 +1,6 @@
 {
   "name": "analytics-front-end",
-  "version": "3.9.8",
+  "version": "3.9.9",
   "scripts": {
     "preinstall": "npx --yes --prefer-online --registry=https://npm.pkg.github.com --package @kaltura/kaltura-tools@latest kaltura-tools check --root=.",
     "ng": "ng",
