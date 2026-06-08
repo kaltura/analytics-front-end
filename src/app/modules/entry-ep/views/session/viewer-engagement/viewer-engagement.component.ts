@@ -1,19 +1,16 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnDestroy, ViewChild} from '@angular/core';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import {KalturaClient, KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType, KalturaUserFilter, UserListAction} from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
 import {AppAnalytics, AuthService, ButtonType, ErrorsManagerService, NavigationDrillDownService, ReportConfig, ReportService} from 'shared/services';
 import { switchMap } from 'rxjs/operators';
 import { of as ObservableOf } from 'rxjs';
-import { CompareService } from 'shared/services/compare.service';
 import { ReportDataConfig, ReportDataSection } from 'shared/services/storage-data-base.config';
-import { TranslateService } from '@ngx-translate/core';
 import { ViewerEngagementConfig } from './viewer-engagement.config';
 import { FrameEventManagerService, FrameEvents } from 'shared/modules/frame-event-manager/frame-event-manager.service';
 import { DateChangeEvent } from 'shared/components/date-filter/date-filter.service';
 import { HeatMapStoreService } from 'shared/components/heat-map/heat-map-store.service';
 import { reportTypeMap } from 'shared/utils/report-type-map';
-import { TableRow } from 'shared/utils/table-local-sort-handler';
 import { SortEvent } from 'primeng/api';
 import { DateFilterUtils } from "shared/components/date-filter/date-filter-utils";
 import { ExportItem } from "shared/components/export-csv/export-config-base.service";
@@ -34,10 +31,16 @@ import {Router} from "@angular/router";
     ExportConfig
   ]
 })
-export class EpViewerEngagementComponent implements OnInit, OnDestroy {
+export class EpViewerEngagementComponent implements OnDestroy {
   @ViewChild('overlay') _overlay: OverlayPanel;
   @Input() entryIdIn = '';
-  @Input() startDate: Date;
+  @Input() set startDate(value: Date) { // session start date rounded down the last half hour
+    this._startDate = value;
+    setTimeout(() => {
+      this._pager.pageIndex = 1;
+      this._loadReport();
+    }, 0);
+  }
   @Input() actualStartDate: Date; // session actual start date
   @Input() endDate: Date;
   @Input() duration = 0;
@@ -62,6 +65,7 @@ export class EpViewerEngagementComponent implements OnInit, OnDestroy {
   public _isBusy: boolean;
   public _blockerMessage: AreaBlockerMessage = null;
   public _tabsData: Tab[] = [];
+  public _startDate: Date;
   public _pager = new KalturaFilterPager({ pageSize: 10, pageIndex: 1 });
   public _filter = new KalturaEndUserReportInputFilter({
     searchInTags: true,
@@ -86,9 +90,9 @@ export class EpViewerEngagementComponent implements OnInit, OnDestroy {
     this._exportConfig = _exportConfigService.getConfig();
   }
 
-  ngOnInit(): void {
+  public _loadReport(sections = this._dataConfig, userIds = ''): void {
     this._exportDateFilter = {
-      startDate: Math.floor(this.startDate.getTime() / 1000),
+      startDate: Math.floor(this._startDate.getTime() / 1000),
       endDate: Math.floor(this.endDate.getTime() / 1000),
       timeZoneOffset: DateFilterUtils.getTimeZoneOffset(),
       timeUnits: KalturaReportInterval.days,
@@ -96,16 +100,12 @@ export class EpViewerEngagementComponent implements OnInit, OnDestroy {
       startDay: null,
       compare: null
     };
-    this._loadReport();
-  }
-
-  public _loadReport(sections = this._dataConfig, userIds = ''): void {
     this._isBusy = true;
     this._blockerMessage = null;
     this._showMaxUsersMessage = false;
     this._filter.entryIdIn = this.entryIdIn;
     this._filter.timeZoneOffset = DateFilterUtils.getTimeZoneOffset(),
-    this._filter.fromDate = Math.floor(this.startDate.getTime() / 1000);
+    this._filter.fromDate = Math.floor(this._startDate.getTime() / 1000);
     this._filter.toDate = Math.floor(this.endDate.getTime() / 1000);
     this._filter.interval = KalturaReportInterval.days;
     if (userIds.length > 0) {
