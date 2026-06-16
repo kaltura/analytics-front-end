@@ -40,9 +40,13 @@ export class DocumentPerformanceConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 2,
           },
-          'unique_known_users': {
+          'count_document_download': {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 3,
+          },
+          'unique_known_users': {
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 4,
           },
         }
       },
@@ -55,10 +59,17 @@ export class DocumentPerformanceConfig extends ReportDataBaseConfig {
             colors: [getPrimaryColor('impressions'), getSecondaryColor('impressions')],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.entry.count_loads`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
+          'count_document_download': {
+            format: value => ReportHelper.integerOrZero(value),
+            title: this._translate.instant(`app.entry.count_doc_downloads`),
+            sortOrder: 2,
+            colors: [getPrimaryColor('time'), getSecondaryColor('time')],
+            graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.entry.count_doc_downloads`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
+          },
           'unique_known_users': {
             format: value => value,
             title: this._translate.instant(`app.entry.unique_viewers`),
-            sortOrder: 2,
+            sortOrder: 3,
             colors: [getPrimaryColor('viewers'), getSecondaryColor('viewers')],
             graphTooltip: (value) => `<span class="kValue">${this._translate.instant(`app.entry.unique_viewers`)}:&nbsp;${ReportHelper.numberOrZero(String(value), false)}</span>`
           },
@@ -72,11 +83,16 @@ export class DocumentPerformanceConfig extends ReportDataBaseConfig {
             title: this._translate.instant(`app.entry.count_doc_loads`),
             sortOrder: 1,
           },
+          'count_document_download': {
+            format: value => ReportHelper.integerOrZero(value),
+            title: this._translate.instant(`app.entry.count_doc_downloads`),
+            sortOrder: 2
+          },
           'unique_known_users': {
             format: value => value,
             title: this._translate.instant(`app.entry.unique_viewers`),
             tooltip: this._translate.instant('app.entry.unique_known_users_tt'),
-            sortOrder: 2,
+            sortOrder: 3,
           },
         }
       }

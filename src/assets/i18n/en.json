@@ -1166,6 +1166,8 @@
       "unique_videos": "Played Entries",
       "count_loads": "Player Impressions",
       "count_doc_loads": "Document Impressions",
+      "count_doc_downloads": "Document Downloads",
+      "count_document_download": "Document Downloads",
       "loads_distribution": "Player Impressions Distribution",
       "docloads_distribution": "Impressions Distribution",
       "avg_time_viewed": "Avg. View Time",

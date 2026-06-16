@@ -28,6 +28,13 @@ export class EntryTotalsConfig extends ReportDataBaseConfig {
             icon: 'icon-small-viewer-contributor',
             iconColor: 'green',
           },
+          'count_document_download': {
+            format: value => ReportHelper.integerOrZero(value),
+            title: this._translate.instant(`app.entry.count_doc_downloads`),
+            sortOrder: 3,
+            icon: 'icon-download',
+            iconColor: 'orange',
+          },
           'count_viral': {
             format: value => ReportHelper.numberOrZero(value),
             title: this._translate.instant(`app.entry.count_viral`),

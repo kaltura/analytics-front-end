@@ -245,7 +245,6 @@ export class DocumentEntryPerformanceComponent extends EntryBase implements OnDe
         this._reportInterval,
       );
       this._lineChartData = lineChartData;
-
       if (this._metricsCompareTo) {
         this._onCompareTo(this._metricsCompareTo);
       }
@@ -393,6 +392,7 @@ export class DocumentEntryPerformanceComponent extends EntryBase implements OnDe
       }
       // fix grid
       this._metricsLineChartData.grid.left = 36;
+      this._metricsLineChartData.grid.right = 36;
     } else {
       this._metricsLineChartData = null;
       this._metricsCompareTo = null;
