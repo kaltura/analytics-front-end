@@ -1,0 +1,64 @@
+<div data-aid="report-entry-totals" class="kReport kTotals kOverrideFAIcons kImageReport" aria-label="Entry Totals">
+  <k-area-blocker [message]="_blockerMessage" [showLoader]="_isBusy">
+    <div class="kPreview">
+      <ng-content></ng-content>
+    </div>
+    <div class="kDivider"></div>
+    <div class="kTotalsRow">
+      <div class="kTotalsContainer">
+        <div class="kTotalContainer kSmall" *ngFor="let tab of _tabsData">
+          <div class="kMiniIcon" [ngClass]="tab.iconColor"><i [class]="tab.icon"></i></div>
+          <div class="kTotal">
+            <span *ngIf="!_isCompareMode" class="kValue">{{tab.value}}</span>
+            <span *ngIf="_isCompareMode" class="kTrend"
+                  [kTooltip]="tab.tooltip"
+                  [maxWidth]="500"
+                  [escape]="false">
+              <app-trend-value valueStyleClass="kValue"
+                               unitsStyleClass="kUnits"
+                               [value]="tab.value"
+                               [units]="tab.units"
+                               [trend]="tab.trend"></app-trend-value>
+            </span>
+            <span class="kLabel">{{tab.title}}</span>
+          </div>
+        </div>
+        <div *ngIf="_viewConfig.social" class="kDivider"></div>
+        <div class="kSocialHighlights" *ngIf="_viewConfig.social">
+          <h2 class="kTitle" id="kSocialHighlights">{{'app.user.socialHighlights' | translate}}</h2>
+          <div class="kSocialHighlightsItem" aria-labelledby="kSocialHighlights" *ngIf="_viewConfig.social.likes">
+            <i class="kIcon icon-small-like"></i>
+            <span *ngIf="!_isCompareMode" class="kValue">{{_socialHighlights['likes']?.value}}</span>
+            <span *ngIf="_isCompareMode" class="kTrend"
+                  [kTooltip]="_socialHighlights['likes']?.tooltip"
+                  [maxWidth]="500"
+                  [escape]="false">
+              <app-trend-value valueStyleClass="kValue"
+                               unitsStyleClass="kUnits"
+                               [value]="_socialHighlights['likes']?.value"
+                               [units]="_socialHighlights['likes']?.units"
+                               [trend]="_socialHighlights['likes']?.trend"></app-trend-value>
+          </span>
+            <span [class.kSocialLabel]="_isCompareMode">{{'app.user.votes' | translate}}</span>
+          </div>
+          <div class="kSocialHighlightsItem" aria-labelledby="kSocialHighlights" *ngIf="_viewConfig.social.shares">
+            <i class="kIcon icon-share"></i>
+            <span *ngIf="!_isCompareMode" class="kValue">{{_socialHighlights['shares']?.value}}</span>
+            <span *ngIf="_isCompareMode" class="kTrend"
+                  [kTooltip]="_socialHighlights['shares']?.tooltip"
+                  [maxWidth]="500"
+                  [escape]="false">
+              <app-trend-value valueStyleClass="kValue"
+                               unitsStyleClass="kUnits"
+                               [value]="_socialHighlights['shares']?.value"
+                               [units]="_socialHighlights['shares']?.units"
+                               [trend]="_socialHighlights['shares']?.trend"></app-trend-value>
+          </span>
+            <span [class.kSocialLabel]="_isCompareMode">{{'app.user.count_viral' | translate}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </k-area-blocker>
+</div>
+
