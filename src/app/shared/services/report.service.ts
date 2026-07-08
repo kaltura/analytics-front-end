@@ -440,7 +440,7 @@ export class ReportService implements OnDestroy {
           },
           symbol: 'circle',
           symbolSize: 8,
-          showSymbol: false
+          showSymbol: xAxisData?.length < 2
         }]
       };
       barChartData[graph.id] = {

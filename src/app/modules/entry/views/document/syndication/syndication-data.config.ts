@@ -47,6 +47,11 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
             format: value => ReportHelper.numberOrZero(value),
             sortOrder: 3,
           },
+          'referrer': {
+            format: value => value,
+            nonComparable: true,
+            sortOrder: 4,
+          },
         }
       },
       [ReportDataSection.totals]: {
