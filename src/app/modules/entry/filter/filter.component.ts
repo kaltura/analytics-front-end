@@ -37,6 +37,7 @@ import { FilterConfig } from "shared/components/filter/filter-base.service";
 })
 export class EntryFilterComponent extends FilterComponent {
   public filterConfig: FilterConfig = {};
+  @Input() isDocument = false;
   @Input() set viewConfig(value: ViewConfig) {
     if (!isEmptyObject(value)) {
       this._viewConfig = value;

@@ -21,6 +21,7 @@ export interface DomainsFilterValue {
 })
 export class DomainsFilterComponent implements OnDestroy {
   @Input() expandWidth = false;
+  @Input() isDocument = false;
 
   @Input() set selectedFilters(value: DomainsFilterValue[]) {
     if (Array.isArray(value) && value.length) {
@@ -51,7 +52,7 @@ export class DomainsFilterComponent implements OnDestroy {
       this._domainsFilterService.updateDateFilter(event, () => {
         this._selectedDomains = [];
         this._selectedPages = [];
-      });
+      }, this.isDocument);
     }, 0);
   }
 
@@ -74,7 +75,7 @@ export class DomainsFilterComponent implements OnDestroy {
         this._selectedDomains = items;
         this._selectedPages = [];
         domainsNames = this._selectedDomains.map(({ name }) => name).join(analyticsConfig.valueSeparator);
-        this._domainsFilterService.resetPages(domainsNames);
+        this._domainsFilterService.resetPages(domainsNames, this.isDocument);
         break;
       case 'pages':
         this._selectedPages = items;

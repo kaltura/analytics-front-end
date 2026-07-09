@@ -19,6 +19,7 @@ export class CountryFilterComponent implements OnDestroy {
     }
   }
 
+  @Input() isDocument = false;
   @Input() set filterConfig (config: FilterConfig) {
     if (config) {
       this._locationFilterService.filterConfig = config;
@@ -30,7 +31,7 @@ export class CountryFilterComponent implements OnDestroy {
     setTimeout(() => {
       this._locationFilterService.updateDateFilter(event, () => {
         this._selectedCountries = [];
-      });
+      }, false, this.isDocument);
     }, 0);
   }
 

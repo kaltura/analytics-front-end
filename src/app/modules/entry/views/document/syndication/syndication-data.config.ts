@@ -39,19 +39,19 @@ export class SyndicationDataConfig extends ReportDataBaseConfig {
             nonComparable: true,
             sortOrder: 1,
           },
-          'count_document_impression': {
-            format: value => ReportHelper.numberOrZero(value),
-            sortOrder: 2,
-          },
-          'unique_known_users': {
-            format: value => ReportHelper.numberOrZero(value),
-            sortOrder: 3,
-          },
           'referrer': {
             format: value => value,
             nonComparable: true,
-            sortOrder: 4,
+            sortOrder: 2,
           },
+          'count_document_impression': {
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 3,
+          },
+          'unique_known_users': {
+            format: value => ReportHelper.numberOrZero(value),
+            sortOrder: 4,
+          }
         }
       },
       [ReportDataSection.totals]: {

@@ -61,12 +61,12 @@ export class DomainsFilterService extends FilterBaseService implements OnDestroy
     })));
   }
 
-  public loadDomainsData(): void {
+  public loadDomainsData(isDocument = false): void {
     this._isBusy = true;
     this._currentlyLoading.push('domains');
 
     const reportConfig: ReportConfig = {
-      reportType: this._reportType,
+      reportType: isDocument ? reportTypeMap(KalturaReportType.documentEntryDomains) : this._reportType,
       filter: this._filter,
       pager: this._pager,
       order: '+domain_name',
@@ -91,12 +91,12 @@ export class DomainsFilterService extends FilterBaseService implements OnDestroy
         });
   }
 
-  private _loadPagesData(domains: string): void {
+  private _loadPagesData(domains: string, isDocument = false): void {
     this._isBusy = true;
     this._currentlyLoading.push('pages');
 
     let reportConfig: ReportConfig = {
-      reportType: reportTypeMap(KalturaReportType.topSyndication),
+      reportType: isDocument ? reportTypeMap(KalturaReportType.documentEntryDomains) : reportTypeMap(KalturaReportType.topSyndication),
       filter: this._filter,
       pager: this._pager,
       order: '+referrer',
@@ -123,15 +123,15 @@ export class DomainsFilterService extends FilterBaseService implements OnDestroy
     this.resetPages();
   }
 
-  public resetPages(domains?: string): void {
-    this._pagesOptions.next([])
+  public resetPages(domains?: string, isDocument = false): void {
+    this._pagesOptions.next([]);
 
     if (domains) {
-      this._loadPagesData(domains);
+      this._loadPagesData(domains, isDocument);
     }
   }
 
-  public updateDateFilter(event: DateChangeEvent, callback: () => void): void {
+  public updateDateFilter(event: DateChangeEvent, callback: () => void, isDocument = false): void {
     if (this._dateFilterDiffer.diff(event)) {
       this._filter.timeZoneOffset = event.timeZoneOffset;
       this._filter.fromDate = event.startDate;
@@ -140,7 +140,7 @@ export class DomainsFilterService extends FilterBaseService implements OnDestroy
       this._pager.pageIndex = 1;
 
       this.resetAll();
-      this.loadDomainsData();
+      this.loadDomainsData(isDocument);
 
       if (typeof callback === 'function') {
         callback();

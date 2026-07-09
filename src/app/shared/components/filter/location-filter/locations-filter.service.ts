@@ -75,11 +75,14 @@ export class LocationsFilterService extends  FilterBaseService implements OnDest
     })));
   }
 
-  public loadCountryData(): void {
+  public loadCountryData(isDocument = false): void {
     this._isBusy = true;
     this._currentlyLoading.push('country');
 
-    const reportType = this._reportType ? this._reportType : reportTypeMap(this._isRealTime ? KalturaReportType.mapOverlayCountryRealtime : KalturaReportType.mapOverlayCountry);
+    let reportType = this._reportType ? this._reportType : reportTypeMap(this._isRealTime ? KalturaReportType.mapOverlayCountryRealtime : KalturaReportType.mapOverlayCountry);
+    if (isDocument) {
+      reportType = reportTypeMap(KalturaReportType.documentEntryMapOverlayCountry);
+    }
     const reportConfig: ReportConfig = {
       reportType,
       filter: this._filter,
@@ -186,7 +189,7 @@ export class LocationsFilterService extends  FilterBaseService implements OnDest
     }
   }
 
-  public updateDateFilter(event: DateChangeEvent, callback: () => void, isRealTime = false): void {
+  public updateDateFilter(event: DateChangeEvent, callback: () => void, isRealTime = false, isDocument = false): void {
     this._isRealTime = isRealTime;
     if (this._dateFilterDiffer.diff(event)) {
       this._filter.timeZoneOffset = event.timeZoneOffset;
@@ -196,7 +199,7 @@ export class LocationsFilterService extends  FilterBaseService implements OnDest
       this._pager.pageIndex = 1;
 
       this.resetAll();
-      this.loadCountryData();
+      this.loadCountryData(isDocument);
 
       if (typeof callback === 'function') {
         callback();
