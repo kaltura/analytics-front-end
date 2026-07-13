@@ -30,11 +30,11 @@
 
 
             <app-category-filter *ngIf="_viewConfig.categories"
-                                 [label]="'app.filters.playbackContext' | translate"
+                                 [label]="isDocument ? ('app.filters.documentContext' | translate) : ('app.filters.playbackContext' | translate)"
                                  [selectedFilters]="_selectedValues['context']"
-                                 [linkLabel]="'app.filters.selectPlaybackContext' | translate"
-                                 [popupTitle]="'app.filters.selectPlaybackContext' | translate"
-                                 [popupFilterPlaceholder]="'app.filters.findContext' | translate"
+                                 [linkLabel]="isDocument ? ('app.filters.selectDocumentContext' | translate) : ('app.filters.selectPlaybackContext' | translate)"
+                                 [popupTitle]="isDocument ? ('app.filters.documentContext' | translate) : ('app.filters.selectPlaybackContext' | translate)"
+                                 [popupFilterPlaceholder]="isDocument ? ('app.filters.findDocumentContext' | translate) : ('app.filters.findContext' | translate)"
                                  (itemSelected)="_onItemSelected($event, 'context')"
                                  (itemUnselected)="_onItemUnselected($event, 'context')"></app-category-filter>
 

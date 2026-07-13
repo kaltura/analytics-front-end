@@ -95,8 +95,11 @@
       "filterContext": "Filter Contexts",
       "context": "Context",
       "playbackContext": "Playback Context",
+      "documentContext": "Document Context",
+      "selectDocumentContext": "Select Document Context",
       "selectPlaybackContext": "Playback Context",
-      "findContext": "Find Playback Context"
+      "findContext": "Find Playback Context",
+      "findDocumentContext": "Find Document Context"
     },
     "categories": {
       "selectCategories": "Select Categories",
