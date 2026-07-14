@@ -46,6 +46,7 @@ export class DocumentSyndicationComponent implements OnDestroy {
 
       if (!this._dateFilter.applyIn || this._dateFilter.applyIn.indexOf(this._componentId) !== -1) {
         this._updateFilter();
+        this._pager.pageIndex = 1;
         this._loadReport();
       }
     }
@@ -55,6 +56,7 @@ export class DocumentSyndicationComponent implements OnDestroy {
     if (value) {
       this._refineFilter = value;
       this._updateRefineFilter();
+      this._pager.pageIndex = 1;
       this._loadReport();
     }
   }

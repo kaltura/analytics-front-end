@@ -1,4 +1,5 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Table } from 'primeng/table';
 import { Tab } from 'shared/components/report-tabs/report-tabs.component';
 import { KalturaEndUserReportInputFilter, KalturaFilterPager, KalturaObjectBaseFactory, KalturaReportGraph, KalturaReportInterval, KalturaReportTable, KalturaReportTotal, KalturaReportType } from 'kaltura-ngx-client';
 import { AreaBlockerMessage } from '@kaltura-ng/kaltura-ui';
@@ -29,6 +30,7 @@ import { reportTypeMap } from 'shared/utils/report-type-map';
 export class DocumentEntryPerformanceComponent extends EntryBase implements OnDestroy {
   @Input() entryId = '';
   @Input() dateFilterComponent: DateFilterComponent;
+  @ViewChild(Table) _table: Table;
 
   private _order = '-date_id';
   private _reportType = reportTypeMap(KalturaReportType.documentEntryHighlights);
@@ -113,6 +115,9 @@ export class DocumentEntryPerformanceComponent extends EntryBase implements OnDe
 
   protected _loadReport(sections = this._dataConfig): void {
     this._isBusy = true;
+    if (this._table && !this._customPaginator) {
+      this._table.first = 0;
+    }
     this._blockerMessage = null;
     this._filter.entryIdIn = this.entryId;
     this._reportType = this._tableMode === TableModes.users ? reportTypeMap(KalturaReportType.documentEntryUserEngagement) : reportTypeMap(KalturaReportType.documentEntryHighlights);
