@@ -10,7 +10,7 @@
                      (back)="_back()"
                      (navigateToEntry)="_navigateToEntry()"></app-image-entry>
 
-    <app-video-entry *ngIf="_entry?.mediaType === _mediaTypes.video && _entry?.type !== '10'"
+    <app-video-entry *ngIf="(_entry?.mediaType === _mediaTypes.video || _entry?.mediaType === _mediaTypes.audio) && _entry?.type !== '10'"
                      [isChildAccount]="_isChildAccount"
                      [viewConfig]="_entryViewConfig"
                      [entry]="_entry"
