@@ -37,6 +37,7 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
   public _isPolling: boolean;
   public _pollingBtnDisabled = false;
   public _rangeLabel: string;
+  public _streamFilter = 'none';
 
   constructor(private _liveExploreWidget: LiveDiscoveryWidget,
               private _liveDiscoveryTable: LiveDiscoveryTableWidget,
@@ -129,5 +130,11 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
   public onZoom(event): void {
     this._analytics.trackButtonClickEvent(ButtonType.Filter, 'RT_line_graph_drag_select_time');
     this._liveExploreWidget.updateFiltersDateRange(event);
+  }
+
+  public onStreamChange(stream: string): void {
+    this._streamFilter = stream;
+    this._liveExploreWidget.updateStreamFilter(stream);
+    this._liveDiscoveryTable.updateStreamFilter(stream);
   }
 }

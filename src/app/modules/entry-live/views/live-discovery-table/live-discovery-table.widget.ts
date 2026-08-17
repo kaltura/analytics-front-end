@@ -66,6 +66,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
   protected _pollsFactory: LiveDiscoveryTableWidgetPollFactory = null;
   protected _dataConfig: ReportDataConfig;
   protected _showTable = false;
+  protected _streamFilter = 'none';
 
   public isBusy = false;
   public filtersChange$ = this._filtersChange.asObservable();
@@ -128,6 +129,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
   private _applyFilters(widgetsArgs: WidgetsActivationArgs = null): void {
     if (this._dateFilter) {
       this._pollsFactory.interval = this._dateFilter.timeIntervalServerValue;
+      this._pollsFactory.streamFilter = this._streamFilter;
 
       if (this._isPresetMode) {
         this._pollsFactory.dateRange = this._filterService.getDateRangeServerValue(this._dateRange);
@@ -142,7 +144,7 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
 
     if (widgetsArgs) {
       this.stopPolling();
-      ['deviceIn', 'browserFamilyIn', 'operatingSystemFamilyIn', 'countryIn', 'regionIn', 'citiesIn', 'userIds'].forEach(key => {
+      ['deviceIn', 'browserFamilyIn', 'operatingSystemFamilyIn', 'countryIn', 'regionIn', 'citiesIn', 'userIds', 'streamTypeIn'].forEach(key => {
         this._pollsFactory.pollFilter = {key, value: widgetsArgs[key] || ''};
       });
       this.isBusy = true;
@@ -196,6 +198,13 @@ export class LiveDiscoveryTableWidget extends WidgetBase<LiveDiscoveryTableData>
     this._setProvider(tableMode);
 
     this.activate(this._widgetArgs, false, !this._dateFilter.isPresetMode);
+  }
+
+  public updateStreamFilter(stream: string): void {
+    this._streamFilter = stream;
+    this.stopPolling();
+    this._pollsFactory.streamFilter = this._streamFilter;
+    this.startPolling();
   }
 
   public updateFilters(event: DateFiltersChangedEvent): void {

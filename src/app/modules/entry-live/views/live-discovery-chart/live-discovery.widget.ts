@@ -32,6 +32,7 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
   protected _pollsFactory: LiveDiscoveryRequestFactory = null;
   protected _dataConfig: ReportDataConfig;
   protected _timeInterval: TimeInterval;
+  protected _streamFilter = 'none';
 
   private get _dateRange(): DateRange {
     return this._dateFilter ? this._dateFilter.dateRange : null;
@@ -60,6 +61,7 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
   private _applyFilters(): void {
     if (this._dateFilter) {
       this._pollsFactory.interval = this._dateFilter.timeIntervalServerValue;
+      this._pollsFactory.streamFilter = this._streamFilter;
       if (this._isPresetMode) {
         this._pollsFactory.dateRange = this._dateFilter.dateRangeServerValue;
       } else {
@@ -100,6 +102,13 @@ export class LiveDiscoveryWidget extends WidgetBase<LiveDiscoveryData> {
     this._dateFilter.endDate = dateRange.endDate;
     this._dateFilter.isPresetMode = false;
     this.restartPolling(true); // poll only once and pause polling
+  }
+
+  public updateStreamFilter(stream: string): void {
+    this._streamFilter = stream;
+    this.stopPolling();
+    this._pollsFactory.streamFilter = this._streamFilter;
+    this.startPolling();
   }
 
   private _getFormatByInterval(): string {

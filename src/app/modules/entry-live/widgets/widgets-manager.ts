@@ -11,6 +11,7 @@ export interface WidgetsActivationArgs {
   operatingSystemFamilyIn?: string;
   browserFamilyIn?: string;
   userIds?: string;
+  streamTypeIn?: string;
 }
 
 @Injectable()

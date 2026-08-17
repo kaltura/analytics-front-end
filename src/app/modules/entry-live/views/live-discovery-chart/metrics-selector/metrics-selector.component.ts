@@ -3,6 +3,7 @@ import { SelectItem, SelectItemGroup } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { ReportDataFields } from 'shared/services/storage-data-base.config';
 import {AppAnalytics, ButtonType} from "shared/services";
+import {EntryLiveUsersMode} from "configuration/analytics-config";
 
 export interface MetricsSelectorChangeEvent {
   selected: string[];
@@ -19,6 +20,7 @@ export class MetricsSelectorComponent implements OnChanges {
   @Input() colorsMap: { [metric: string]: string } = {};
 
   @Output() selectorChange = new EventEmitter<MetricsSelectorChangeEvent>();
+  @Output() streamChange = new EventEmitter<string>();
 
   private _metrics: string[] = [];
 
@@ -26,6 +28,21 @@ export class MetricsSelectorComponent implements OnChanges {
   public _secondaryMetricsOptions: SelectItemGroup[] = [];
   public _selectedMain: string;
   public _selectedSecondary: string;
+  public _streamFilter: 'none' | 'Primary' | 'Secondary' = 'none';
+  public _streamFilterOptions: SelectItem[] = [
+    {
+      value: 'none',
+      label: this._translate.instant('app.entryLive.discovery.filterByNone')
+    },
+    {
+      value: 'Primary',
+      label: this._translate.instant('app.entryLive.discovery.filterByPrimary')
+    },
+    {
+      value: 'Secondary',
+      label: this._translate.instant('app.entryLive.discovery.filterBySecondary')
+    }
+  ];
 
   constructor(private _translate: TranslateService,
               private _analytics: AppAnalytics) {
@@ -78,5 +95,9 @@ export class MetricsSelectorComponent implements OnChanges {
       selected: [this._selectedMain, this._selectedSecondary],
       initialRun: initial,
     });
+  }
+
+  public onStreamChange(stream: string): void {
+    this.streamChange.emit(stream);
   }
 }

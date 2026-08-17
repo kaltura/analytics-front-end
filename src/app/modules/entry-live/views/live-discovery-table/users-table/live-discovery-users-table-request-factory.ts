@@ -34,6 +34,7 @@ export class LiveDiscoveryUsersTableRequestFactory implements RequestFactory<Kal
   };
 
   private _interval = KalturaReportInterval.tenSeconds;
+  private _streamFilter = 'none';
 
   private _getTotalActionArgs: ReportGetTotalActionArgs = {
     reportType: liveReportTypeMap(KalturaReportType.entryLevelUsersDiscoveryRealtime),
@@ -76,6 +77,17 @@ export class LiveDiscoveryUsersTableRequestFactory implements RequestFactory<Kal
       this._interval = interval;
       this._getTableActionArgs.reportInputFilter.interval = interval;
       this._getTotalActionArgs.reportInputFilter.interval = interval;
+    }
+  }
+
+  public set streamFilter(filter: string) {
+    this._streamFilter = filter;
+    if (this._streamFilter && this._streamFilter !== 'none') {
+      this._getTableActionArgs.reportInputFilter.streamTypeIn = this._streamFilter;
+      this._getTotalActionArgs.reportInputFilter.streamTypeIn = this._streamFilter;
+    } else {
+      delete this._getTableActionArgs.reportInputFilter.streamTypeIn;
+      delete this._getTotalActionArgs.reportInputFilter.streamTypeIn;
     }
   }
 

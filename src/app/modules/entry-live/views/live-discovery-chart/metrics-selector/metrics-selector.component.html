@@ -10,4 +10,7 @@
                                  [colorsMap]="colorsMap"
                                  (change)="_onChange(false, 'RT_line_graph_dropdown2')"
                                  [(selection)]="_selectedSecondary"></app-metrics-selector-dropdown>
+
+  <span class="kVersus kFilterBy">{{'app.entryLive.discovery.filterBy' | translate}}</span>
+  <p-dropdown [options]="_streamFilterOptions" [(ngModel)]="_streamFilter" (ngModelChange)="onStreamChange($event)"></p-dropdown>
 </div>
