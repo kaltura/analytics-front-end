@@ -130,4 +130,9 @@ export class LiveDiscoveryComponent implements OnInit, OnDestroy {
     this._analytics.trackButtonClickEvent(ButtonType.Filter, 'RT_line_graph_drag_select_time');
     this._liveExploreWidget.updateFiltersDateRange(event);
   }
+
+  public onStreamChange(stream: string): void {
+    this._liveExploreWidget.updateStreamFilter(stream);
+    this._liveDiscoveryTable.updateStreamFilter(stream);
+  }
 }

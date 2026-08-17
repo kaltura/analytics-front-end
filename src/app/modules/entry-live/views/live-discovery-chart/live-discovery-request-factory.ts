@@ -31,6 +31,8 @@ export class LiveDiscoveryRequestFactory implements RequestFactory<KalturaMultiR
     fromDate: FiltersService.getDateRangeServerValue(defaultDateRange).fromDate,
   };
 
+  private _streamFilter = 'none';
+
   private _interval = KalturaReportInterval.tenSeconds;
 
   private _getTotalActionArgs: ReportGetTotalActionArgs = {
@@ -40,6 +42,7 @@ export class LiveDiscoveryRequestFactory implements RequestFactory<KalturaMultiR
       toDate: this._dateRange.toDate,
       fromDate: this._dateRange.fromDate,
       interval: this._interval,
+      ...(this._streamFilter !== 'none' && { streamTypeIn: this._streamFilter })
     }),
     responseOptions: this._responseOptions
   };
@@ -51,6 +54,7 @@ export class LiveDiscoveryRequestFactory implements RequestFactory<KalturaMultiR
       toDate: this._dateRange.toDate,
       fromDate: this._dateRange.fromDate,
       interval: this._interval,
+      ...(this._streamFilter !== 'none' && { streamTypeIn: this._streamFilter })
     }),
     responseOptions: this._responseOptions
   };
@@ -59,6 +63,17 @@ export class LiveDiscoveryRequestFactory implements RequestFactory<KalturaMultiR
     if (range.hasOwnProperty('toDate') && range.hasOwnProperty('fromDate')) {
       this._dateRange = range;
       this.onPollTickSuccess();
+    }
+  }
+
+  public set streamFilter(filter: string) {
+    this._streamFilter = filter;
+    if (this._streamFilter && this._streamFilter !== 'none') {
+      this._getGraphActionArgs.reportInputFilter.streamTypeIn = this._streamFilter;
+      this._getTotalActionArgs.reportInputFilter.streamTypeIn = this._streamFilter;
+    } else {
+      delete this._getGraphActionArgs.reportInputFilter.streamTypeIn;
+      delete this._getTotalActionArgs.reportInputFilter.streamTypeIn;
     }
   }
 
