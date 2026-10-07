@@ -264,7 +264,8 @@ export class SyndicationComponent implements OnDestroy {
   private _handleTotals(totals: KalturaReportTotal): void {
     this._tabsData = this._reportService.parseTotals(totals, this._dataConfig.totals, this._selectedMetrics);
     if (this._tabsData.length) {
-      this._totalPlaysCount = Number(this._tabsData[0].rawValue);
+      const playsTab = this._tabsData.find(tab => tab.key === 'count_plays');
+      this._totalPlaysCount = playsTab ? Number(playsTab.rawValue) : 0;
     }
     const uniquePlayedTab = this._tabsData.find(tab => tab.key === 'unique_played_videos');
     this.uniquePlayedVideos$.next(uniquePlayedTab ? parseInt(String(uniquePlayedTab.rawValue), 10) || 0 : 0);
