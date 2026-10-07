@@ -891,7 +891,7 @@
           "message-text-box": "Se produjo una reconexión del codificador. Compruebe los registros del codificador"
         },
         "101": {
-          "message-log": "La velocidad de bits entrante real ({{incomingBitrate}} Kbps) es diferente a la manifestada ({{configuredBitrate}} Kbps). Asegúrese de que su codificador está configurado para usar CBR (velocidad de bits constante)",
+          "message-log": "La velocidad de bits entrante real ({{incomingBitrate}} Mbps) es diferente a la manifestada ({{configuredBitrate}} Mbps). Asegúrese de que su codificador está configurado para usar CBR (velocidad de bits constante)",
           "message-text-box": "La velocidad de bits entrante real detectada ({{incomingBitrate}}) es diferente a la manifestada ({{configuredBitrate}}). Asegúrese de que su codificador está configurado para usar CBR (velocidad de bits constante)"
         },
         "102": {

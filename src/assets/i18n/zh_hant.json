@@ -891,7 +891,7 @@
           "message-text-box": "編碼器曾重新連接。請檢查您的編碼器記錄文件"
         },
         "101": {
-          "message-log": "所檢測傳入的實際 Bit Rate ({{incomingBitrate}}Kbps) 與所聲明的 ({{configuredBitrate}}Kbps) 不同。請確定您的編碼器設定爲使用 CBR（恆定比特率）",
+          "message-log": "所檢測傳入的實際 Bit Rate ({{incomingBitrate}}Mbps) 與所聲明的 ({{configuredBitrate}}Mbps) 不同。請確定您的編碼器設定爲使用 CBR（恆定比特率）",
           "message-text-box": "所檢測傳入的實際比特率 ({{incomingBitrate}}) 與所聲明的 ({{configuredBitrate}}) 不同。請確定您的編碼器設定爲使用 CBR（恆定比特率）"
         },
         "102": {

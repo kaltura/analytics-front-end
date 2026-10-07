@@ -891,7 +891,7 @@
           "message-text-box": "Ocorreu a reconexão do codificador. Verifique os logs do codificador"
         },
         "101": {
-          "message-log": "A taxa de bits real de entrada detectada ({{incomingBitrate}} Kbps) é diferente da declarada ({{configuredBitrate}} Kbps). Confirme se seu codificador está configurado para usar CBR (taxa de bits constante)",
+          "message-log": "A taxa de bits real de entrada detectada ({{incomingBitrate}} Mbps) é diferente da declarada ({{configuredBitrate}} Mbps). Confirme se seu codificador está configurado para usar CBR (taxa de bits constante)",
           "message-text-box": "A taxa de bits real de entrada detectada ({{incomingBitrate}}) é diferente da declarada ({{configuredBitrate}}). Confirme se seu codificador está configurado para usar CBR (taxa de bits constante)"
         },
         "102": {
