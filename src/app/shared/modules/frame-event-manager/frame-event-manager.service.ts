@@ -39,6 +39,11 @@ export class FrameEventManagerService implements OnDestroy {
   }
 
   private _windowEventListener(event: any): void {
+    // only trust the hosting window, on the origin pinned during the init handshake
+    if (event.source !== window.parent || analyticsConfig.originTarget === '*' || event.origin !== analyticsConfig.originTarget) {
+      return;
+    }
+
     let postMessageData;
     try {
       postMessageData = event.data;
