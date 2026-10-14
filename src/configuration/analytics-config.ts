@@ -199,7 +199,13 @@ export function initConfig(): Observable<void> {
     );
 
     const initEventHandler = event => {
+      // only the hosting window may initialize the app
+      if (event.source !== window.parent) {
+        return;
+      }
       if (event.data && event.data.messageType === 'init') {
+        // pin the host origin: later messages are accepted from it only and sent to it only
+        analyticsConfig.originTarget = event.origin;
         setConfig(event.data.payload, true);
         observer.next();
         observer.complete();
