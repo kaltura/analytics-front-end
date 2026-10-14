@@ -123,7 +123,14 @@ export class AppService implements OnDestroy {
     this._frameEventManager.listen(FrameEvents.UpdateConfig)
       .pipe(cancelOnDestroy(this), filter(Boolean))
       .subscribe((config: any) => {
-        setConfig(config, true);
+        // server endpoints are set once by the init handshake and cannot be re-pointed by later messages
+        setConfig({
+          ...config,
+          kalturaServer: analyticsConfig.kalturaServer,
+          analyticsServer: analyticsConfig.analyticsServer,
+          cdnServers: analyticsConfig.cdnServers,
+          externalServices: analyticsConfig.externalServices,
+        }, true);
         if (config.ks) {
           // update client
           this._authService.ks = config.ks;
