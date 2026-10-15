@@ -56,7 +56,10 @@ export class ExportComponent implements OnInit, OnDestroy {
     this._downloadingReport = true;
     this._blockerMessage = null;
 
-    const url = buildCDNUrl(`/api_v3/index.php/service/report/action/serve/id/${this._reportId}/ks/${this._authService.ks}`);
+    // ks is sent in the POST body to keep it out of the URL (and server/CDN logs)
+    const url = buildCDNUrl(`/api_v3/index.php/service/report/action/serve/id/${this._reportId}`);
+    // encodeURIComponent (not HttpParams) so '+' in v1 KS isn't decoded as a space
+    const body = `ks=${encodeURIComponent(this._authService.ks)}`;
     const httpOptions = {
       headers: new HttpHeaders({
         'Accept': 'text/html, application/xhtml+xml, */*',
@@ -65,7 +68,7 @@ export class ExportComponent implements OnInit, OnDestroy {
       responseType: 'text'
     };
 
-    this._http.post(url, {}, httpOptions as any).subscribe(
+    this._http.post(url, body, httpOptions as any).subscribe(
       result => {
         this._downloadingReport = false;
         if (result.toString() === "") {
