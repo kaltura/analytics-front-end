@@ -23,7 +23,7 @@ export class KalturaPlayerComponent implements AfterViewInit, OnDestroy {
 	entryid: string;
 
 	@Input()
-	cdnUrl = 'http://cdnapi.kaltura.com';
+	cdnUrl = '';
 
 	@Input()
 	flashvars: any = {};
