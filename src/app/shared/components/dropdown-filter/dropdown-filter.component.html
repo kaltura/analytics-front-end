@@ -35,7 +35,7 @@
           <ng-container *ngSwitchCase="'domain'">
             <div [id]="'favicon-'+ item?.label"
                  style="margin-right: 8px; margin-left: 4px; display:inline-block; vertical-align:top; margin-top: 2px; height: 16px; width: 16px">
-              <img [src]="'//' + item?.value?.id + '/favicon.ico'" style="height: 16px; width: 16px"
+              <img [src]="item?.value?.id | appFaviconUrl" referrerpolicy="no-referrer" style="height: 16px; width: 16px"
                    (error)="onIconLoadError($event, 'favicon-'+ item?.label)">
             </div>
             <span style="display: inline-block; overflow: hidden; text-overflow: ellipsis; max-width: 440px"

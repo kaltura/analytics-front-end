@@ -77,7 +77,7 @@
               <td><span>{{data['index']}}</span></td>
               <td *ngIf="!exporting" [ngStyle]="{'padding': '0', 'width': exporting ? '0px' : '30px'}">
                 <div class="kDomainIcon" [id]="'favicon-' + data['index']">
-                  <img [src]="'//' + data['domain_name'] + '/favicon.ico'"
+                  <img [src]="data['domain_name'] | appFaviconUrl" referrerpolicy="no-referrer"
                        (error)="onIconLoadError($event, 'favicon-' + data['index'])">
                 </div>
               </td>
