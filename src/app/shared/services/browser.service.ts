@@ -154,7 +154,7 @@ export class BrowserService {
         baseUrl = baseUrl.slice(0, -1); // remove last &
       }
     }
-    window.open(baseUrl, target);
+    window.open(baseUrl, target, 'noopener,noreferrer');
   }
 
   public isIE11(): boolean {

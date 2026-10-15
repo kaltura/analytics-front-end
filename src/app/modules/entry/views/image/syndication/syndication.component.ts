@@ -28,6 +28,7 @@ import { refineFilterToServerValue } from 'shared/components/filter/filter-to-se
 import { reportTypeMap } from 'shared/utils/report-type-map';
 import { cancelOnDestroy } from '@kaltura-ng/kaltura-common';
 import { NgxEchartsDirective } from 'shared/ngx-echarts/ngx-echarts.directive';
+import { openExternalUrl } from 'shared/utils/external-url';
 
 @Component({
   selector: 'app-image-syndication',
@@ -325,8 +326,7 @@ export class ImageSyndicationComponent implements OnDestroy {
 
   public _openLink(data): void {
     if (data && data.referrer) {
-      const link = data.referrer.indexOf('http') === 0 ? data.referrer : `http://${data.referrer}`;
-      window.open(link, '_blank');
+      openExternalUrl(data.referrer);
     }
   }
 

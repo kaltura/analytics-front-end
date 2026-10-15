@@ -7,10 +7,10 @@
     <div *ngIf="!_isCompareMode" class="kReportContent">
       <div class="kReportRow">
         <div *ngIf="_topSourceLabel" class="kDomainIcon" #holder>
-          <img [src]="'//' + _topSourceLabel + '/favicon.ico'"
+          <img [src]="_topSourceLabel | appFaviconUrl" referrerpolicy="no-referrer"
                (error)="onIconLoadError($event)">
         </div>
-        <a class="topDomain" [href]="'http://' + _topSourceLabel" target="_blank">{{_topSourceLabel}}</a>
+        <a class="topDomain" [href]="_topSourceLabel | appExternalUrl" target="_blank" rel="noopener noreferrer">{{_topSourceLabel}}</a>
       </div>
       <div class="kReportRow kDomain">
         <span class="kLabel">{{'app.user.popularDomain' | translate}}</span>
@@ -30,10 +30,10 @@
 
       <div class="kReportRow kDomain" *ngIf="_compareTopSourceLabel">
         <div *ngIf="_compareTopSourceLabel" class="kDomainIcon" #holder2>
-          <img [src]="'//' + _compareTopSourceLabel + '/favicon.ico'"
+          <img [src]="_compareTopSourceLabel | appFaviconUrl" referrerpolicy="no-referrer"
                (error)="onIconLoadError2($event)">
         </div>
-        <a class="topDomain" [href]="'http://' + _compareTopSourceLabel" target="_blank">{{_compareTopSourceLabel}}</a>
+        <a class="topDomain" [href]="_compareTopSourceLabel | appExternalUrl" target="_blank" rel="noopener noreferrer">{{_compareTopSourceLabel}}</a>
       </div>
 
       <div class="kReportRow" *ngIf="!_isBusy && _compareBulletValues[0]">
@@ -49,10 +49,10 @@
 
       <div class="kReportRow kDomain">
         <div *ngIf="_topSourceLabel" class="kDomainIcon" #holder3>
-          <img [src]="'//' + _topSourceLabel + '/favicon.ico'"
+          <img [src]="_topSourceLabel | appFaviconUrl" referrerpolicy="no-referrer"
                (error)="onIconLoadError3($event)">
         </div>
-        <a class="topDomain" [href]="'http://' + _topSourceLabel" target="_blank">{{_topSourceLabel}}</a>
+        <a class="topDomain" [href]="_topSourceLabel | appExternalUrl" target="_blank" rel="noopener noreferrer">{{_topSourceLabel}}</a>
       </div>
 
       <div class="kReportRow">
