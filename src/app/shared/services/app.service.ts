@@ -73,7 +73,6 @@ export class AppService implements OnDestroy {
     delete analyticsConfig.pid;
 
     // set ks in ngx-client
-    this._logger.info(`Setting ks in ngx-client: ${analyticsConfig.ks}`);
     this._kalturaServerClient.setOptions({
       endpointUrl: getKalturaServerUri(),
       clientTag: `kmc-analytics:${analyticsConfig.appVersion}`
