@@ -170,13 +170,24 @@ function setLiveEntryUsersReports(value: string): void {
   analyticsConfig.liveEntryUsersReports = allowedValues.indexOf(value) !== -1 ? value : EntryLiveUsersMode.All;
 }
 
+let customBaseClassName: string = null;
+
+// updateConfig can resend the custom style, so the previous class and CSS are replaced rather than accumulated
 function setCustomStyle(value: {baseClassName: string, css: any}): void {
   try {
+    if (customBaseClassName) {
+      document.body.classList.remove(customBaseClassName);
+    }
     document.body.classList.add(value.baseClassName); // add baseClassName to body
+    customBaseClassName = value.baseClassName;
     // inject CSS to head
-    let css = document.createElement('style');
+    let css = document.getElementById('analyticsCustomStyle');
+    if (!css) {
+      css = document.createElement('style');
+      css.id = 'analyticsCustomStyle';
+      document.getElementsByTagName('head')[0].appendChild(css);
+    }
     css.innerText = value.css.replace(/(\r\n|\n|\r)/gm, '');
-    document.getElementsByTagName('head')[0].appendChild(css);
   } catch (e) {
     console.warn(`Error injecting custom CSS: ${e.message}`);
   }
